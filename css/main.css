@@ -5,16 +5,21 @@
   font-family: "Tajawal", "Arial", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background:
-    radial-gradient(circle at top left, rgba(124,58,237,.35), transparent 35%),
+    radial-gradient(circle at top left, rgba(124, 58, 237, .35), transparent 35%),
     linear-gradient(135deg, #070016, #120032, #1b064b);
   color: #fff;
   min-height: 100vh;
 }
 
+/* الشريط العلوي */
 .navbar {
-  height: 76px;
+  height: 85px;
   padding: 0 38px;
   display: flex;
   align-items: center;
@@ -24,7 +29,14 @@ body {
   backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  transition: .35s;
+}
+
+.navbar.scrolled {
+  height: 65px;
+  background: rgba(15,10,36,.95);
+  box-shadow: 0 8px 30px rgba(0,0,0,.3);
 }
 
 .brand {
@@ -41,6 +53,7 @@ body {
   border-radius: 14px;
   background: linear-gradient(135deg, #7c3aed, #a855f7);
   font-size: 25px;
+  box-shadow: 0 0 25px rgba(168,85,247,.35);
 }
 
 .brand h2 {
@@ -57,6 +70,7 @@ nav a {
   text-decoration: none;
   font-weight: 600;
   opacity: .85;
+  transition: .3s;
 }
 
 nav a:hover {
@@ -80,6 +94,14 @@ nav a:hover {
   background: linear-gradient(135deg, #7c3aed, #9333ea);
 }
 
+.login-btn:hover,
+.main-btn:hover,
+.light-btn:hover,
+.account-card button:hover {
+  transform: translateY(-3px);
+}
+
+/* القسم الرئيسي */
 .hero {
   min-height: 560px;
   padding: 70px 8%;
@@ -97,6 +119,7 @@ nav a:hover {
 
 .hero-text h1 span {
   color: #a855f7;
+  text-shadow: 0 0 20px rgba(168,85,247,.45);
 }
 
 .hero-text p {
@@ -124,13 +147,6 @@ nav a:hover {
   padding: 16px 34px;
   color: #16002f;
   background: white;
-}
-
-.main-btn:hover,
-.light-btn:hover,
-.login-btn:hover,
-.account-card button:hover {
-  transform: translateY(-3px);
 }
 
 .hero-visual {
@@ -170,6 +186,7 @@ nav a:hover {
 .card3 { bottom: 80px; right: 20px; }
 .card4 { bottom: 35px; left: 80px; }
 
+/* الإحصائيات */
 .stats,
 .accounts-grid,
 .features-grid,
@@ -194,6 +211,12 @@ nav a:hover {
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.12);
   text-align: center;
+  transition: .35s;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 25px rgba(168,85,247,.25);
 }
 
 .stat-card .icon {
@@ -215,6 +238,7 @@ nav a:hover {
   color: #cfcfcf;
 }
 
+/* المميزات والحسابات */
 .features,
 .accounts {
   padding: 70px 6%;
@@ -245,6 +269,12 @@ nav a:hover {
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.12);
   font-weight: 700;
+  transition: .3s;
+}
+
+.features-grid div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(168,85,247,.25);
 }
 
 .accounts-grid {
@@ -260,12 +290,16 @@ nav a:hover {
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.14);
   box-shadow: 0 15px 45px rgba(0,0,0,.25);
-  transition: .3s;
+  transition: .35s;
 }
 
 .account-card:hover {
-  transform: translateY(-7px);
+  transform: translateY(-10px) scale(1.03);
   border-color: #a855f7;
+  box-shadow:
+    0 0 25px rgba(168,85,247,.4),
+    0 0 50px rgba(168,85,247,.2),
+    0 20px 40px rgba(0,0,0,.3);
 }
 
 .big-icon {
@@ -277,6 +311,7 @@ nav a:hover {
   border-radius: 50%;
   font-size: 36px;
   background: linear-gradient(135deg, #7c3aed, #a855f7);
+  box-shadow: 0 0 25px rgba(168,85,247,.35);
 }
 
 .account-card h3 {
@@ -298,10 +333,19 @@ nav a:hover {
   background: linear-gradient(135deg, #7c3aed, #9333ea);
 }
 
-.teacher button { background: linear-gradient(135deg, #059669, #10b981); }
-.parent button { background: linear-gradient(135deg, #ca8a04, #eab308); }
-.admin button { background: linear-gradient(135deg, #2563eb, #4f46e5); }
+.teacher button {
+  background: linear-gradient(135deg, #059669, #10b981);
+}
 
+.parent button {
+  background: linear-gradient(135deg, #ca8a04, #eab308);
+}
+
+.admin button {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+}
+
+/* معلومات سفلية */
 .bottom-info {
   padding: 25px 0 55px;
   display: grid;
@@ -315,8 +359,10 @@ nav a:hover {
   border-radius: 18px;
   background: rgba(255,255,255,.06);
   color: #eee;
+  border: 1px solid rgba(255,255,255,.08);
 }
 
+/* الفوتر */
 footer {
   padding: 35px;
   text-align: center;
@@ -324,6 +370,31 @@ footer {
   color: #ddd;
 }
 
+/* زر الرجوع للأعلى */
+#backToTop {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  width: 55px;
+  height: 55px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#7c3aed,#a855f7);
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(124,58,237,.45);
+  display: none;
+  z-index: 9999;
+  transition: .3s;
+}
+
+#backToTop:hover {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 15px 35px rgba(168,85,247,.65);
+}
+
+/* الهاتف */
 @media (max-width: 900px) {
   .navbar {
     padding: 14px;
@@ -331,6 +402,14 @@ footer {
 
   nav {
     display: none;
+  }
+
+  .brand h2 {
+    font-size: 20px;
+  }
+
+  .login-btn {
+    padding: 10px 15px;
   }
 
   .hero {
@@ -369,5 +448,12 @@ footer {
 
   .stats {
     padding: 20px;
+  }
+
+  #backToTop {
+    width: 48px;
+    height: 48px;
+    bottom: 18px;
+    left: 18px;
   }
 }
