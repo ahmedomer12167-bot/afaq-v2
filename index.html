@@ -1,110 +1,142 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>آفاق التعليمية</title>
-
-<link rel="stylesheet" href="css/main.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>آفاق التعليمية</title>
+  <link rel="stylesheet" href="css/main.css" />
 </head>
-
 <body>
 
-<header class="topbar">
-    <div class="logo">آفاق التعليمية</div>
+<header class="navbar">
+  <div class="brand">
+    <div class="logo">📖</div>
+    <h2>آفاق التعليمية</h2>
+  </div>
 
-    <nav>
-        <a href="#">الرئيسية</a>
-        <a href="#">عن المنصة</a>
-        <a href="#">المواد</a>
-        <a href="#">تواصل معنا</a>
-    </nav>
+  <nav>
+    <a href="#">الرئيسية</a>
+    <a href="#about">عن المنصة</a>
+    <a href="#features">المميزات</a>
+    <a href="#contact">تواصل معنا</a>
+  </nav>
+
+  <button class="login-btn" onclick="scrollToAccounts()">تسجيل الدخول</button>
 </header>
 
 <section class="hero">
-
-    <h1>منصة آفاق التعليمية</h1>
-
+  <div class="hero-text">
+    <h1>منصة <span>آفاق</span> التعليمية</h1>
     <p>
-        منصة تعليمية متكاملة للدروس والاختبارات والواجبات الإلكترونية
+      منصة تعليمية متكاملة للدروس والاختبارات والواجبات الإلكترونية،
+      تساعد الطلاب والمعلمين وأولياء الأمور على متابعة العملية التعليمية بسهولة.
     </p>
 
-    <div class="hero-buttons">
-        <button class="primary-btn">
-            ابدأ الآن
-        </button>
-
-        <button class="secondary-btn">
-            تسجيل الدخول
-        </button>
+    <div class="hero-actions">
+      <button class="main-btn" onclick="scrollToAccounts()">ابدأ الآن 🚀</button>
+      <button class="light-btn" onclick="scrollToAccounts()">تسجيل الدخول ←</button>
     </div>
+  </div>
 
+  <div class="hero-visual">
+    <div class="laptop">▶</div>
+    <div class="float-card card1">📚 دروس</div>
+    <div class="float-card card2">📝 اختبارات</div>
+    <div class="float-card card3">📊 نتائج</div>
+    <div class="float-card card4">💬 تواصل</div>
+  </div>
 </section>
 
 <section class="stats">
+  <div class="stat-card">
+    <div class="icon">👨‍🎓</div>
+    <h3>الطلاب</h3>
+    <strong id="studentsCount">0</strong>
+    <small>طالب وطالبة</small>
+  </div>
 
-    <div class="card">
-        👨‍🎓
-        <h3>الطلاب</h3>
-        <span>0</span>
-    </div>
+  <div class="stat-card">
+    <div class="icon">👨‍🏫</div>
+    <h3>المدرسون</h3>
+    <strong id="teachersCount">0</strong>
+    <small>معلم ومعلمة</small>
+  </div>
 
-    <div class="card">
-        👨‍🏫
-        <h3>المدرسون</h3>
-        <span>0</span>
-    </div>
+  <div class="stat-card">
+    <div class="icon">📚</div>
+    <h3>المواد</h3>
+    <strong id="subjectsCount">8</strong>
+    <small>مادة تعليمية</small>
+  </div>
 
-    <div class="card">
-        📚
-        <h3>المواد</h3>
-        <span>8</span>
-    </div>
-
-    <div class="card">
-        📝
-        <h3>الاختبارات</h3>
-        <span>0</span>
-    </div>
-
+  <div class="stat-card">
+    <div class="icon">📝</div>
+    <h3>الاختبارات</h3>
+    <strong id="quizzesCount">0</strong>
+    <small>اختبار متاح</small>
+  </div>
 </section>
 
-<section class="account-types">
+<section class="features" id="features">
+  <h2>مميزات المنصة</h2>
 
-    <div class="account-card">
-        🎓
-        <h3>الطالب</h3>
-    </div>
-
-    <div class="account-card">
-        👨‍🏫
-        <h3>المدرس</h3>
-    </div>
-
-    <div class="account-card">
-        👨‍👩‍👦
-        <h3>ولي الأمر</h3>
-    </div>
-
-    <div class="account-card">
-        ⚙️
-        <h3>المدير</h3>
-    </div>
-
+  <div class="features-grid">
+    <div>📚 دروس إلكترونية</div>
+    <div>📝 اختبارات تفاعلية</div>
+    <div>📋 واجبات إلكترونية</div>
+    <div>✅ متابعة الحضور</div>
+    <div>📊 نتائج ومستويات</div>
+    <div>💬 مراسلات داخلية</div>
+  </div>
 </section>
 
-<footer>
+<section class="accounts" id="accounts">
+  <h2>اختر نوع الحساب للبدء</h2>
+  <p>اختر حسابك للوصول إلى الخدمات المناسبة لك</p>
 
-    <h3>آفاق التعليمية</h3>
+  <div class="accounts-grid">
+    <div class="account-card student">
+      <div class="big-icon">🎓</div>
+      <h3>الطالب</h3>
+      <p>الوصول إلى الدروس والاختبارات والواجبات ومتابعة النتائج</p>
+      <button>دخول الطالب ←</button>
+    </div>
 
-    <p>
-        جميع الحقوق محفوظة
-    </p>
+    <div class="account-card teacher">
+      <div class="big-icon">👨‍🏫</div>
+      <h3>المعلم</h3>
+      <p>إدارة الدروس والاختبارات والطلاب وتقييم الأداء</p>
+      <button>دخول المعلم ←</button>
+    </div>
 
+    <div class="account-card parent">
+      <div class="big-icon">👨‍👩‍👦</div>
+      <h3>ولي الأمر</h3>
+      <p>متابعة مستوى الأبناء والنتائج والتواصل مع المدرسة</p>
+      <button>دخول ولي الأمر ←</button>
+    </div>
+
+    <div class="account-card admin">
+      <div class="big-icon">⚙️</div>
+      <h3>المدير</h3>
+      <p>إدارة المنصة والمستخدمين والتقارير والإعدادات</p>
+      <button>دخول المدير ←</button>
+    </div>
+  </div>
+</section>
+
+<section class="bottom-info">
+  <div>🔒 آمن وموثوق</div>
+  <div>⚡ سهل الاستخدام</div>
+  <div>📱 يعمل على الهاتف</div>
+  <div>🎧 دعم فني</div>
+</section>
+
+<footer id="contact">
+  <h3>آفاق التعليمية</h3>
+  <p>جميع الحقوق محفوظة</p>
 </footer>
 
 <script src="js/app.js"></script>
-
 </body>
 </html>
