@@ -5,9 +5,7 @@
   font-family: "Tajawal", "Arial", sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   background:
@@ -17,7 +15,6 @@ body {
   min-height: 100vh;
 }
 
-/* الشريط العلوي */
 .navbar {
   height: 85px;
   padding: 0 38px;
@@ -39,11 +36,7 @@ body {
   box-shadow: 0 8px 30px rgba(0,0,0,.3);
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.brand { display: flex; align-items: center; gap: 12px; }
 
 .logo {
   width: 46px;
@@ -56,14 +49,9 @@ body {
   box-shadow: 0 0 25px rgba(168,85,247,.35);
 }
 
-.brand h2 {
-  font-size: 25px;
-}
+.brand h2 { font-size: 25px; }
 
-nav {
-  display: flex;
-  gap: 30px;
-}
+nav { display: flex; gap: 30px; }
 
 nav a {
   color: #eee;
@@ -73,14 +61,13 @@ nav a {
   transition: .3s;
 }
 
-nav a:hover {
-  color: #c084fc;
-}
+nav a:hover { color: #c084fc; }
 
 .login-btn,
 .main-btn,
 .light-btn,
-.account-card button {
+.account-card button,
+.login-box button {
   border: none;
   cursor: pointer;
   border-radius: 14px;
@@ -97,11 +84,9 @@ nav a:hover {
 .login-btn:hover,
 .main-btn:hover,
 .light-btn:hover,
-.account-card button:hover {
-  transform: translateY(-3px);
-}
+.account-card button:hover,
+.login-box button:hover { transform: translateY(-3px); }
 
-/* القسم الرئيسي */
 .hero {
   min-height: 560px;
   padding: 70px 8%;
@@ -186,14 +171,10 @@ nav a:hover {
 .card3 { bottom: 80px; right: 20px; }
 .card4 { bottom: 35px; left: 80px; }
 
-/* الإحصائيات */
 .stats,
 .accounts-grid,
 .features-grid,
-.bottom-info {
-  width: 92%;
-  margin: auto;
-}
+.bottom-info { width: 92%; margin: auto; }
 
 .stats {
   padding: 35px;
@@ -219,42 +200,17 @@ nav a:hover {
   box-shadow: 0 0 25px rgba(168,85,247,.25);
 }
 
-.stat-card .icon {
-  font-size: 34px;
-  margin-bottom: 8px;
-}
+.stat-card .icon { font-size: 34px; margin-bottom: 8px; }
+.stat-card h3 { margin-bottom: 8px; color: #ddd; }
+.stat-card strong { display: block; font-size: 34px; }
+.stat-card small { color: #cfcfcf; }
 
-.stat-card h3 {
-  margin-bottom: 8px;
-  color: #ddd;
-}
-
-.stat-card strong {
-  display: block;
-  font-size: 34px;
-}
-
-.stat-card small {
-  color: #cfcfcf;
-}
-
-/* المميزات والحسابات */
 .features,
-.accounts {
-  padding: 70px 6%;
-  text-align: center;
-}
+.accounts { padding: 70px 6%; text-align: center; }
 
 .features h2,
-.accounts h2 {
-  font-size: 34px;
-  margin-bottom: 14px;
-}
-
-.accounts p {
-  color: #cfcfcf;
-  margin-bottom: 30px;
-}
+.accounts h2 { font-size: 34px; margin-bottom: 14px; }
+.accounts p { color: #cfcfcf; margin-bottom: 30px; }
 
 .features-grid {
   margin-top: 28px;
@@ -296,10 +252,7 @@ nav a:hover {
 .account-card:hover {
   transform: translateY(-10px) scale(1.03);
   border-color: #a855f7;
-  box-shadow:
-    0 0 25px rgba(168,85,247,.4),
-    0 0 50px rgba(168,85,247,.2),
-    0 20px 40px rgba(0,0,0,.3);
+  box-shadow: 0 0 25px rgba(168,85,247,.4), 0 0 50px rgba(168,85,247,.2), 0 20px 40px rgba(0,0,0,.3);
 }
 
 .big-icon {
@@ -314,16 +267,8 @@ nav a:hover {
   box-shadow: 0 0 25px rgba(168,85,247,.35);
 }
 
-.account-card h3 {
-  font-size: 24px;
-  margin-bottom: 12px;
-}
-
-.account-card p {
-  line-height: 1.8;
-  color: #ddd;
-  min-height: 75px;
-}
+.account-card h3 { font-size: 24px; margin-bottom: 12px; }
+.account-card p { line-height: 1.8; color: #ddd; min-height: 75px; }
 
 .account-card button {
   width: 100%;
@@ -333,19 +278,10 @@ nav a:hover {
   background: linear-gradient(135deg, #7c3aed, #9333ea);
 }
 
-.teacher button {
-  background: linear-gradient(135deg, #059669, #10b981);
-}
+.teacher button { background: linear-gradient(135deg, #059669, #10b981); }
+.parent button { background: linear-gradient(135deg, #ca8a04, #eab308); }
+.admin button { background: linear-gradient(135deg, #2563eb, #4f46e5); }
 
-.parent button {
-  background: linear-gradient(135deg, #ca8a04, #eab308);
-}
-
-.admin button {
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
-}
-
-/* معلومات سفلية */
 .bottom-info {
   padding: 25px 0 55px;
   display: grid;
@@ -362,7 +298,6 @@ nav a:hover {
   border: 1px solid rgba(255,255,255,.08);
 }
 
-/* الفوتر */
 footer {
   padding: 35px;
   text-align: center;
@@ -370,7 +305,6 @@ footer {
   color: #ddd;
 }
 
-/* زر الرجوع للأعلى */
 #backToTop {
   position: fixed;
   bottom: 25px;
@@ -394,23 +328,82 @@ footer {
   box-shadow: 0 15px 35px rgba(168,85,247,.65);
 }
 
-/* الهاتف */
+/* صفحات تسجيل الدخول */
+.login-page {
+  min-height: 100vh;
+  padding: 35px 18px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top right, rgba(168,85,247,.35), transparent 35%),
+    linear-gradient(135deg, #070016, #120032, #1b064b);
+}
+
+.login-box {
+  width: min(520px, 100%);
+  padding: 32px;
+  border-radius: 28px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 25px 75px rgba(0,0,0,.35), 0 0 35px rgba(168,85,247,.18);
+  backdrop-filter: blur(16px);
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: #ddd;
+  text-decoration: none;
+  transition: .3s;
+}
+
+.back-link:hover { color: #c084fc; }
+
+.login-icon {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 42px;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  box-shadow: 0 0 30px rgba(168,85,247,.35);
+}
+
+.login-box h1 { text-align: center; font-size: 30px; margin-bottom: 10px; }
+.login-box p { text-align: center; color: #d8d8d8; line-height: 1.8; margin-bottom: 26px; }
+
+.login-box form { display: grid; gap: 13px; }
+.login-box label { font-weight: 700; color: #eee; }
+
+.login-box input,
+.login-box select {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 15px;
+  background: rgba(255,255,255,.09);
+  color: white;
+  outline: none;
+}
+
+.login-box input::placeholder { color: #bfbfbf; }
+.login-box select option { color: #111; }
+
+.login-box button {
+  margin-top: 12px;
+  padding: 15px;
+  color: white;
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  box-shadow: 0 10px 30px rgba(124,58,237,.28);
+}
+
 @media (max-width: 900px) {
-  .navbar {
-    padding: 14px;
-  }
-
-  nav {
-    display: none;
-  }
-
-  .brand h2 {
-    font-size: 20px;
-  }
-
-  .login-btn {
-    padding: 10px 15px;
-  }
+  .navbar { padding: 14px; }
+  nav { display: none; }
+  .brand h2 { font-size: 20px; }
+  .login-btn { padding: 10px 15px; }
 
   .hero {
     grid-template-columns: 1fr;
@@ -418,37 +411,18 @@ footer {
     padding: 45px 20px;
   }
 
-  .hero-text h1 {
-    font-size: 40px;
-  }
-
-  .hero-text p {
-    font-size: 17px;
-  }
-
-  .hero-actions {
-    justify-content: center;
-  }
-
-  .hero-visual {
-    height: 300px;
-  }
-
-  .laptop {
-    width: 260px;
-    height: 180px;
-  }
+  .hero-text h1 { font-size: 40px; }
+  .hero-text p { font-size: 17px; }
+  .hero-actions { justify-content: center; }
+  .hero-visual { height: 300px; }
+  .laptop { width: 260px; height: 180px; }
 
   .stats,
   .accounts-grid,
   .features-grid,
-  .bottom-info {
-    grid-template-columns: 1fr;
-  }
+  .bottom-info { grid-template-columns: 1fr; }
 
-  .stats {
-    padding: 20px;
-  }
+  .stats { padding: 20px; }
 
   #backToTop {
     width: 48px;
