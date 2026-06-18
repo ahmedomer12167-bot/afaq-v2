@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة المدرسين - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+
+<style>
+.management-page{
+min-height:100vh;
+padding:24px;
+}
+
+.page-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+padding:18px 22px;
+border-radius:22px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.12);
+margin-bottom:24px;
+}
+
+.page-header h1{
+font-size:28px;
+}
+
+.page-header p{
+color:#d8d8d8;
+margin-top:6px;
+}
+
+.header-actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.action-btn{
+border:none;
+padding:12px 16px;
+border-radius:14px;
+cursor:pointer;
+color:white;
+font-weight:bold;
+background:linear-gradient(135deg,#7c3aed,#a855f7);
+}
+
+.danger-btn{
+background:linear-gradient(135deg,#dc2626,#ef4444);
+}
+
+.box{
+padding:22px;
+border-radius:24px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.13);
+margin-bottom:22px;
+}
+
+.search-input,
+.form-grid input,
+.form-grid select{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+outline:none;
+font-size:15px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:15px;
+}
+
+.teachers-table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+.teachers-table th,
+.teachers-table td{
+padding:14px;
+text-align:center;
+border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+.teachers-table th{
+color:#c084fc;
+}
+
+.mini-btn{
+border:none;
+padding:8px 10px;
+border-radius:10px;
+cursor:pointer;
+color:white;
+font-weight:bold;
+background:linear-gradient(135deg,#7c3aed,#9333ea);
+}
+
+.delete-btn{
+background:linear-gradient(135deg,#dc2626,#ef4444);
+}
+
+@media(max-width:900px){
+.page-header{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.form-grid{
+grid-template-columns:1fr;
+}
+
+.teachers-table{
+font-size:13px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<main class="management-page">
+
+<header class="page-header">
+<div>
+<h1>إدارة المدرسين</h1>
+<p>إضافة المدرسين وربطهم بالمواد والصفوف والأكواد.</p>
+</div>
+
+<div class="header-actions">
+<button class="action-btn" onclick="location.href='admin-dashboard.html'">🏠 لوحة المدير</button>
+<button class="action-btn" onclick="history.back()">← رجوع</button>
+<button class="action-btn danger-btn" onclick="clearTeachers()">تفريغ المدرسين</button>
+</div>
+</header>
+
+<section class="box">
+<input
+class="search-input"
+type="text"
+id="teacherSearch"
+placeholder="🔍 البحث عن مدرس بالاسم أو المادة أو الصف..."
+oninput="filterTeachers()">
+</section>
+
+<section class="box">
+<h2>إضافة مدرس</h2>
+
+<div class="form-grid">
+<input id="teacherName" type="text" placeholder="الاسم الثلاثي">
+
+<select id="teacherSubject">
+<option value="">اختر المادة</option>
+<option>الأحياء</option>
+<option>الفيزياء</option>
+<option>الكيمياء</option>
+<option>الرياضيات</option>
+<option>الاجتماعيات</option>
+<option>العربي</option>
+<option>الإنكليزي</option>
+<option>الإسلامية</option>
+</select>
+
+<select id="teacherGrade">
+<option value="">اختر الصف</option>
+<option>الأول متوسط</option>
+<option>الثاني متوسط</option>
+<option>الثالث متوسط</option>
+<option>الرابع الإعدادي</option>
+<option>الخامس الإعدادي</option>
+<option>السادس الإعدادي</option>
+</select>
+
+<input id="teacherCode" type="text" placeholder="كود المدرس">
+<input id="subjectCode" type="text" placeholder="كود المادة">
+<input id="teacherPhone" type="text" placeholder="رقم الهاتف">
+</div>
+
+<button class="action-btn" style="margin-top:15px;" onclick="addTeacher()">
+➕ إضافة المدرس
+</button>
+
+</section>
+
+<section class="box">
+<h2>قائمة المدرسين</h2>
+
+<table class="teachers-table">
+<thead>
+<tr>
+<th>الاسم</th>
+<th>المادة</th>
+<th>الصف</th>
+<th>كود المدرس</th>
+<th>كود المادة</th>
+<th>الهاتف</th>
+<th>الإجراءات</th>
+</tr>
+</thead>
+
+<tbody id="teachersBody">
+<tr>
+<td colspan="7">لا يوجد مدرسون حالياً</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+</main>
+
+<script>
+let teachers = JSON.parse(localStorage.getItem("afaq_teachers")) || [];
+
+function saveTeachers(){
+localStorage.setItem("afaq_teachers", JSON.stringify(teachers));
+}
+
+function renderTeachers(list = teachers){
+const body = document.getElementById("teachersBody");
+
+if(list.length === 0){
+body.innerHTML = '<tr><td colspan="7">لا يوجد مدرسون حالياً</td></tr>';
+return;
+}
+
+body.innerHTML = "";
+
+list.forEach((teacher,index)=>{
+body.innerHTML += `
+<tr>
+<td>${teacher.name}</td>
+<td>${teacher.subject}</td>
+<td>${teacher.grade}</td>
+<td>${teacher.code}</td>
+<td>${teacher.subjectCode || "غير محدد"}</td>
+<td>${teacher.phone || "غير محدد"}</td>
+<td>
+<button class="mini-btn delete-btn" onclick="deleteTeacher(${index})">حذف</button>
+</td>
+</tr>
+`;
+});
+}
+
+function addTeacher(){
+const name = document.getElementById("teacherName").value.trim();
+const subject = document.getElementById("teacherSubject").value;
+const grade = document.getElementById("teacherGrade").value;
+const code = document.getElementById("teacherCode").value.trim();
+const subjectCode = document.getElementById("subjectCode").value.trim();
+const phone = document.getElementById("teacherPhone").value.trim();
+
+if(!name || !subject || !grade || !code){
+alert("يرجى ملء الاسم والمادة والصف وكود المدرس");
+return;
+}
+
+teachers.unshift({
+name,
+subject,
+grade,
+code,
+subjectCode,
+phone
+});
+
+saveTeachers();
+renderTeachers();
+
+clearForm();
+}
+
+function clearForm(){
+document.getElementById("teacherName").value = "";
+document.getElementById("teacherSubject").value = "";
+document.getElementById("teacherGrade").value = "";
+document.getElementById("teacherCode").value = "";
+document.getElementById("subjectCode").value = "";
+document.getElementById("teacherPhone").value = "";
+}
+
+function deleteTeacher(index){
+if(confirm("هل تريد حذف المدرس؟")){
+teachers.splice(index,1);
+saveTeachers();
+renderTeachers();
+}
+}
+
+function clearTeachers(){
+if(confirm("سيتم حذف جميع المدرسين. هل أنت متأكد؟")){
+teachers = [];
+saveTeachers();
+renderTeachers();
+}
+}
+
+function filterTeachers(){
+const value = document.getElementById("teacherSearch").value.trim();
+
+const filtered = teachers.filter(t =>
+t.name.includes(value) ||
+t.subject.includes(value) ||
+t.grade.includes(value) ||
+t.code.includes(value) ||
+(t.subjectCode || "").includes(value) ||
+(t.phone || "").includes(value)
+);
+
+renderTeachers(filtered);
+}
+
+renderTeachers();
+</script>
+
+</body>
+</html>
