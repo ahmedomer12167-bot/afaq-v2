@@ -1,51 +1,41 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة المدير - آفاق التعليمية</title>
-  <link rel="stylesheet" href="../css/main.css">
-  <style>
-    .dashboard{min-height:100vh;padding:24px}.dash-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-radius:22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);margin-bottom:25px}.dash-title h1{font-size:28px;margin-bottom:6px}.dash-title p{color:#d8d8d8}.dash-actions{display:flex;gap:10px;flex-wrap:wrap}.dash-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.logout{background:linear-gradient(135deg,#dc2626,#ef4444)}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:25px}.dash-card{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);box-shadow:0 15px 40px rgba(0,0,0,.2);transition:.3s}.dash-card:hover{transform:translateY(-7px) scale(1.02);box-shadow:0 0 28px rgba(168,85,247,.35);border-color:#a855f7}.dash-card .icon{font-size:34px;margin-bottom:12px}.dash-card h3{margin-bottom:8px;color:#eee}.dash-card strong{font-size:32px;display:block}.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:25px}.admin-tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:150px}.admin-tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.admin-tile span{font-size:38px;display:block;margin-bottom:14px}.admin-tile h3{font-size:22px;margin-bottom:8px}.admin-tile p{color:#d6d6d6;line-height:1.7}.activity-box{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13)}.activity-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.activity-item{padding:14px;border-radius:14px;background:rgba(255,255,255,.07);margin-bottom:10px;display:flex;justify-content:space-between;gap:10px}.delete-small{border:none;border-radius:10px;padding:7px 10px;color:white;cursor:pointer;background:rgba(239,68,68,.8)}@media(max-width:900px){.stats-grid,.admin-grid{grid-template-columns:1fr}.dash-header{flex-direction:column;align-items:flex-start;gap:15px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة المدير - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.dashboard{min-height:100vh;padding:24px}.dash-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-radius:22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);margin-bottom:25px}.dash-title h1{font-size:28px;margin-bottom:6px}.dash-title p{color:#d8d8d8}.dash-actions{display:flex;gap:10px;flex-wrap:wrap}.dash-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.logout{background:linear-gradient(135deg,#dc2626,#ef4444)}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:25px}.dash-card{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);box-shadow:0 15px 40px rgba(0,0,0,.2);transition:.3s}.dash-card:hover{transform:translateY(-7px) scale(1.02);box-shadow:0 0 28px rgba(168,85,247,.35);border-color:#a855f7}.dash-card .icon{font-size:34px;margin-bottom:12px}.dash-card h3{margin-bottom:8px;color:#eee}.dash-card strong{font-size:32px;display:block}.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:25px}.admin-tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:150px}.admin-tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.admin-tile span{font-size:38px;display:block;margin-bottom:14px}.admin-tile h3{font-size:22px;margin-bottom:8px}.admin-tile p{color:#d6d6d6;line-height:1.7}.activity-box{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13)}.activity-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.activity-item{padding:14px;border-radius:14px;background:rgba(255,255,255,.07);margin-bottom:10px;display:flex;justify-content:space-between;gap:10px}.delete-small{border:none;border-radius:10px;padding:7px 10px;color:white;cursor:pointer;background:rgba(239,68,68,.8)}@media(max-width:900px){.stats-grid,.admin-grid{grid-template-columns:1fr}.dash-header{flex-direction:column;align-items:flex-start;gap:15px}}
+</style>
 </head>
 <body>
 <main class="dashboard">
-  <header class="dash-header">
-    <div class="dash-title">
-      <h1>لوحة المدير</h1>
-      <p>مرحباً بك في إدارة منصة آفاق التعليمية</p>
-    </div>
-    <div class="dash-actions">
-      <button class="dash-btn" onclick="location.href='../index.html'">🏠 الرئيسية</button>
-      <button class="dash-btn" onclick="history.back()">← رجوع</button>
-      <button class="dash-btn logout" onclick="location.href='../index.html'">تسجيل الخروج</button>
-    </div>
-  </header>
-  <section class="stats-grid">
-    <div class="dash-card"><div class="icon">👨‍🎓</div><h3>الطلاب</h3><strong>0</strong></div>
-    <div class="dash-card"><div class="icon">👨‍🏫</div><h3>المدرسون</h3><strong>0</strong></div>
-    <div class="dash-card"><div class="icon">📚</div><h3>المواد</h3><strong>8</strong></div>
-    <div class="dash-card"><div class="icon">💳</div><h3>طلبات الاشتراك</h3><strong>0</strong></div>
-  </section>
-  <section class="admin-grid">
-    <div class="admin-tile" onclick="location.href='students-management.html'"><span>👨‍🎓</span><h3>إدارة الطلاب</h3><p>عرض الطلاب، البحث، ملف الطالب، الاشتراك، الحضور والنتائج.</p></div>
-    <div class="admin-tile" onclick="location.href='teachers-management.html'"><span>👨‍🏫</span><h3>إدارة المدرسين</h3><p>إضافة المدرسين وربطهم بالمواد والصفوف والأكواد.</p></div>
-    <div class="admin-tile" onclick="location.href='subjects-management.html'"><span>📚</span><h3>إدارة المواد</h3><p>إضافة مادة، تحديد الصف، كود المادة، والمدرس المسؤول.</p></div>
-    <div class="admin-tile" onclick="location.href='subscriptions-management.html'"><span>💳</span><h3>الاشتراكات</h3><p>مراجعة طلبات الاشتراك، قبولها، رفضها، وتحديد مدة الاشتراك.</p></div>
-    <div class="admin-tile"><span>📊</span><h3>مستويات الطلبة</h3><p>عرض مستوى كل طالب في كل مادة من مبتدئ إلى ممتاز.</p></div>
-    <div class="admin-tile" onclick="location.href='access-codes-management.html'"><span>🔑</span><h3>أكواد الدخول</h3><p>تعديل كود المدير، كود الطالب العام، أكواد المدرسين، أكواد المواد، ورموز أولياء الأمور.</p></div>
-    <div class="admin-tile" onclick="location.href='messages-management.html'"><span>💬</span><h3>الرسائل</h3><p>مراسلة المدرسين والطلاب وأولياء الأمور ومتابعة صندوق الوارد.</p></div>
-    <div class="admin-tile" onclick="location.href='notifications-management.html'"><span>🔔</span><h3>الإشعارات</h3><p>إرسال إشعارات عامة أو مخصصة حسب الصف أو المادة.</p></div>
-    <div class="admin-tile" onclick="location.href='calendar-events-management.html'"><span>📅</span><h3>التقويم والأحداث</h3><p>إضافة الاختبارات القادمة، الواجبات، المحاضرات، والأحداث المهمة.</p></div>
-    <div class="admin-tile"><span>🗑️</span><h3>سلة المحذوفات</h3><p>استعادة العناصر المحذوفة أو حذفها نهائياً.</p></div>
-    <div class="admin-tile"><span>🧹</span><h3>الصيانة</h3><p>تفريغ الطلاب، تفريغ المدرسين، أو إعادة ضبط المنصة بالكامل.</p></div>
-    <div class="admin-tile"><span>⚙️</span><h3>الإعدادات</h3><p>تعديل اسم المنصة، الشعار، بيانات الدفع، والألوان.</p></div>
-  </section>
-  <section class="activity-box">
-    <div class="activity-head"><h2>آخر النشاطات</h2><button class="delete-small">حذف الكل</button></div>
-    <div class="activity-item"><span>لا توجد نشاطات حالياً</span><button class="delete-small">حذف</button></div>
-  </section>
+<header class="dash-header">
+<div class="dash-title"><h1>لوحة المدير</h1><p>مرحباً بك في إدارة منصة آفاق التعليمية</p></div>
+<div class="dash-actions"><button class="dash-btn" onclick="location.href='../index.html'">🏠 الرئيسية</button><button class="dash-btn" onclick="history.back()">← رجوع</button><button class="dash-btn logout" onclick="location.href='../index.html'">تسجيل الخروج</button></div>
+</header>
+<section class="stats-grid">
+<div class="dash-card"><div class="icon">👨‍🎓</div><h3>الطلاب</h3><strong>0</strong></div>
+<div class="dash-card"><div class="icon">👨‍🏫</div><h3>المدرسون</h3><strong>0</strong></div>
+<div class="dash-card"><div class="icon">📚</div><h3>المواد</h3><strong>8</strong></div>
+<div class="dash-card"><div class="icon">💳</div><h3>طلبات الاشتراك</h3><strong>0</strong></div>
+</section>
+<section class="admin-grid">
+<div class="admin-tile" onclick="location.href='students-management.html'"><span>👨‍🎓</span><h3>إدارة الطلاب</h3><p>عرض الطلاب، البحث، ملف الطالب، الاشتراك، الحضور والنتائج.</p></div>
+<div class="admin-tile" onclick="location.href='teachers-management.html'"><span>👨‍🏫</span><h3>إدارة المدرسين</h3><p>إضافة المدرسين وربطهم بالمواد والصفوف والأكواد.</p></div>
+<div class="admin-tile" onclick="location.href='subjects-management.html'"><span>📚</span><h3>إدارة المواد</h3><p>إضافة مادة، تحديد الصف، كود المادة، والمدرس المسؤول.</p></div>
+<div class="admin-tile" onclick="location.href='subscriptions-management.html'"><span>💳</span><h3>الاشتراكات</h3><p>مراجعة طلبات الاشتراك، قبولها، رفضها، وتحديد مدة الاشتراك.</p></div>
+<div class="admin-tile"><span>📊</span><h3>مستويات الطلبة</h3><p>عرض مستوى كل طالب في كل مادة من مبتدئ إلى ممتاز.</p></div>
+<div class="admin-tile" onclick="location.href='access-codes-management.html'"><span>🔑</span><h3>أكواد الدخول</h3><p>تعديل كود المدير، كود الطالب العام، أكواد المدرسين، أكواد المواد، ورموز أولياء الأمور.</p></div>
+<div class="admin-tile" onclick="location.href='messages-management.html'"><span>💬</span><h3>الرسائل</h3><p>مراسلة المدرسين والطلاب وأولياء الأمور ومتابعة صندوق الوارد.</p></div>
+<div class="admin-tile" onclick="location.href='notifications-management.html'"><span>🔔</span><h3>الإشعارات</h3><p>إرسال إشعارات عامة أو مخصصة حسب الصف أو المادة.</p></div>
+<div class="admin-tile" onclick="location.href='calendar-events-management.html'"><span>📅</span><h3>التقويم والأحداث</h3><p>إضافة الاختبارات القادمة، الواجبات، المحاضرات، والأحداث المهمة.</p></div>
+<div class="admin-tile" onclick="location.href='trash-management.html'"><span>🗑️</span><h3>سلة المحذوفات</h3><p>استعادة العناصر المحذوفة أو حذفها نهائياً.</p></div>
+<div class="admin-tile"><span>🧹</span><h3>الصيانة</h3><p>تفريغ الطلاب، تفريغ المدرسين، أو إعادة ضبط المنصة بالكامل.</p></div>
+<div class="admin-tile"><span>⚙️</span><h3>الإعدادات</h3><p>تعديل اسم المنصة، الشعار، بيانات الدفع، والألوان.</p></div>
+</section>
+<section class="activity-box"><div class="activity-head"><h2>آخر النشاطات</h2><button class="delete-small">حذف الكل</button></div><div class="activity-item"><span>لا توجد نشاطات حالياً</span><button class="delete-small">حذف</button></div></section>
 </main>
 </body>
 </html>
