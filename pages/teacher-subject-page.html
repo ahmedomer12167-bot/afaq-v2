@@ -3,35 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إدارة المادة - آفاق التعليمية</title>
+<title>صفحة المادة - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:20px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);margin-bottom:24px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:150px}.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.tile span{font-size:40px;display:block;margin-bottom:14px}.tile h3{font-size:22px;margin-bottom:8px}.tile p{color:#ddd;line-height:1.7}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+.page{min-height:100vh;padding:24px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:150px}.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.tile span{font-size:38px;display:block;margin-bottom:14px}.tile h3{font-size:22px;margin-bottom:8px}.tile p{color:#d6d6d6;line-height:1.7}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <main class="page">
 <header class="header">
-<div>
-<h1>إدارة المادة</h1>
-<p>مركز التحكم الخاص بالمادة: الدروس، الطلاب، الاختبارات، الواجبات، الحضور والنتائج.</p>
-</div>
-<div class="actions">
-<button class="btn" onclick="location.href='teacher-dashboard.html'">🏠 لوحة المدرس</button>
-<button class="btn" onclick="location.href='teacher-subjects.html'">📚 موادي</button>
-<button class="btn" onclick="history.back()">← رجوع</button>
-</div>
+<div><h1>🧬 مادة الأحياء</h1><p>مركز إدارة المادة: الدروس، الطلاب، الاختبارات، الواجبات، الحضور والنتائج.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='teacher-subjects.html'">📚 موادي</button><button class="btn" onclick="history.back()">← رجوع</button></div>
 </header>
 <section class="grid">
-<div class="tile" onclick="location.href='teacher-lessons.html'"><span>📖</span><h3>الدروس</h3><p>إضافة الدروس والشروحات والملفات التعليمية.</p></div>
-<div class="tile" onclick="location.href='teacher-files.html'"><span>📂</span><h3>الملفات</h3><p>إدارة ملفات المادة والملخصات والملازم.</p></div>
-<div class="tile" onclick="location.href='teacher-exams.html'"><span>📝</span><h3>الاختبارات</h3><p>إنشاء الاختبارات ومتابعة درجات الطلاب.</p></div>
-<div class="tile" onclick="location.href='teacher-assignments.html'"><span>📋</span><h3>الواجبات</h3><p>إضافة الواجبات وتصحيح تسليم الطلاب.</p></div>
-<div class="tile" onclick="location.href='teacher-attendance.html'"><span>✅</span><h3>الحضور</h3><p>إنشاء حضور المحاضرات ومتابعة الغياب.</p></div>
-<div class="tile" onclick="location.href='teacher-students.html'"><span>👨‍🎓</span><h3>الطلاب المسجلون</h3><p>عرض الطلاب المشتركين والبحث وفتح ملف الطالب.</p></div>
-<div class="tile" onclick="location.href='teacher-results.html'"><span>📊</span><h3>النتائج النهائية</h3><p>إدخال ومراجعة الدرجات النهائية للطلاب.</p></div>
-<div class="tile" onclick="location.href='teacher-leaderboard.html'"><span>🏆</span><h3>لوحة المتفوقين</h3><p>عرض ترتيب الطلاب في المادة حسب المستوى والدرجات.</p></div>
-<div class="tile" onclick="location.href='messages-management.html'"><span>💬</span><h3>رسائل المادة</h3><p>مراسلة الطلاب وأولياء الأمور بخصوص المادة.</p></div>
+<div class="tile" onclick="location.href='teacher-lessons.html'"><span>📖</span><h3>الدروس</h3><p>إضافة الدروس والملفات التعليمية وإدارتها.</p></div>
+<div class="tile" onclick="location.href='teacher-lessons.html'"><span>📂</span><h3>الملفات</h3><p>إدارة ملفات المادة والمرفقات التعليمية.</p></div>
+<div class="tile"><span>📝</span><h3>الاختبارات</h3><p>إنشاء الاختبارات وتصحيح الأسئلة المقالية.</p></div>
+<div class="tile"><span>📋</span><h3>الواجبات</h3><p>إضافة الواجبات وتصحيح تسليمات الطلاب.</p></div>
+<div class="tile"><span>✅</span><h3>الحضور</h3><p>تسجيل الحضور والغياب حسب المحاضرات.</p></div>
+<div class="tile" onclick="location.href='teacher-students.html'"><span>👨‍🎓</span><h3>الطلاب المسجلون</h3><p>عرض الطلاب والبحث وملفاتهم داخل المادة.</p></div>
+<div class="tile"><span>📊</span><h3>النتائج النهائية</h3><p>تحديد ومراجعة الدرجات النهائية للطلاب.</p></div>
+<div class="tile"><span>🏆</span><h3>لوحة المتفوقين</h3><p>ترتيب الطلاب حسب المستوى والدرجات.</p></div>
+<div class="tile"><span>💬</span><h3>رسائل المادة</h3><p>التواصل مع الطلاب وأولياء الأمور.</p></div>
+<div class="tile"><span>🔔</span><h3>إشعارات المادة</h3><p>إرسال إشعارات خاصة بهذه المادة.</p></div>
 </section>
 </main>
 </body>
