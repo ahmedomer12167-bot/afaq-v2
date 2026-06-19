@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الصيانة - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.danger,.warning,.success{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.danger{background:linear-gradient(135deg,#dc2626,#ef4444)}.warning{background:linear-gradient(135deg,#ca8a04,#eab308);color:#16002f}.success{background:linear-gradient(135deg,#16a34a,#22c55e)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{padding:20px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}.card h3{margin-bottom:10px;color:#c084fc}.card p{line-height:1.7;color:#ddd;margin-bottom:15px}.log{padding:12px;border-radius:14px;background:rgba(255,255,255,.07);margin-top:10px;display:flex;justify-content:space-between;gap:10px}.textarea{width:100%;height:160px;padding:14px;border:none;border-radius:14px;outline:none;resize:none;margin-top:12px}.file-input{width:100%;padding:12px;background:white;color:#111;border-radius:14px;border:none;margin-top:12px}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="header">
+<div><h1>🧹 الصيانة</h1><p>إدارة تفريغ البيانات والنسخ الاحتياطي وإعادة ضبط المنصة.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='admin-dashboard.html'">🏠 لوحة المدير</button><button class="btn" onclick="history.back()">← رجوع</button></div>
+</header>
 
+<section class="box">
+<h2>تفريغ الأقسام</h2>
+<div class="grid">
+<div class="card"><h3>تفريغ الطلاب</h3><p>يحذف جميع الطلاب المسجلين محلياً.</p><button class="danger" onclick="clearKey('afaq_students','تم تفريغ الطلاب')">تفريغ الطلاب</button></div>
+<div class="card"><h3>تفريغ المدرسين</h3><p>يحذف جميع المدرسين المسجلين محلياً.</p><button class="danger" onclick="clearKey('afaq_teachers','تم تفريغ المدرسين')">تفريغ المدرسين</button></div>
+<div class="card"><h3>تفريغ المواد</h3><p>يحذف جميع المواد التي أضيفت محلياً.</p><button class="danger" onclick="clearKey('afaq_subjects','تم تفريغ المواد')">تفريغ المواد</button></div>
+<div class="card"><h3>تفريغ الإشعارات</h3><p>يحذف الإشعارات المرسلة محلياً.</p><button class="danger" onclick="clearKey('afaq_notifications','تم تفريغ الإشعارات')">تفريغ الإشعارات</button></div>
+<div class="card"><h3>تفريغ الرسائل</h3><p>يحذف الرسائل الداخلية المحفوظة محلياً.</p><button class="danger" onclick="clearKey('afaq_messages','تم تفريغ الرسائل')">تفريغ الرسائل</button></div>
+<div class="card"><h3>تفريغ سجل النشاطات</h3><p>يحذف سجل النشاطات الحالي.</p><button class="danger" onclick="clearKey('afaq_activity_logs','تم تفريغ سجل النشاطات')">تفريغ السجل</button></div>
+<div class="card"><h3>تفريغ سلة المحذوفات</h3><p>يحذف محتوى سلة المحذوفات نهائياً.</p><button class="danger" onclick="clearKey('afaq_trash','تم تفريغ سلة المحذوفات')">تفريغ السلة</button></div>
+<div class="card"><h3>تفريغ أكواد الدخول</h3><p>يعيد الأكواد المحفوظة محلياً للحالة الافتراضية.</p><button class="danger" onclick="clearCodes()">تفريغ الأكواد</button></div>
+<div class="card"><h3>إعادة ضبط المنصة</h3><p>يمسح جميع بيانات المنصة المحلية ويعيدها كأنها جديدة.</p><button class="danger" onclick="resetPlatform()">إعادة ضبط بالكامل</button></div>
+</div>
+</section>
+
+<section class="box">
+<h2>النسخ الاحتياطي</h2>
+<div class="grid">
+<div class="card"><h3>إنشاء نسخة احتياطية</h3><p>ينشئ ملف JSON يحتوي على بيانات LocalStorage الحالية.</p><button class="success" onclick="createBackup()">💾 إنشاء نسخة</button></div>
+<div class="card"><h3>استعادة نسخة احتياطية</h3><p>اختر ملف JSON سابقاً لاستعادة البيانات.</p><input class="file-input" type="file" id="restoreFile" accept="application/json"><button class="warning" onclick="restoreBackup()">📂 استعادة</button></div>
+<div class="card"><h3>ملاحظة مهمة</h3><p>حالياً الحفظ محلي مؤقت. عند ربط Firebase سنجعل النسخ الاحتياطي من قاعدة البيانات الحقيقية.</p></div>
+</div>
+</section>
+
+<section class="box">
+<h2>سجل عمليات الصيانة</h2>
+<div id="maintenanceLog"></div>
+</section>
+</main>
+<script>
+let maintenanceLogs=JSON.parse(localStorage.getItem('afaq_maintenance_logs'))||[];
+function addLog(text){maintenanceLogs.unshift({text,date:new Date().toLocaleString('ar-IQ')});localStorage.setItem('afaq_maintenance_logs',JSON.stringify(maintenanceLogs));renderLogs();}
+function renderLogs(){const box=document.getElementById('maintenanceLog');if(!maintenanceLogs.length){box.innerHTML='<p>لا توجد عمليات صيانة حالياً</p>';return;}box.innerHTML=maintenanceLogs.map((l,i)=>`<div class="log"><span>${l.text} - ${l.date}</span><button class="danger" onclick="deleteLog(${i})">حذف</button></div>`).join('');}
+function deleteLog(i){maintenanceLogs.splice(i,1);localStorage.setItem('afaq_maintenance_logs',JSON.stringify(maintenanceLogs));renderLogs();}
+function clearKey(key,msg){if(confirm(msg+'؟')){localStorage.removeItem(key);addLog(msg);alert(msg);}}
+function clearCodes(){if(confirm('هل تريد تفريغ أكواد الدخول؟')){localStorage.removeItem('afaq_general_codes');localStorage.removeItem('afaq_teacher_codes');localStorage.removeItem('afaq_subject_codes');localStorage.removeItem('afaq_parent_codes');addLog('تم تفريغ أكواد الدخول');alert('تم تفريغ الأكواد');}}
+function resetPlatform(){const phrase=prompt('للتأكيد اكتب: تأكيد الحذف');if(phrase!=='تأكيد الحذف'){alert('تم إلغاء العملية');return;}Object.keys(localStorage).filter(k=>k.startsWith('afaq_')).forEach(k=>localStorage.removeItem(k));maintenanceLogs=[];localStorage.setItem('afaq_maintenance_logs',JSON.stringify([{text:'تمت إعادة ضبط المنصة بالكامل',date:new Date().toLocaleString('ar-IQ')}]));location.reload();}
+function createBackup(){const data={};Object.keys(localStorage).filter(k=>k.startsWith('afaq_')).forEach(k=>data[k]=localStorage.getItem(k));const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='afaq-backup.json';a.click();addLog('تم إنشاء نسخة احتياطية');}
+function restoreBackup(){const file=document.getElementById('restoreFile').files[0];if(!file){alert('اختر ملف النسخة الاحتياطية أولاً');return;}const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);Object.keys(data).forEach(k=>localStorage.setItem(k,data[k]));addLog('تمت استعادة نسخة احتياطية');alert('تمت الاستعادة بنجاح');}catch(err){alert('ملف غير صالح');}};reader.readAsText(file);}
+renderLogs();
+</script>
+</body>
+</html>
