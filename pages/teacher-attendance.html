@@ -6,20 +6,52 @@
 <title>الحضور والغياب - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.box{padding:28px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);max-width:900px;margin:40px auto}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.icon{font-size:48px;margin-bottom:15px}p{line-height:1.9;color:#ddd}
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.save-btn,.danger-btn,.mini-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.save-btn{background:linear-gradient(135deg,#16a34a,#22c55e)}.danger-btn{background:linear-gradient(135deg,#dc2626,#ef4444)}input,select{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 14px;font-size:15px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.student-row,.session-card{padding:15px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);margin-top:10px}.student-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.status-present{color:#22c55e;font-weight:bold}.status-absent{color:#ef4444;font-weight:bold}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.summary-card{padding:18px;border-radius:18px;background:rgba(255,255,255,.07);text-align:center}.summary-card strong{display:block;font-size:30px;margin-top:8px}@media(max-width:900px){.grid,.summary{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.student-row{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <main class="page">
+<header class="header">
+<div><h1>✅ الحضور والغياب</h1><p>إنشاء محاضرة وتسجيل حضور وغياب الطلاب.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='teacher-subject-page.html'">🏠 صفحة المادة</button><button class="btn" onclick="history.back()">← رجوع</button></div>
+</header>
 <section class="box">
-<div class="icon">✅</div>
-<h1>الحضور والغياب</h1>
-<p>سيتم بناء صفحة الحضور والغياب بعد الواجبات.</p>
-<div class="actions">
-<button class="btn" onclick="location.href='teacher-subject-page.html'">🏠 صفحة المادة</button>
-<button class="btn" onclick="history.back()">← رجوع</button>
-</div>
+<h2>إنشاء محاضرة جديدة</h2>
+<div class="grid"><input id="sessionTitle" placeholder="عنوان المحاضرة"><input id="sessionDate" type="date"><input id="sessionTime" type="time"></div>
+<button class="save-btn" onclick="createSession()">➕ إنشاء المحاضرة</button>
+</section>
+<section class="box">
+<h2>تسجيل الحضور</h2>
+<div class="summary"><div class="summary-card">عدد الطلاب<strong id="totalStudents">0</strong></div><div class="summary-card">الحضور<strong id="presentCount">0</strong></div><div class="summary-card">الغياب<strong id="absentCount">0</strong></div></div>
+<div id="studentsList"></div>
+<button class="save-btn" style="margin-top:15px" onclick="saveAttendance()">💾 حفظ سجل الحضور</button>
+</section>
+<section class="box">
+<h2>سجلات الحضور</h2>
+<input id="searchAttendance" placeholder="🔍 بحث في السجلات" oninput="renderSessions()">
+<div id="sessionsList"></div>
+<button class="danger-btn" onclick="clearSessions()">🧹 تفريغ جميع سجلات الحضور</button>
 </section>
 </main>
+<script>
+let students=JSON.parse(localStorage.getItem('afaq_students'))||[
+{name:'أحمد محمد علي',grade:'الثالث متوسط',phone:'07800000000'},
+{name:'علي حسن كريم',grade:'الثالث متوسط',phone:'07700000000'},
+{name:'محمد خالد عمر',grade:'الثالث متوسط',phone:'07500000000'}
+];
+let attendanceSessions=JSON.parse(localStorage.getItem('afaq_attendance_sessions'))||[];
+let currentSession=null;
+let currentRecords=[];
+function defaultDate(){document.getElementById('sessionDate').value=new Date().toISOString().slice(0,10);}defaultDate();
+function createSession(){const title=sessionTitle.value.trim();const date=sessionDate.value;const time=sessionTime.value;if(!title||!date){alert('يرجى إدخال عنوان وتاريخ المحاضرة');return;}currentSession={title,date,time};currentRecords=students.map(s=>({name:s.name,grade:s.grade,status:'حاضر'}));renderStudents();}
+function renderStudents(){const box=document.getElementById('studentsList');if(!currentSession){box.innerHTML='<p>أنشئ محاضرة أولاً لعرض الطلاب.</p>';updateSummary();return;}box.innerHTML=currentRecords.map((r,i)=>`<div class="student-row"><div><strong>${r.name}</strong><p>${r.grade}</p><span class="${r.status==='حاضر'?'status-present':'status-absent'}">${r.status}</span></div><div><button class="mini-btn" onclick="setStatus(${i},'حاضر')">حاضر</button><button class="danger-btn" onclick="setStatus(${i},'غائب')">غائب</button></div></div>`).join('');updateSummary();}
+function setStatus(i,status){currentRecords[i].status=status;renderStudents();}
+function updateSummary(){totalStudents.textContent=currentRecords.length||students.length;presentCount.textContent=currentRecords.filter(r=>r.status==='حاضر').length;absentCount.textContent=currentRecords.filter(r=>r.status==='غائب').length;}
+function saveAttendance(){if(!currentSession||currentRecords.length===0){alert('لا يوجد سجل حضور للحفظ');return;}attendanceSessions.unshift({...currentSession,records:[...currentRecords],createdAt:new Date().toLocaleString('ar')});localStorage.setItem('afaq_attendance_sessions',JSON.stringify(attendanceSessions));currentSession=null;currentRecords=[];sessionTitle.value='';sessionTime.value='';defaultDate();renderStudents();renderSessions();alert('تم حفظ سجل الحضور');}
+function renderSessions(){const s=searchAttendance.value.trim();const list=attendanceSessions.filter(a=>a.title.includes(s)||a.date.includes(s));sessionsList.innerHTML=list.length?list.map((a,i)=>{const p=a.records.filter(r=>r.status==='حاضر').length;const ab=a.records.filter(r=>r.status==='غائب').length;return `<div class="session-card"><h3>${a.title}</h3><p>التاريخ: ${a.date} ${a.time||''}</p><p>الحضور: ${p} | الغياب: ${ab}</p><details><summary>عرض الطلاب</summary>${a.records.map(r=>`<p>${r.name} - ${r.status}</p>`).join('')}</details><button class="danger-btn" onclick="deleteSession(${i})">حذف السجل</button></div>`}).join(''):'<p>لا توجد سجلات حضور حالياً</p>';}
+function deleteSession(i){if(confirm('حذف سجل الحضور؟')){attendanceSessions.splice(i,1);localStorage.setItem('afaq_attendance_sessions',JSON.stringify(attendanceSessions));renderSessions();}}
+function clearSessions(){if(confirm('سيتم حذف جميع سجلات الحضور')){attendanceSessions=[];localStorage.setItem('afaq_attendance_sessions',JSON.stringify(attendanceSessions));renderSessions();}}
+renderStudents();renderSessions();
+</script>
 </body>
 </html>
