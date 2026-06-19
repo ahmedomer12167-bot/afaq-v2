@@ -1,43 +1,205 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تسجيل دخول الطالب - آفاق التعليمية</title>
-  <link rel="stylesheet" href="../css/main.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل دخول الطالب - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+
+<style>
+.login-page{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:24px;
+}
+
+.login-box{
+width:100%;
+max-width:520px;
+padding:28px;
+border-radius:28px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.14);
+box-shadow:0 20px 60px rgba(0,0,0,.25);
+backdrop-filter:blur(16px);
+}
+
+.back-link{
+display:inline-block;
+margin-bottom:20px;
+color:#ddd;
+text-decoration:none;
+font-weight:bold;
+}
+
+.login-icon{
+width:90px;
+height:90px;
+border-radius:50%;
+margin:0 auto 18px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:42px;
+background:linear-gradient(135deg,#7c3aed,#a855f7);
+box-shadow:0 0 35px rgba(168,85,247,.45);
+}
+
+.login-box h1{
+text-align:center;
+margin-bottom:8px;
+}
+
+.login-box p{
+text-align:center;
+color:#d8d8d8;
+margin-bottom:22px;
+}
+
+.login-box label{
+display:block;
+margin:12px 0 8px;
+font-weight:bold;
+}
+
+.login-box input,
+.login-box select{
+width:100%;
+padding:14px;
+border:none;
+outline:none;
+border-radius:14px;
+background:rgba(255,255,255,.14);
+color:white;
+font-size:15px;
+}
+
+.login-box input::placeholder{
+color:#ddd;
+}
+
+.login-box select option{
+color:#111;
+}
+
+.login-box button{
+width:100%;
+margin-top:22px;
+padding:15px;
+border:none;
+border-radius:16px;
+cursor:pointer;
+color:white;
+font-weight:bold;
+font-size:16px;
+background:linear-gradient(135deg,#7c3aed,#a855f7);
+box-shadow:0 0 25px rgba(168,85,247,.35);
+transition:.3s;
+}
+
+.login-box button:hover{
+transform:translateY(-3px);
+box-shadow:0 0 35px rgba(168,85,247,.55);
+}
+</style>
 </head>
+
 <body>
 
 <section class="login-page">
-  <div class="login-box">
-    <a href="../index.html" class="back-link">← الرجوع للرئيسية</a>
 
-    <div class="login-icon">🎓</div>
-    <h1>تسجيل دخول الطالب</h1>
-    <p>أدخل بياناتك للوصول إلى لوحة الطالب</p>
+<div class="login-box">
 
-    <form>
-      <label>الاسم الثلاثي</label>
-      <input type="text" placeholder="مثال: أحمد محمد علي" />
+<a href="../index.html" class="back-link">
+← الرجوع للرئيسية
+</a>
 
-      <label>الصف</label>
-      <select>
-        <option>الأول متوسط</option>
-        <option>الثاني متوسط</option>
-        <option>الثالث متوسط</option>
-        <option>الرابع الإعدادي</option>
-        <option>الخامس الإعدادي</option>
-        <option>السادس الإعدادي</option>
-      </select>
+<div class="login-icon">
+🎓
+</div>
 
-      <label>الكود العام للطالب</label>
-      <input type="password" placeholder="أدخل كود الطالب" />
+<h1>تسجيل دخول الطالب</h1>
 
-      <button type="button">دخول الطالب</button>
-    </form>
-  </div>
+<p>
+أدخل بياناتك للوصول إلى لوحة الطالب
+</p>
+
+<form onsubmit="event.preventDefault(); loginStudent();">
+
+<label>
+الاسم الثلاثي
+</label>
+
+<input
+id="studentName"
+type="text"
+placeholder="مثال: أحمد محمد علي"
+required>
+
+<label>
+الصف
+</label>
+
+<select id="studentGrade" required>
+<option value="">اختر الصف</option>
+<option>الأول متوسط</option>
+<option>الثاني متوسط</option>
+<option>الثالث متوسط</option>
+<option>الرابع العلمي</option>
+<option>الخامس العلمي</option>
+<option>السادس العلمي</option>
+</select>
+
+<label>
+الكود العام للطالب
+</label>
+
+<input
+id="studentCode"
+type="password"
+placeholder="أدخل كود الطالب"
+required>
+
+<button type="submit">
+دخول الطالب
+</button>
+
+</form>
+
+</div>
+
 </section>
 
-<script src="../js/app.js"></script>
+<script>
+function loginStudent(){
+
+const name =
+document.getElementById("studentName").value.trim();
+
+const grade =
+document.getElementById("studentGrade").value;
+
+const code =
+document.getElementById("studentCode").value.trim();
+
+if(!name || !grade || !code){
+alert("يرجى ملء جميع الحقول");
+return;
+}
+
+localStorage.setItem("afaq_current_student", JSON.stringify({
+name:name,
+grade:grade,
+code:code,
+loginAt:new Date().toLocaleString("ar")
+}));
+
+window.location.href = "student-dashboard.html";
+
+}
+</script>
+
 </body>
 </html>
