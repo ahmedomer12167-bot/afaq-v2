@@ -1,1 +1,65 @@
-
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مستويات الطلبة - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.page{min-height:100vh;padding:25px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.save-btn,.delete-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.delete-btn{background:linear-gradient(135deg,#dc2626,#ef4444)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:15px}input,select{width:100%;padding:14px;border:none;border-radius:14px;outline:none}.table{width:100%;border-collapse:collapse;margin-top:15px}.table th,.table td{padding:13px;text-align:center;border-bottom:1px solid rgba(255,255,255,.12)}.table th{color:#c084fc}.level{font-weight:bold;padding:6px 10px;border-radius:10px;display:inline-block}.excellent{background:rgba(34,197,94,.22);color:#86efac}.verygood{background:rgba(59,130,246,.22);color:#93c5fd}.good{background:rgba(250,204,21,.22);color:#fde68a}.accepted{background:rgba(249,115,22,.22);color:#fdba74}.beginner{background:rgba(239,68,68,.22);color:#fca5a5}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.summary-card{padding:18px;border-radius:18px;background:rgba(255,255,255,.07);text-align:center}.summary-card strong{font-size:26px;display:block;margin-top:6px}@media(max-width:900px){.grid,.summary{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.table{font-size:13px}}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="header">
+<div><h1>📊 مستويات الطلبة</h1><p>متابعة مستوى كل طالب في كل مادة حسب الاختبارات والواجبات والحضور.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='admin-dashboard.html'">🏠 لوحة المدير</button><button class="btn" onclick="history.back()">← رجوع</button></div>
+</header>
+<section class="box">
+<h2>ملخص المستويات</h2>
+<div class="summary">
+<div class="summary-card">ممتاز<strong id="excellentCount">0</strong></div>
+<div class="summary-card">جيد جداً<strong id="veryGoodCount">0</strong></div>
+<div class="summary-card">جيد<strong id="goodCount">0</strong></div>
+<div class="summary-card">مقبول<strong id="acceptedCount">0</strong></div>
+<div class="summary-card">مبتدئ<strong id="beginnerCount">0</strong></div>
+</div>
+</section>
+<section class="box">
+<h2>إضافة مستوى طالب</h2>
+<div class="grid">
+<input id="studentName" placeholder="اسم الطالب الثلاثي">
+<select id="grade"><option value="">اختر الصف</option><option>الأول متوسط</option><option>الثاني متوسط</option><option>الثالث متوسط</option><option>الرابع الإعدادي</option><option>الخامس الإعدادي</option><option>السادس الإعدادي</option></select>
+<select id="subject"><option value="">اختر المادة</option><option>الأحياء</option><option>الفيزياء</option><option>الكيمياء</option><option>الرياضيات</option><option>الاجتماعيات</option><option>العربي</option><option>الإنكليزي</option><option>الإسلامية</option></select>
+<select id="level"><option value="">اختر المستوى</option><option>ممتاز</option><option>جيد جداً</option><option>جيد</option><option>مقبول</option><option>مبتدئ</option></select>
+<input id="examScore" type="number" placeholder="درجة الاختبارات">
+<input id="assignmentScore" type="number" placeholder="درجة الواجبات">
+<input id="attendanceScore" type="number" placeholder="نقاط الحضور">
+<button class="save-btn" onclick="addLevel()">➕ إضافة المستوى</button>
+</div>
+</section>
+<section class="box">
+<h2>البحث والفلترة</h2>
+<div class="grid">
+<input id="searchInput" placeholder="🔍 ابحث بالاسم أو الصف أو المادة" oninput="filterLevels()">
+<select id="filterLevel" onchange="filterLevels()"><option value="">كل المستويات</option><option>ممتاز</option><option>جيد جداً</option><option>جيد</option><option>مقبول</option><option>مبتدئ</option></select>
+</div>
+</section>
+<section class="box">
+<h2>قائمة مستويات الطلبة</h2>
+<table class="table"><thead><tr><th>الطالب</th><th>الصف</th><th>المادة</th><th>المستوى</th><th>الاختبارات</th><th>الواجبات</th><th>الحضور</th><th>حذف</th></tr></thead><tbody id="levelsBody"></tbody></table>
+</section>
+</main>
+<script>
+let levels=JSON.parse(localStorage.getItem('afaq_student_levels'))||[];
+function save(){localStorage.setItem('afaq_student_levels',JSON.stringify(levels))}
+function levelClass(level){if(level==='ممتاز')return'excellent';if(level==='جيد جداً')return'verygood';if(level==='جيد')return'good';if(level==='مقبول')return'accepted';return'beginner'}
+function render(list=levels){const body=document.getElementById('levelsBody');if(!list.length){body.innerHTML='<tr><td colspan="8">لا توجد مستويات مسجلة حالياً</td></tr>'}else{body.innerHTML=list.map((l,i)=>`<tr><td>${l.studentName}</td><td>${l.grade}</td><td>${l.subject}</td><td><span class="level ${levelClass(l.level)}">${l.level}</span></td><td>${l.examScore||0}</td><td>${l.assignmentScore||0}</td><td>${l.attendanceScore||0}</td><td><button class="delete-btn" onclick="deleteLevel(${i})">حذف</button></td></tr>`).join('')}updateSummary()}
+function updateSummary(){document.getElementById('excellentCount').textContent=levels.filter(x=>x.level==='ممتاز').length;document.getElementById('veryGoodCount').textContent=levels.filter(x=>x.level==='جيد جداً').length;document.getElementById('goodCount').textContent=levels.filter(x=>x.level==='جيد').length;document.getElementById('acceptedCount').textContent=levels.filter(x=>x.level==='مقبول').length;document.getElementById('beginnerCount').textContent=levels.filter(x=>x.level==='مبتدئ').length}
+function addLevel(){const studentName=document.getElementById('studentName').value.trim();const grade=document.getElementById('grade').value;const subject=document.getElementById('subject').value;const level=document.getElementById('level').value;const examScore=document.getElementById('examScore').value;const assignmentScore=document.getElementById('assignmentScore').value;const attendanceScore=document.getElementById('attendanceScore').value;if(!studentName||!grade||!subject||!level){alert('يرجى ملء الاسم والصف والمادة والمستوى');return}levels.unshift({studentName,grade,subject,level,examScore,assignmentScore,attendanceScore});save();render();document.querySelectorAll('input,select').forEach(el=>{if(el.id!=='filterLevel'&&el.id!=='searchInput')el.value=''})}
+function deleteLevel(i){if(confirm('هل تريد حذف هذا المستوى؟')){levels.splice(i,1);save();render()}}
+function filterLevels(){const q=document.getElementById('searchInput').value.trim();const f=document.getElementById('filterLevel').value;const list=levels.filter(l=>(!q||l.studentName.includes(q)||l.grade.includes(q)||l.subject.includes(q))&&(!f||l.level===f));render(list)}
+render();
+</script>
+</body>
+</html>
