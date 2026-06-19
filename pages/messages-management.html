@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الرسائل الداخلية - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.page{min-height:100vh;padding:25px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:20px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);margin-bottom:25px}.btn{border:none;padding:12px 18px;border-radius:14px;cursor:pointer;font-weight:bold;color:white;background:linear-gradient(135deg,#7c3aed,#a855f7)}.box{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);margin-bottom:20px}input,select,textarea{width:100%;padding:14px;border:none;border-radius:14px;margin-top:10px;margin-bottom:15px;outline:none}textarea{height:140px;resize:none}.send-btn{background:linear-gradient(135deg,#16a34a,#22c55e);border:none;padding:14px;border-radius:14px;color:white;font-weight:bold;cursor:pointer;width:100%}.message{padding:15px;border-radius:14px;background:rgba(255,255,255,.08);margin-top:12px;border:1px solid rgba(255,255,255,.1)}.message-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}.delete-btn{border:none;padding:8px 12px;border-radius:10px;cursor:pointer;background:#ef4444;color:white}.role{padding:4px 10px;border-radius:8px;background:#7c3aed;font-size:12px}.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.tab{border:none;padding:10px 14px;border-radius:12px;cursor:pointer;color:white;background:rgba(255,255,255,.12)}.tab.active{background:linear-gradient(135deg,#7c3aed,#a855f7)}@media(max-width:900px){.header{flex-direction:column;align-items:flex-start}.message-head{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="header"><div><h1>💬 الرسائل الداخلية</h1><p>إدارة الرسائل بين المدير والمدرسين والطلاب وأولياء الأمور</p></div><div><button class="btn" onclick="location.href='admin-dashboard.html'">🏠 لوحة المدير</button> <button class="btn" onclick="history.back()">← رجوع</button></div></div>
+<div class="box"><h2>إرسال رسالة</h2>
+<select id="senderRole"><option>المدير</option><option>مدرس</option><option>طالب</option><option>ولي أمر</option></select>
+<select id="receiverRole"><option>مدرس</option><option>طالب</option><option>ولي أمر</option><option>المدير</option></select>
+<input id="receiver" placeholder="اسم المستلم">
+<input id="subject" placeholder="عنوان الرسالة">
+<textarea id="messageText" placeholder="اكتب الرسالة هنا"></textarea>
+<button class="send-btn" onclick="sendMessage()">إرسال الرسالة</button>
+</div>
+<div class="box"><h2>صندوق الرسائل</h2>
+<div class="tabs"><button class="tab active" onclick="setFilter('all',this)">الكل</button><button class="tab" onclick="setFilter('مدرس',this)">المدرسين</button><button class="tab" onclick="setFilter('طالب',this)">الطلاب</button><button class="tab" onclick="setFilter('ولي أمر',this)">أولياء الأمور</button></div>
+<div id="messagesList"></div></div>
+</div>
+<script>
+let messages=JSON.parse(localStorage.getItem('afaq_messages'))||[];let currentFilter='all';
+function saveMessages(){localStorage.setItem('afaq_messages',JSON.stringify(messages));}
+function setFilter(filter,btn){currentFilter=filter;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMessages();}
+function renderMessages(){const list=document.getElementById('messagesList');let shown=messages;if(currentFilter!=='all'){shown=messages.filter(m=>m.receiverRole===currentFilter||m.senderRole===currentFilter)}if(shown.length===0){list.innerHTML='<p>لا توجد رسائل حالياً</p>';return;}list.innerHTML=shown.map((m)=>{const realIndex=messages.indexOf(m);return `<div class="message"><div class="message-head"><div><span class="role">${m.senderRole}</span> <strong>${m.subject}</strong></div><button class="delete-btn" onclick="deleteMessage(${realIndex})">حذف</button></div><p>إلى: ${m.receiverRole} - ${m.receiver}</p><p>${m.text}</p><small>${m.date||''}</small></div>`}).join('');}
+function sendMessage(){const senderRole=document.getElementById('senderRole').value;const receiverRole=document.getElementById('receiverRole').value;const receiver=document.getElementById('receiver').value.trim();const subject=document.getElementById('subject').value.trim();const text=document.getElementById('messageText').value.trim();if(!receiver||!subject||!text){alert('يرجى ملء جميع الحقول');return;}messages.unshift({senderRole,receiverRole,receiver,subject,text,date:new Date().toLocaleString('ar-IQ')});saveMessages();renderMessages();document.getElementById('receiver').value='';document.getElementById('subject').value='';document.getElementById('messageText').value='';alert('تم إرسال الرسالة');}
+function deleteMessage(index){if(confirm('هل تريد حذف الرسالة؟')){messages.splice(index,1);saveMessages();renderMessages();}}
+renderMessages();
+</script>
+</body>
+</html>
