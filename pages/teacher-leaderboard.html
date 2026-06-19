@@ -6,20 +6,57 @@
 <title>لوحة المتفوقين - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.box{padding:28px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);max-width:900px;margin:40px auto}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.icon{font-size:48px;margin-bottom:15px}p{line-height:1.9;color:#ddd}
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.save-btn,.danger-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.save-btn{background:linear-gradient(135deg,#16a34a,#22c55e)}.danger-btn{background:linear-gradient(135deg,#dc2626,#ef4444)}input,select{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 14px;font-size:15px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.stat,.student-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}.stat strong{display:block;font-size:28px;margin-top:8px}.leader-list{display:grid;gap:12px}.student-card{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:14px}.rank{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#7c3aed,#a855f7);font-size:22px;font-weight:bold}.name h3{margin-bottom:6px}.meta{color:#ddd;line-height:1.7}.level{padding:8px 12px;border-radius:12px;background:rgba(168,85,247,.25);border:1px solid rgba(168,85,247,.35);font-weight:bold}.table{width:100%;border-collapse:collapse;margin-top:15px}.table th,.table td{padding:13px;text-align:center;border-bottom:1px solid rgba(255,255,255,.12)}.table th{color:#c084fc}@media(max-width:900px){.grid,.stats{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.student-card{grid-template-columns:1fr;text-align:center}.rank{margin:auto}}
 </style>
 </head>
 <body>
 <main class="page">
-<section class="box">
-<div class="icon">🏆</div>
-<h1>لوحة المتفوقين</h1>
-<p>سيتم بناء لوحة ترتيب الطلاب حسب الأداء والمستوى.</p>
+<header class="header">
+<div>
+<h1>🏆 لوحة المتفوقين - الأحياء</h1>
+<p>ترتيب طلاب هذه المادة فقط حسب الدرجات والحضور والاختبارات.</p>
+</div>
 <div class="actions">
 <button class="btn" onclick="location.href='teacher-subject-page.html'">🏠 صفحة المادة</button>
 <button class="btn" onclick="history.back()">← رجوع</button>
 </div>
+</header>
+<section class="box">
+<h2>إضافة طالب إلى لوحة المتفوقين</h2>
+<div class="grid">
+<input id="studentName" placeholder="اسم الطالب">
+<input id="testsDone" type="number" placeholder="عدد الاختبارات">
+<input id="correctAnswers" type="number" placeholder="الإجابات الصحيحة">
+<input id="attendanceRate" type="number" placeholder="نسبة الحضور %">
+<input id="score" type="number" placeholder="المجموع">
+</div>
+<button class="save-btn" onclick="addStudent()">➕ إضافة / تحديث الطالب</button>
+</section>
+<section class="box">
+<h2>إحصائيات المادة</h2>
+<div class="stats">
+<div class="stat">عدد الطلاب<strong id="totalStudents">0</strong></div>
+<div class="stat">أعلى مجموع<strong id="topScore">0</strong></div>
+<div class="stat">متوسط الحضور<strong id="avgAttendance">0%</strong></div>
+<div class="stat">طلاب ممتازون<strong id="excellentCount">0</strong></div>
+</div>
+</section>
+<section class="box">
+<h2>ترتيب الطلاب</h2>
+<input id="search" placeholder="🔍 ابحث عن طالب" oninput="renderLeaderboard()">
+<div id="leaderList" class="leader-list"></div>
 </section>
 </main>
+<script>
+let leaders=JSON.parse(localStorage.getItem('afaq_teacher_leaderboard_biology'))||[];
+function save(){localStorage.setItem('afaq_teacher_leaderboard_biology',JSON.stringify(leaders));}
+function calcLevel(score,attendance,tests){score=Number(score)||0;attendance=Number(attendance)||0;tests=Number(tests)||0;let points=score+(attendance/2)+(tests*2);if(points>=140)return 'أسطورة';if(points>=115)return 'خبير';if(points>=90)return 'متفوق';if(points>=60)return 'مجتهد';return 'مبتدئ';}
+function addStudent(){let name=studentName.value.trim();let tests=Number(testsDone.value)||0;let correct=Number(correctAnswers.value)||0;let attendance=Number(attendanceRate.value)||0;let score=Number(document.getElementById('score').value)||0;if(!name){alert('يرجى إدخال اسم الطالب');return;}let level=calcLevel(score,attendance,tests);let existing=leaders.findIndex(s=>s.name===name);let item={name,tests,correct,attendance,score,level,updatedAt:new Date().toLocaleString('ar')};if(existing>=0)leaders[existing]=item;else leaders.push(item);save();clearForm();renderLeaderboard();}
+function clearForm(){studentName.value='';testsDone.value='';correctAnswers.value='';attendanceRate.value='';score.value='';}
+function deleteStudent(i){if(confirm('حذف الطالب من لوحة المتفوقين؟')){leaders.splice(i,1);save();renderLeaderboard();}}
+function renderLeaderboard(){let q=document.getElementById('search').value.trim();let sorted=[...leaders].sort((a,b)=>b.score-a.score||b.attendance-a.attendance||b.correct-a.correct);let filtered=sorted.filter(s=>s.name.includes(q));let list=document.getElementById('leaderList');if(filtered.length===0){list.innerHTML='<p>لا توجد بيانات حالياً</p>';}else{list.innerHTML=filtered.map((s,i)=>`<div class="student-card"><div class="rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div class="name"><h3>${s.name}</h3><div class="meta">الاختبارات: ${s.tests} | الصحيحة: ${s.correct} | الحضور: ${s.attendance}% | المجموع: ${s.score}</div></div><div><div class="level">${s.level}</div><button class="danger-btn" style="margin-top:8px" onclick="deleteStudent(${leaders.indexOf(s)})">حذف</button></div></div>`).join('');}
+let total=leaders.length;let top=leaders.length?Math.max(...leaders.map(s=>Number(s.score)||0)):0;let avg=leaders.length?Math.round(leaders.reduce((a,s)=>a+(Number(s.attendance)||0),0)/leaders.length):0;let exc=leaders.filter(s=>s.level==='متفوق'||s.level==='خبير'||s.level==='أسطورة').length;totalStudents.textContent=total;topScore.textContent=top;avgAttendance.textContent=avg+'%';excellentCount.textContent=exc;}
+renderLeaderboard();
+</script>
 </body>
 </html>
