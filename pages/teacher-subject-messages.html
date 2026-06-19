@@ -6,20 +6,39 @@
 <title>رسائل المادة - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.box{padding:28px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);max-width:900px;margin:40px auto}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.icon{font-size:48px;margin-bottom:15px}p{line-height:1.9;color:#ddd}
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.save-btn,.danger-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.save-btn{background:linear-gradient(135deg,#16a34a,#22c55e)}.danger-btn{background:linear-gradient(135deg,#dc2626,#ef4444)}input,select,textarea{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 14px;font-size:15px}textarea{min-height:120px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.message-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);margin-top:14px}.message-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.badge{display:inline-block;padding:5px 10px;border-radius:10px;background:#7c3aed;font-size:13px}.muted{color:#d6d6d6;line-height:1.7}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <main class="page">
+<header class="header">
+<div><h1>💬 رسائل المادة</h1><p>إرسال رسائل لطلاب المادة أو لطالب محدد ومتابعة الرسائل المرسلة.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='teacher-subject-page.html'">🏠 صفحة المادة</button><button class="btn" onclick="history.back()">← رجوع</button></div>
+</header>
 <section class="box">
-<div class="icon">💬</div>
-<h1>رسائل المادة</h1>
-<p>سيتم بناء رسائل المادة بين المدرس والطلاب وأولياء الأمور.</p>
-<div class="actions">
-<button class="btn" onclick="location.href='teacher-subject-page.html'">🏠 صفحة المادة</button>
-<button class="btn" onclick="history.back()">← رجوع</button>
+<h2>إرسال رسالة جديدة</h2>
+<div class="grid">
+<select id="messageTarget"><option>جميع طلاب المادة</option><option>طالب محدد</option></select>
+<input id="studentName" placeholder="اسم الطالب إذا كانت الرسالة لطالب محدد">
+<input id="messageTitle" placeholder="عنوان الرسالة">
+<select id="messageType"><option>إعلان</option><option>تنبيه</option><option>ملاحظة</option><option>رد على استفسار</option></select>
 </div>
+<textarea id="messageText" placeholder="اكتب نص الرسالة هنا"></textarea>
+<button class="save-btn" onclick="sendMessage()">📨 إرسال الرسالة</button>
+</section>
+<section class="box">
+<h2>الرسائل المرسلة</h2>
+<input id="searchMessage" placeholder="🔍 بحث في الرسائل" oninput="renderMessages()">
+<div id="messagesList"></div>
 </section>
 </main>
+<script>
+let messages=JSON.parse(localStorage.getItem('afaq_teacher_subject_messages'))||[];
+function saveAll(){localStorage.setItem('afaq_teacher_subject_messages',JSON.stringify(messages));}
+function sendMessage(){const target=messageTarget.value;const student=studentName.value.trim();const title=messageTitle.value.trim();const type=messageType.value;const text=messageText.value.trim();if(!title||!text){alert('يرجى إدخال عنوان الرسالة ونصها');return;}if(target==='طالب محدد'&&!student){alert('يرجى إدخال اسم الطالب');return;}messages.unshift({target,student,title,type,text,date:new Date().toLocaleString('ar')});saveAll();studentName.value='';messageTitle.value='';messageText.value='';renderMessages();alert('تم إرسال الرسالة بنجاح');}
+function renderMessages(){const list=document.getElementById('messagesList');const s=document.getElementById('searchMessage').value.trim();const filtered=messages.filter(m=>m.title.includes(s)||m.text.includes(s)||m.type.includes(s)||(m.student||'').includes(s));if(filtered.length===0){list.innerHTML='<p class="muted">لا توجد رسائل حالياً</p>';return;}list.innerHTML=filtered.map((m,i)=>`<div class="message-card"><div class="message-head"><div><h3>${m.title}</h3><span class="badge">${m.type}</span></div><button class="danger-btn" onclick="deleteMessage(${i})">حذف</button></div><p class="muted">المستلم: ${m.target}${m.student?` - ${m.student}`:''}</p><p>${m.text}</p><p class="muted">التاريخ: ${m.date}</p></div>`).join('');}
+function deleteMessage(i){if(confirm('هل تريد حذف هذه الرسالة؟')){messages.splice(i,1);saveAll();renderMessages();}}
+renderMessages();
+</script>
 </body>
 </html>
