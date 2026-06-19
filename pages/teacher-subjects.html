@@ -6,43 +6,34 @@
 <title>موادي - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:20px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);margin-bottom:24px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.subjects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.subject-card{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:170px}.subject-card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.subject-card span{font-size:42px;display:block;margin-bottom:14px}.subject-card h3{font-size:24px;margin-bottom:8px}.subject-card p{color:#ddd;line-height:1.7}.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}.tool-card{padding:18px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);text-align:center;cursor:pointer;transition:.3s}.tool-card:hover{transform:translateY(-5px);box-shadow:0 0 22px rgba(168,85,247,.28)}.subject-panel{display:none}.muted{color:#d6d6d6}@media(max-width:900px){.header{flex-direction:column;align-items:flex-start}.subjects-grid,.tools-grid{grid-template-columns:1fr}}
+.page{min-height:100vh;padding:24px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:20px 22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);margin-bottom:25px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.subject-card{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:170px}.subject-card:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.subject-card span{font-size:42px;display:block;margin-bottom:14px}.subject-card h3{font-size:24px;margin-bottom:8px}.subject-card p{color:#d6d6d6;line-height:1.7}.notice{padding:18px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);margin-bottom:22px;color:#ddd;line-height:1.8}@media(max-width:900px){.header{flex-direction:column;align-items:flex-start}.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <main class="page">
 <header class="header">
-<div><h1>📚 موادي</h1><p>المواد والصفوف المرتبطة بالمدرس.</p></div>
-<div class="actions"><button class="btn" onclick="location.href='teacher-dashboard.html'">🏠 لوحة المدرس</button><button class="btn" onclick="history.back()">← رجوع</button></div>
-</header>
-<section class="box">
-<h2>المواد الحالية</h2>
-<p class="muted">حالياً تظهر بيانات تجريبية مؤقتة، ولاحقاً ستأتي من لوحة المدير وقاعدة البيانات.</p>
-<div class="subjects-grid" id="subjectsGrid"></div>
-</section>
-<section class="box subject-panel" id="subjectPanel">
-<h2 id="panelTitle">المادة</h2>
-<p id="panelInfo" class="muted"></p>
-<div class="tools-grid">
-<div class="tool-card">📖<h3>الدروس</h3></div>
-<div class="tool-card">📂<h3>الملفات</h3></div>
-<div class="tool-card">📝<h3>الاختبارات</h3></div>
-<div class="tool-card">📋<h3>الواجبات</h3></div>
-<div class="tool-card">✅<h3>الحضور</h3></div>
-<div class="tool-card">👨‍🎓<h3>الطلاب</h3></div>
-<div class="tool-card">📊<h3>النتائج</h3></div>
-<div class="tool-card">🏆<h3>لوحة التميز</h3></div>
+<div>
+<h1>📚 موادي</h1>
+<p>اختر المادة التي تريد إدارتها</p>
 </div>
+<div class="actions">
+<button class="btn" onclick="location.href='teacher-dashboard.html'">🏠 لوحة المدرس</button>
+<button class="btn" onclick="history.back()">← رجوع</button>
+</div>
+</header>
+
+<div class="notice">حالياً هذه مواد افتراضية للواجهة. لاحقاً ستظهر المواد الحقيقية التي يربطها المدير بحساب المدرس.</div>
+
+<section class="grid">
+<div class="subject-card" onclick="openSubject('الأحياء','الثالث متوسط')"><span>🧬</span><h3>الأحياء</h3><p>الثالث متوسط - إدارة محتوى المادة والطلاب والنتائج.</p></div>
+<div class="subject-card" onclick="openSubject('الكيمياء','الرابع الإعدادي')"><span>🧪</span><h3>الكيمياء</h3><p>الرابع الإعدادي - اختبارات وواجبات ودروس.</p></div>
+<div class="subject-card" onclick="openSubject('الفيزياء','الخامس الإعدادي')"><span>⚛️</span><h3>الفيزياء</h3><p>الخامس الإعدادي - ملفات وحضور ونتائج.</p></div>
 </section>
 </main>
 <script>
-let subjects=JSON.parse(localStorage.getItem('afaq_teacher_subjects'))||[
-{name:'الأحياء',grade:'الثالث متوسط',code:'BIO-3',students:0},
-{name:'الكيمياء',grade:'الرابع الإعدادي',code:'CHE-4',students:0}
-];
-function renderSubjects(){const grid=document.getElementById('subjectsGrid');grid.innerHTML=subjects.map((s,i)=>`<div class="subject-card" onclick="openSubject(${i})"><span>📚</span><h3>${s.name}</h3><p>${s.grade}</p><p>كود المادة: ${s.code}</p><p>الطلاب: ${s.students}</p></div>`).join('')}
-function openSubject(i){const s=subjects[i];document.getElementById('subjectPanel').style.display='block';document.getElementById('panelTitle').textContent=`${s.name} - ${s.grade}`;document.getElementById('panelInfo').textContent=`كود المادة: ${s.code} | عدد الطلاب المسجلين: ${s.students}`;document.getElementById('subjectPanel').scrollIntoView({behavior:'smooth'});}
-renderSubjects();
+function openSubject(subject, grade){
+  location.href = `teacher-subject-page.html?subject=${encodeURIComponent(subject)}&grade=${encodeURIComponent(grade)}`;
+}
 </script>
 </body>
 </html>
