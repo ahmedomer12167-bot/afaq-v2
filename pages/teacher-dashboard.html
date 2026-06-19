@@ -2,30 +2,17 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة المدرس - آفاق التعليمية</title>
-<link rel="stylesheet" href="../css/main.css">
-<style>
-.dashboard{min-height:100vh;padding:24px}.dash-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-radius:22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);margin-bottom:25px}.dash-title h1{font-size:28px;margin-bottom:6px}.dash-title p{color:#d8d8d8}.dash-actions{display:flex;gap:10px;flex-wrap:wrap}.dash-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.logout{background:linear-gradient(135deg,#dc2626,#ef4444)}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:25px}.dash-card{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);transition:.3s}.dash-card:hover{transform:translateY(-7px) scale(1.02);box-shadow:0 0 28px rgba(168,85,247,.35);border-color:#a855f7}.dash-card .icon{font-size:34px;margin-bottom:12px}.dash-card strong{font-size:32px;display:block}.teacher-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.teacher-tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:150px}.teacher-tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.teacher-tile span{font-size:38px;display:block;margin-bottom:14px}.teacher-tile h3{font-size:22px;margin-bottom:8px}.teacher-tile p{color:#d6d6d6;line-height:1.7}@media(max-width:900px){.stats-grid,.teacher-grid{grid-template-columns:1fr}.dash-header{flex-direction:column;align-items:flex-start;gap:15px}}
-</style>
+<title>لوحة المدرس - آفاق التعليمية</title><link rel="stylesheet" href="../css/main.css">
+<style>.dashboard{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:150px}.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.tile span{font-size:38px;display:block;margin-bottom:14px}.tile h3{font-size:22px;margin-bottom:8px}.tile p{color:#d6d6d6;line-height:1.7}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}</style>
 </head>
-<body>
-<main class="dashboard">
-<header class="dash-header"><div class="dash-title"><h1>لوحة المدرس</h1><p>مرحباً بك في لوحة إدارة المادة والطلاب.</p></div><div class="dash-actions"><button class="dash-btn" onclick="location.href='../index.html'">🏠 الرئيسية</button><button class="dash-btn" onclick="history.back()">← رجوع</button><button class="dash-btn logout" onclick="location.href='../index.html'">تسجيل الخروج</button></div></header>
-<section class="stats-grid"><div class="dash-card"><div class="icon">📚</div><h3>المواد</h3><strong>2</strong></div><div class="dash-card"><div class="icon">👨‍🎓</div><h3>الطلاب</h3><strong>0</strong></div><div class="dash-card"><div class="icon">📝</div><h3>الاختبارات</h3><strong>0</strong></div><div class="dash-card"><div class="icon">📋</div><h3>الواجبات</h3><strong>0</strong></div></section>
-<section class="teacher-grid">
-<div class="teacher-tile" onclick="location.href='teacher-subjects.html'"><span>📚</span><h3>موادي</h3><p>عرض المواد والصفوف المرتبطة بالمدرس.</p></div>
-<div class="teacher-tile"><span>📖</span><h3>الدروس</h3><p>إضافة وإدارة الدروس حسب المادة.</p></div>
-<div class="teacher-tile"><span>📂</span><h3>الملفات</h3><p>إدارة الملفات التعليمية الخاصة بالمواد.</p></div>
-<div class="teacher-tile"><span>📝</span><h3>الاختبارات</h3><p>إنشاء اختبارات متعددة الأنواع.</p></div>
-<div class="teacher-tile"><span>📋</span><h3>الواجبات</h3><p>إضافة الواجبات وتصحيحها.</p></div>
-<div class="teacher-tile"><span>✅</span><h3>الحضور</h3><p>تسجيل حضور وغياب الطلاب.</p></div>
-<div class="teacher-tile"><span>📢</span><h3>التبليغات</h3><p>إرسال تبليغات مواعيد الامتحانات والواجبات.</p></div>
-<div class="teacher-tile"><span>👨‍🎓</span><h3>الطلاب</h3><p>عرض الطلاب المسجلين والبحث عن طالب.</p></div>
-<div class="teacher-tile"><span>📊</span><h3>النتائج</h3><p>إدارة الدرجات والنتائج النهائية.</p></div>
-<div class="teacher-tile"><span>🧠</span><h3>بنك الأسئلة</h3><p>حفظ الأسئلة وإعادة استخدامها.</p></div>
-<div class="teacher-tile"><span>💬</span><h3>الرسائل</h3><p>التواصل مع الطلاب وأولياء الأمور.</p></div>
-<div class="teacher-tile"><span>🔔</span><h3>الإشعارات</h3><p>متابعة إشعارات المادة.</p></div>
+<body><main class="dashboard">
+<header class="header"><div><h1>👨‍🏫 لوحة المدرس</h1><p>إدارة المواد والدروس والاختبارات والطلاب.</p></div><button class="btn" onclick="location.href='../index.html'">🏠 الرئيسية</button></header>
+<section class="grid">
+<div class="tile" onclick="location.href='teacher-subjects.html'"><span>📚</span><h3>موادي</h3><p>عرض المواد والصفوف المرتبطة بك.</p></div>
+<div class="tile" onclick="location.href='teacher-question-bank.html'"><span>🧠</span><h3>بنك الأسئلة</h3><p>حفظ الأسئلة وتصنيفها لاستخدامها في الاختبارات.</p></div>
+<div class="tile"><span>💬</span><h3>الرسائل</h3><p>صندوق الرسائل العام للمدرس.</p></div>
+<div class="tile"><span>🔔</span><h3>الإشعارات</h3><p>متابعة إشعارات المنصة.</p></div>
+<div class="tile"><span>👤</span><h3>الملف الشخصي</h3><p>تعديل بيانات وصورة المدرس.</p></div>
+<div class="tile"><span>📊</span><h3>إحصائياتي</h3><p>ملخص الطلاب والاختبارات والواجبات.</p></div>
 </section>
-</main>
-</body>
-</html>
+</main></body></html>
