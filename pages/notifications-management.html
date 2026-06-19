@@ -1,1 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>إدارة الإشعارات - آفاق التعليمية</title>
+
+<link rel="stylesheet" href="../css/main.css">
+
+<style>
+
+.page{
+min-height:100vh;
+padding:25px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+padding:20px;
+border-radius:24px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.12);
+margin-bottom:25px;
+}
+
+.btn{
+border:none;
+padding:12px 18px;
+border-radius:14px;
+cursor:pointer;
+font-weight:bold;
+color:white;
+background:linear-gradient(135deg,#7c3aed,#a855f7);
+}
+
+.box{
+padding:24px;
+border-radius:24px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.12);
+margin-bottom:20px;
+}
+
+input,select,textarea{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+margin-top:10px;
+margin-bottom:15px;
+}
+
+textarea{
+height:140px;
+resize:none;
+}
+
+.send-btn{
+background:linear-gradient(135deg,#16a34a,#22c55e);
+border:none;
+padding:14px;
+border-radius:14px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+width:100%;
+}
+
+.notification{
+padding:15px;
+border-radius:14px;
+background:rgba(255,255,255,.08);
+margin-top:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+}
+
+.delete-btn{
+border:none;
+padding:8px 12px;
+border-radius:10px;
+cursor:pointer;
+background:#ef4444;
+color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<div class="header">
+
+<div>
+<h1>🔔 إدارة الإشعارات</h1>
+<p>إرسال ومتابعة إشعارات المنصة</p>
+</div>
+
+<div>
+<button class="btn"
+onclick="location.href='admin-dashboard.html'">
+لوحة المدير
+</button>
+</div>
+
+</div>
+
+<div class="box">
+
+<h2>إرسال إشعار جديد</h2>
+
+<select id="target">
+
+<option value="all">
+جميع الطلاب
+</option>
+
+<option value="third">
+الثالث متوسط
+</option>
+
+<option value="fourth">
+الرابع العلمي
+</option>
+
+<option value="fifth">
+الخامس العلمي
+</option>
+
+<option value="sixth">
+السادس العلمي
+</option>
+
+</select>
+
+<input
+id="title"
+placeholder="عنوان الإشعار">
+
+<textarea
+id="message"
+placeholder="اكتب نص الإشعار هنا">
+</textarea>
+
+<button
+class="send-btn"
+onclick="sendNotification()">
+
+إرسال الإشعار
+
+</button>
+
+</div>
+
+<div class="box">
+
+<h2>الإشعارات المرسلة</h2>
+
+<div id="notificationsList">
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let notifications =
+JSON.parse(
+localStorage.getItem(
+"afaq_notifications"
+)
+) || [];
+
+function saveNotifications(){
+
+localStorage.setItem(
+"afaq_notifications",
+JSON.stringify(notifications)
+);
+
+}
+
+function renderNotifications(){
+
+const list =
+document.getElementById(
+"notificationsList"
+);
+
+if(notifications.length===0){
+
+list.innerHTML=
+"<p>لا توجد إشعارات حالياً</p>";
+
+return;
+
+}
+
+list.innerHTML=
+notifications.map((n,index)=>`
+
+<div class="notification">
+
+<div>
+
+<strong>${n.title}</strong>
+
+<p>${n.message}</p>
+
+<small>${n.target}</small>
+
+</div>
+
+<button
+class="delete-btn"
+onclick="deleteNotification(${index})">
+
+حذف
+
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+function sendNotification(){
+
+const target =
+document.getElementById("target").value;
+
+const title =
+document.getElementById("title").value;
+
+const message =
+document.getElementById("message").value;
+
+if(!title || !message){
+
+alert("يرجى ملء جميع الحقول");
+
+return;
+
+}
+
+notifications.unshift({
+
+target,
+title,
+message,
+date:new Date()
+
+});
+
+saveNotifications();
+
+renderNotifications();
+
+document.getElementById("title").value="";
+document.getElementById("message").value="";
+
+alert("تم إرسال الإشعار");
+
+}
+
+function deleteNotification(index){
+
+notifications.splice(index,1);
+
+saveNotifications();
+
+renderNotifications();
+
+}
+
+renderNotifications();
+
+</script>
+
+</body>
+</html>
