@@ -11,17 +11,28 @@
 </head>
 <body>
 <main class="page">
-<header class="header"><div><h1>🧬 الأحياء - صفحة المادة</h1><p>إدارة الدروس، الاختبارات، الواجبات، الحضور، والطلاب.</p></div><div><button class="btn" onclick="location.href='teacher-subjects.html'">📚 موادي</button><button class="btn" onclick="location.href='teacher-dashboard.html'">🏠 لوحة المدرس</button></div></header>
+<header class="header">
+<div>
+<h1>🧬 الأحياء - صفحة المادة</h1>
+<p>إدارة الدروس، الاختبارات، الواجبات، الحضور، الطلاب، النتائج، الرسائل والإشعارات.</p>
+</div>
+<div>
+<button class="btn" onclick="location.href='teacher-subjects.html'">📚 موادي</button>
+<button class="btn" onclick="location.href='teacher-dashboard.html'">🏠 لوحة المدرس</button>
+<button class="btn" onclick="history.back()">← رجوع</button>
+</div>
+</header>
+
 <section class="grid">
 <div class="tile" onclick="location.href='teacher-lessons.html'"><span>📖</span><h3>الدروس والملفات</h3><p>إضافة الدروس والملفات التعليمية وإدارتها.</p></div>
 <div class="tile" onclick="location.href='teacher-exams.html'"><span>📝</span><h3>الاختبارات</h3><p>إنشاء اختبار كامل يحتوي على عدة أسئلة بأنواع مختلفة.</p></div>
-<div class="tile"><span>📋</span><h3>الواجبات</h3><p>إضافة الواجبات وتصحيح تسليمات الطلاب.</p></div>
-<div class="tile"><span>✅</span><h3>الحضور</h3><p>إنشاء محاضرة وتسجيل حضور وغياب الطلاب.</p></div>
+<div class="tile" onclick="location.href='teacher-assignments.html'"><span>📋</span><h3>الواجبات</h3><p>إضافة الواجبات وتصحيح تسليمات الطلاب.</p></div>
+<div class="tile" onclick="location.href='teacher-attendance.html'"><span>✅</span><h3>الحضور</h3><p>إنشاء محاضرة وتسجيل حضور وغياب الطلاب.</p></div>
 <div class="tile" onclick="location.href='teacher-students.html'"><span>👨‍🎓</span><h3>الطلاب المسجلون</h3><p>عرض الطلاب المشتركين والبحث عن طالب وملفه الكامل.</p></div>
-<div class="tile"><span>📊</span><h3>النتائج النهائية</h3><p>تحديد الدرجات النهائية التي تظهر للطالب والمدير.</p></div>
-<div class="tile"><span>🏆</span><h3>لوحة المتفوقين</h3><p>ترتيب الطلاب حسب المستوى والدرجات والحضور.</p></div>
-<div class="tile"><span>💬</span><h3>رسائل المادة</h3><p>مراسلة الطلاب وأولياء الأمور ضمن هذه المادة.</p></div>
-<div class="tile"><span>🔔</span><h3>إشعارات المادة</h3><p>إرسال إشعارات خاصة بطلاب هذه المادة.</p></div>
+<div class="tile" onclick="location.href='teacher-results.html'"><span>📊</span><h3>النتائج النهائية</h3><p>تحديد الدرجات النهائية التي تظهر للطالب والمدير.</p></div>
+<div class="tile" onclick="location.href='teacher-leaderboard.html'"><span>🏆</span><h3>لوحة المتفوقين</h3><p>ترتيب الطلاب حسب المستوى والدرجات والحضور.</p></div>
+<div class="tile" onclick="location.href='teacher-subject-messages.html'"><span>💬</span><h3>رسائل المادة</h3><p>مراسلة الطلاب وأولياء الأمور ضمن هذه المادة.</p></div>
+<div class="tile" onclick="location.href='teacher-subject-notifications.html'"><span>🔔</span><h3>إشعارات المادة</h3><p>إرسال إشعارات خاصة بطلاب هذه المادة.</p></div>
 </section>
 </main>
 </body>
