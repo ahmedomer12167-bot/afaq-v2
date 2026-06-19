@@ -3,62 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>صفحة المادة - آفاق التعليمية</title>
+<title>إدارة المادة - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:20px 22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);margin-bottom:25px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.subject-hero{padding:28px;border-radius:28px;background:linear-gradient(135deg,rgba(124,58,237,.35),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.14);margin-bottom:25px}.subject-hero h1{font-size:34px;margin-bottom:8px}.subject-hero p{color:#ddd;line-height:1.8}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0}.stat{padding:18px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);text-align:center}.stat strong{display:block;font-size:28px;margin-top:8px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.tile{min-height:150px;padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s}.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.tile span{font-size:38px;display:block;margin-bottom:12px}.tile h3{font-size:22px;margin-bottom:8px}.tile p{color:#d6d6d6;line-height:1.7}.note{margin-top:24px;padding:18px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#ddd;line-height:1.8}@media(max-width:900px){.header{flex-direction:column;align-items:flex-start}.stats,.grid{grid-template-columns:1fr}.subject-hero h1{font-size:27px}}
+.page{min-height:100vh;padding:24px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:24px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.subject-hero{padding:26px;border-radius:26px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:24px}.subject-hero h1{font-size:34px;margin-bottom:10px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:145px}.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.tile span{font-size:38px;display:block;margin-bottom:12px}.tile h3{font-size:22px;margin-bottom:8px}.tile p{color:#ddd;line-height:1.7}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <main class="page">
 <header class="header">
-<div>
-<h1>إدارة المادة</h1>
-<p>مركز التحكم بجميع محتويات المادة</p>
-</div>
-<div class="actions">
-<button class="btn" onclick="location.href='teacher-dashboard.html'">🏠 لوحة المدرس</button>
-<button class="btn" onclick="location.href='teacher-subjects.html'">📚 موادي</button>
-<button class="btn" onclick="history.back()">← رجوع</button>
-</div>
+<div><h1>صفحة المادة</h1><p>إدارة محتوى المادة والطلاب والنتائج.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='teacher-subjects.html'">📚 موادي</button><button class="btn" onclick="location.href='teacher-dashboard.html'">لوحة المدرس</button><button class="btn" onclick="history.back()">← رجوع</button></div>
 </header>
-
-<section class="subject-hero">
-<h1 id="subjectTitle">الأحياء</h1>
-<p id="subjectInfo">الثالث متوسط - إدارة الدروس والاختبارات والواجبات والحضور والطلاب والنتائج من مكان واحد.</p>
-</section>
-
-<section class="stats">
-<div class="stat">👨‍🎓 الطلاب <strong id="studentsCount">0</strong></div>
-<div class="stat">📖 الدروس <strong id="lessonsCount">0</strong></div>
-<div class="stat">📝 الاختبارات <strong id="examsCount">0</strong></div>
-<div class="stat">📋 الواجبات <strong id="assignmentsCount">0</strong></div>
-</section>
-
+<section class="subject-hero"><h1>🧬 الأحياء</h1><p>الثالث متوسط - إدارة المادة بالكامل من هذه الصفحة.</p></section>
 <section class="grid">
-<div class="tile" onclick="location.href='teacher-lessons.html'"><span>📖</span><h3>الدروس</h3><p>إضافة درس جديد، تعديل الدروس، وتنظيم محتوى المادة.</p></div>
-<div class="tile" onclick="location.href='teacher-files.html'"><span>📂</span><h3>الملفات</h3><p>إدارة ملفات PDF والصور والروابط التعليمية الخاصة بالمادة.</p></div>
-<div class="tile" onclick="location.href='teacher-exams.html'"><span>📝</span><h3>الاختبارات</h3><p>إنشاء اختبارات متعددة الأنواع ومتابعة درجات الطلاب.</p></div>
-<div class="tile" onclick="location.href='teacher-assignments.html'"><span>📋</span><h3>الواجبات</h3><p>إضافة الواجبات، تحديد وقت التسليم، وتصحيح الإجابات.</p></div>
-<div class="tile" onclick="location.href='teacher-attendance.html'"><span>✅</span><h3>الحضور</h3><p>إنشاء محاضرة، تسجيل حضور وغياب، وعرض التقارير.</p></div>
-<div class="tile" onclick="location.href='teacher-students.html'"><span>👨‍🎓</span><h3>الطلاب المسجلون</h3><p>عرض الطلاب المقبولين في المادة والبحث عن طالب.</p></div>
-<div class="tile" onclick="location.href='teacher-results.html'"><span>📊</span><h3>النتائج النهائية</h3><p>إدخال الدرجة النهائية لكل طالب ومتابعة نتائجه.</p></div>
-<div class="tile" onclick="location.href='teacher-leaderboard.html'"><span>🏆</span><h3>لوحة المتفوقين</h3><p>ترتيب الطلاب حسب المستوى والدرجات والحضور.</p></div>
-<div class="tile" onclick="location.href='teacher-announcements.html'"><span>📢</span><h3>تبليغات المادة</h3><p>إرسال تبليغ عن اختبار أو واجب أو موعد مهم.</p></div>
-<div class="tile" onclick="location.href='messages-management.html'"><span>💬</span><h3>رسائل المادة</h3><p>التواصل مع الطلاب وأولياء الأمور والإدارة.</p></div>
-<div class="tile" onclick="location.href='notifications-management.html'"><span>🔔</span><h3>إشعارات المادة</h3><p>إرسال إشعارات خاصة بطلاب هذه المادة.</p></div>
-<div class="tile" onclick="location.href='teacher-question-bank.html'"><span>🧠</span><h3>بنك الأسئلة</h3><p>حفظ الأسئلة واستخدامها لاحقاً في الاختبارات.</p></div>
+<div class="tile" onclick="alert('سننشئ صفحة الدروس لاحقاً')"><span>📖</span><h3>الدروس</h3><p>إضافة الدروس وتنظيمها حسب المادة.</p></div>
+<div class="tile" onclick="alert('سننشئ صفحة الملفات لاحقاً')"><span>📂</span><h3>الملفات</h3><p>إدارة ملفات المادة والملازم والمراجعات.</p></div>
+<div class="tile" onclick="alert('سننشئ صفحة الاختبارات لاحقاً')"><span>📝</span><h3>الاختبارات</h3><p>إنشاء الاختبارات بأنواع متعددة.</p></div>
+<div class="tile" onclick="alert('سننشئ صفحة الواجبات لاحقاً')"><span>📋</span><h3>الواجبات</h3><p>إضافة الواجبات وتصحيحها.</p></div>
+<div class="tile" onclick="alert('سننشئ صفحة الحضور لاحقاً')"><span>✅</span><h3>الحضور</h3><p>تسجيل حضور وغياب الطلاب.</p></div>
+<div class="tile" onclick="location.href='teacher-students.html'"><span>👨‍🎓</span><h3>الطلاب المسجلون</h3><p>عرض طلاب المادة والبحث داخل ملفاتهم.</p></div>
+<div class="tile" onclick="alert('سننشئ صفحة النتائج لاحقاً')"><span>📊</span><h3>النتائج النهائية</h3><p>إدخال ومراجعة درجات الطلاب.</p></div>
+<div class="tile" onclick="alert('سننشئ لوحة المتفوقين لاحقاً')"><span>🏆</span><h3>لوحة المتفوقين</h3><p>ترتيب الطلاب حسب المستوى والدرجات.</p></div>
+<div class="tile" onclick="alert('سننشئ رسائل المادة لاحقاً')"><span>💬</span><h3>رسائل المادة</h3><p>التواصل مع طلاب المادة.</p></div>
 </section>
-
-<div class="note">ملاحظة: هذه الصفحة جاهزة للربط لاحقاً مع البيانات الحقيقية، وسيتم تحديد المادة والصف تلقائياً حسب المدرس المسجل.</div>
 </main>
-
-<script>
-const params = new URLSearchParams(window.location.search);
-const subject = params.get('subject') || 'الأحياء';
-const grade = params.get('grade') || 'الثالث متوسط';
-document.getElementById('subjectTitle').textContent = subject;
-document.getElementById('subjectInfo').textContent = `${grade} - إدارة الدروس والاختبارات والواجبات والحضور والطلاب والنتائج من مكان واحد.`;
-</script>
 </body>
 </html>
