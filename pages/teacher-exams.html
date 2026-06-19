@@ -1,1 +1,72 @@
-
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة الاختبارات - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.save-btn,.danger-btn,.mini-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.danger-btn{background:linear-gradient(135deg,#dc2626,#ef4444)}.save-btn{background:linear-gradient(135deg,#16a34a,#22c55e)}input,select,textarea{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 14px;font-size:15px}textarea{min-height:95px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.question-card,.exam-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);margin-top:14px}.question-head,.exam-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.badge{display:inline-block;padding:5px 10px;border-radius:10px;background:#7c3aed;font-size:13px}.questions-list{margin-top:15px}.hidden{display:none}.table{width:100%;border-collapse:collapse;margin-top:15px}.table th,.table td{padding:13px;text-align:center;border-bottom:1px solid rgba(255,255,255,.12)}.table th{color:#c084fc}.options-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}@media(max-width:900px){.grid,.options-grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="header">
+<div><h1>📝 إدارة الاختبارات</h1><p>إنشاء اختبار واحد يحتوي على عدة أسئلة بأنواع مختلفة ودرجات مستقلة.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='teacher-subject-page.html'">🏠 صفحة المادة</button><button class="btn" onclick="history.back()">← رجوع</button></div>
+</header>
+<section class="box">
+<h2>إنشاء اختبار جديد</h2>
+<div class="grid">
+<input id="examTitle" placeholder="عنوان الاختبار">
+<input id="examDuration" type="number" placeholder="مدة الاختبار بالدقائق">
+<select id="examStatus"><option>منشور</option><option>مخفي</option></select>
+<input id="examStart" type="datetime-local">
+<input id="examEnd" type="datetime-local">
+<input id="examSubject" placeholder="اسم المادة" value="الأحياء">
+</div>
+</section>
+<section class="box">
+<h2>إضافة سؤال للاختبار</h2>
+<div class="grid">
+<select id="questionType" onchange="toggleQuestionFields()"><option value="mcq">اختيار من متعدد</option><option value="truefalse">صح أو خطأ</option><option value="blank">املأ الفراغ</option><option value="essay">مقالي</option></select>
+<input id="questionDegree" type="number" placeholder="درجة السؤال">
+<input id="questionAnswer" placeholder="الإجابة الصحيحة / نموذج الإجابة">
+</div>
+<textarea id="questionText" placeholder="نص السؤال"></textarea>
+<div id="mcqFields" class="options-grid">
+<input id="opt1" placeholder="الخيار الأول">
+<input id="opt2" placeholder="الخيار الثاني">
+<input id="opt3" placeholder="الخيار الثالث">
+<input id="opt4" placeholder="الخيار الرابع">
+</div>
+<button class="save-btn" onclick="addQuestion()">➕ إضافة السؤال إلى الاختبار</button>
+<div class="questions-list" id="questionsPreview"></div>
+</section>
+<section class="box">
+<button class="save-btn" onclick="saveExam()">💾 حفظ الاختبار كامل</button>
+<button class="danger-btn" onclick="clearCurrentQuestions()">🧹 تفريغ أسئلة الاختبار الحالي</button>
+</section>
+<section class="box">
+<h2>قائمة الاختبارات</h2>
+<input id="searchExam" placeholder="🔍 بحث عن اختبار" oninput="renderExams()">
+<div id="examsList"></div>
+</section>
+</main>
+<script>
+let currentQuestions=[];
+let exams=JSON.parse(localStorage.getItem('afaq_teacher_exams'))||[];
+function saveAll(){localStorage.setItem('afaq_teacher_exams',JSON.stringify(exams));}
+function toggleQuestionFields(){const type=document.getElementById('questionType').value;document.getElementById('mcqFields').style.display=type==='mcq'?'grid':'none';}
+function typeName(t){return t==='mcq'?'اختيار من متعدد':t==='truefalse'?'صح أو خطأ':t==='blank'?'املأ الفراغ':'مقالي';}
+function addQuestion(){const type=document.getElementById('questionType').value;const text=document.getElementById('questionText').value.trim();const degree=document.getElementById('questionDegree').value.trim();const answer=document.getElementById('questionAnswer').value.trim();if(!text||!degree){alert('يرجى كتابة نص السؤال ودرجته');return;}let options=[];if(type==='mcq'){options=[opt1.value.trim(),opt2.value.trim(),opt3.value.trim(),opt4.value.trim()].filter(Boolean);if(options.length<2){alert('يرجى إدخال خيارين على الأقل');return;}}currentQuestions.push({type,text,degree:Number(degree),answer,options});document.getElementById('questionText').value='';document.getElementById('questionDegree').value='';document.getElementById('questionAnswer').value='';['opt1','opt2','opt3','opt4'].forEach(id=>document.getElementById(id).value='');renderQuestionsPreview();}
+function renderQuestionsPreview(){const box=document.getElementById('questionsPreview');if(currentQuestions.length===0){box.innerHTML='<p>لا توجد أسئلة مضافة حالياً</p>';return;}box.innerHTML=currentQuestions.map((q,i)=>`<div class="question-card"><div class="question-head"><strong>س${i+1}: ${typeName(q.type)}</strong><button class="danger-btn" onclick="deleteCurrentQuestion(${i})">حذف</button></div><p>${q.text}</p><p>الدرجة: ${q.degree}</p>${q.options&&q.options.length?`<p>الخيارات: ${q.options.join(' - ')}</p>`:''}</div>`).join('');}
+function deleteCurrentQuestion(i){currentQuestions.splice(i,1);renderQuestionsPreview();}
+function clearCurrentQuestions(){if(confirm('تفريغ أسئلة الاختبار الحالي؟')){currentQuestions=[];renderQuestionsPreview();}}
+function saveExam(){const title=examTitle.value.trim();const duration=examDuration.value.trim();const status=examStatus.value;const start=examStart.value;const end=examEnd.value;const subject=examSubject.value.trim();if(!title||!duration||currentQuestions.length===0){alert('يرجى إدخال عنوان ومدة وإضافة سؤال واحد على الأقل');return;}const total=currentQuestions.reduce((s,q)=>s+Number(q.degree),0);exams.unshift({title,duration,status,start,end,subject,total,questions:[...currentQuestions],createdAt:new Date().toLocaleString('ar')});saveAll();currentQuestions=[];['examTitle','examDuration','examStart','examEnd'].forEach(id=>document.getElementById(id).value='');renderQuestionsPreview();renderExams();alert('تم حفظ الاختبار بنجاح');}
+function renderExams(){const list=document.getElementById('examsList');const s=document.getElementById('searchExam').value.trim();const filtered=exams.filter(e=>e.title.includes(s)||e.subject.includes(s));if(filtered.length===0){list.innerHTML='<p>لا توجد اختبارات حالياً</p>';return;}list.innerHTML=filtered.map((e,i)=>`<div class="exam-card"><div class="exam-head"><div><h3>${e.title}</h3><span class="badge">${e.status}</span></div><button class="danger-btn" onclick="deleteExam(${i})">حذف</button></div><p>المادة: ${e.subject}</p><p>المدة: ${e.duration} دقيقة</p><p>عدد الأسئلة: ${e.questions.length}</p><p>الدرجة الكلية: ${e.total}</p><p>تاريخ الإنشاء: ${e.createdAt}</p></div>`).join('');}
+function deleteExam(i){if(confirm('هل تريد حذف هذا الاختبار؟')){exams.splice(i,1);saveAll();renderExams();}}
+toggleQuestionFields();renderQuestionsPreview();renderExams();
+</script>
+</body>
+</html>
