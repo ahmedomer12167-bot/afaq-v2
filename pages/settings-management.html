@@ -1,1 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الإعدادات - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.save-btn,.reset-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.reset-btn{background:linear-gradient(135deg,#dc2626,#ef4444)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:15px}.field{padding:18px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}.field label{display:block;margin-bottom:8px;color:#c084fc;font-weight:bold}.field input,.field textarea,.field select{width:100%;padding:13px;border:none;border-radius:12px;outline:none}.field textarea{min-height:90px;resize:none}.switch-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:15px;border-radius:14px;background:rgba(255,255,255,.07);margin-top:10px}.switch-row select{max-width:180px}.preview{padding:18px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);margin-top:15px}.preview h2{color:#c084fc}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.switch-row{flex-direction:column;align-items:flex-start}.switch-row select{max-width:100%;width:100%}}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="header">
+<div><h1>⚙️ الإعدادات</h1><p>تعديل إعدادات منصة آفاق التعليمية من مكان واحد.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='admin-dashboard.html'">🏠 لوحة المدير</button><button class="btn" onclick="history.back()">← رجوع</button></div>
+</header>
 
+<section class="box">
+<h2>إعدادات المنصة</h2>
+<div class="grid">
+<div class="field"><label>اسم المنصة</label><input id="platformName" placeholder="آفاق التعليمية"></div>
+<div class="field"><label>وصف المنصة</label><input id="platformDesc" placeholder="منصة تعليمية متكاملة"></div>
+<div class="field"><label>رابط الشعار</label><input id="logoUrl" placeholder="ضع رابط الشعار هنا"></div>
+<div class="field"><label>رابط صورة الواجهة</label><input id="heroImage" placeholder="ضع رابط صورة الواجهة هنا"></div>
+</div>
+</section>
+
+<section class="box">
+<h2>بيانات التواصل</h2>
+<div class="grid">
+<div class="field"><label>رقم الهاتف</label><input id="phone" placeholder="07xxxxxxxxx"></div>
+<div class="field"><label>واتساب</label><input id="whatsapp" placeholder="رابط أو رقم الواتساب"></div>
+<div class="field"><label>تليجرام</label><input id="telegram" placeholder="@username"></div>
+<div class="field"><label>البريد الإلكتروني</label><input id="email" placeholder="example@email.com"></div>
+</div>
+</section>
+
+<section class="box">
+<h2>إعدادات الاشتراك والدفع</h2>
+<div class="grid">
+<div class="field"><label>سعر الاشتراك الافتراضي</label><input id="subPrice" placeholder="مثال: 25000"></div>
+<div class="field"><label>مدة الاشتراك الافتراضية</label><select id="subDuration"><option>شهر</option><option>شهرين</option><option>3 أشهر</option><option>6 أشهر</option><option>سنة</option></select></div>
+<div class="field"><label>طريقة الدفع</label><input id="paymentMethod" placeholder="ماستر كارد / زين كاش / ..."></div>
+<div class="field"><label>بيانات الدفع</label><textarea id="paymentInfo" placeholder="اكتب تفاصيل الدفع هنا"></textarea></div>
+</div>
+</section>
+
+<section class="box">
+<h2>إعدادات النظام</h2>
+<div class="switch-row"><strong>التسجيل الذاتي</strong><select id="selfRegister"><option value="on">مفعل</option><option value="off">مغلق</option></select></div>
+<div class="switch-row"><strong>الإشعارات العامة</strong><select id="publicNotifications"><option value="on">مفعلة</option><option value="off">مغلقة</option></select></div>
+<div class="switch-row"><strong>الرسائل الداخلية</strong><select id="internalMessages"><option value="on">مفعلة</option><option value="off">مغلقة</option></select></div>
+<div class="switch-row"><strong>الوضع الليلي الافتراضي</strong><select id="darkMode"><option value="on">مفعل</option><option value="off">مغلق</option></select></div>
+</section>
+
+<section class="box">
+<h2>إعدادات المظهر</h2>
+<div class="grid">
+<div class="field"><label>اللون الرئيسي</label><input id="primaryColor" type="color" value="#7c3aed"></div>
+<div class="field"><label>اللون الثانوي</label><input id="secondaryColor" type="color" value="#a855f7"></div>
+</div>
+<div class="preview"><h2 id="previewName">آفاق التعليمية</h2><p id="previewDesc">منصة تعليمية متكاملة</p></div>
+</section>
+
+<section class="box">
+<div class="actions"><button class="save-btn" onclick="saveSettings()">💾 حفظ جميع الإعدادات</button><button class="reset-btn" onclick="resetSettings()">إعادة الإعدادات الافتراضية</button></div>
+</section>
+</main>
+<script>
+const defaultSettings={platformName:'آفاق التعليمية',platformDesc:'منصة تعليمية متكاملة للدروس والاختبارات والواجبات الإلكترونية',logoUrl:'',heroImage:'',phone:'',whatsapp:'',telegram:'',email:'',subPrice:'',subDuration:'شهر',paymentMethod:'ماستر كارد',paymentInfo:'',selfRegister:'on',publicNotifications:'on',internalMessages:'on',darkMode:'on',primaryColor:'#7c3aed',secondaryColor:'#a855f7'};
+let settings=JSON.parse(localStorage.getItem('afaq_settings'))||defaultSettings;
+function loadSettings(){Object.keys(defaultSettings).forEach(k=>{const el=document.getElementById(k); if(el) el.value=settings[k]??defaultSettings[k];}); updatePreview();}
+function saveSettings(){Object.keys(defaultSettings).forEach(k=>{const el=document.getElementById(k); if(el) settings[k]=el.value;}); localStorage.setItem('afaq_settings',JSON.stringify(settings)); logActivity('تم تحديث إعدادات المنصة'); updatePreview(); alert('تم حفظ الإعدادات بنجاح');}
+function resetSettings(){if(confirm('هل تريد إعادة الإعدادات الافتراضية؟')){settings={...defaultSettings}; localStorage.setItem('afaq_settings',JSON.stringify(settings)); loadSettings(); logActivity('تمت إعادة الإعدادات الافتراضية');}}
+function updatePreview(){document.getElementById('previewName').textContent=document.getElementById('platformName').value||'آفاق التعليمية';document.getElementById('previewDesc').textContent=document.getElementById('platformDesc').value||'منصة تعليمية متكاملة';}
+function logActivity(text){let logs=JSON.parse(localStorage.getItem('afaq_activity_logs'))||[];logs.unshift({text,date:new Date().toLocaleString('ar-IQ')});localStorage.setItem('afaq_activity_logs',JSON.stringify(logs));}
+document.querySelectorAll('input,textarea,select').forEach(el=>el.addEventListener('input',updatePreview));loadSettings();
+</script>
+</body>
+</html>
