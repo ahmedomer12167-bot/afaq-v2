@@ -6,24 +6,63 @@
 <title>صفحة المادة - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.header{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:150px}.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.tile span{font-size:38px;display:block;margin-bottom:14px}.tile h3{font-size:22px;margin-bottom:8px}.tile p{color:#d6d6d6;line-height:1.7}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+.page{min-height:100vh;padding:24px}
+.header{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}
+.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tile{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s;min-height:150px}
+.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}
+.tile span{font-size:38px;display:block;margin-bottom:14px}
+.tile h3{font-size:22px;margin-bottom:8px}
+.tile p{color:#d6d6d6;line-height:1.7}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <main class="page">
 <header class="header">
-<div><h1>🧬 الأحياء - صفحة المادة</h1><p>الدروس، الاختبارات، الواجبات، الحضور، النتائج، والرسائل.</p></div>
-<div><button class="btn" onclick="location.href='student-subjects.html'">📚 موادي</button><button class="btn" onclick="location.href='student-dashboard.html'">🏠 لوحة الطالب</button></div>
+<div>
+<h1>🧬 الأحياء - صفحة الطالب</h1>
+<p>الدروس، الاختبارات، الواجبات، الحضور، النتائج، والرسائل الخاصة بالمادة.</p>
+</div>
+<div>
+<button class="btn" onclick="location.href='student-subjects.html'">📚 موادي</button>
+<button class="btn" onclick="location.href='student-dashboard.html'">🏠 لوحة الطالب</button>
+</div>
 </header>
+
 <section class="grid">
-<div class="tile" onclick="location.href='student-lessons.html'"><span>📖</span><h3>الدروس</h3><p>عرض الدروس والملفات التعليمية الخاصة بالمادة.</p></div>
-<div class="tile" onclick="location.href='student-exams.html'"><span>📝</span><h3>الاختبارات</h3><p>عرض الاختبارات المنشورة والإجابة عليها.</p></div>
-<div class="tile" onclick="location.href='student-assignments.html'"><span>📋</span><h3>الواجبات</h3><p>عرض الواجبات المطلوبة وحالة التسليم.</p></div>
-<div class="tile" onclick="location.href='student-attendance.html'"><span>✅</span><h3>الحضور</h3><p>متابعة عدد أيام الحضور والغياب ونسبة الحضور.</p></div>
-<div class="tile" onclick="location.href='student-results.html'"><span>📊</span><h3>النتائج</h3><p>عرض درجات الاختبارات والواجبات والنتيجة النهائية.</p></div>
-<div class="tile" onclick="location.href='student-leaderboard.html'"><span>🏆</span><h3>لوحة المتفوقين</h3><p>ترتيب طلاب المادة حسب المستوى والدرجات.</p></div>
-<div class="tile" onclick="location.href='student-messages.html'"><span>💬</span><h3>الرسائل</h3><p>مراسلة المدرس ومتابعة الرسائل.</p></div>
-<div class="tile" onclick="location.href='student-notifications.html'"><span>🔔</span><h3>الإشعارات</h3><p>عرض إشعارات المادة والتنبيهات الجديدة.</p></div>
+<div class="tile" onclick="location.href='student-lessons.html'">
+<span>📖</span><h3>الدروس</h3><p>مشاهدة الدروس والملفات التعليمية المنشورة.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-exams.html'">
+<span>📝</span><h3>الاختبارات</h3><p>عرض الاختبارات المنشورة وحل الاختبارات المتاحة.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-assignments.html'">
+<span>📋</span><h3>الواجبات</h3><p>عرض الواجبات وتسليم الحلول ومتابعة الدرجات.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-attendance.html'">
+<span>✅</span><h3>الحضور</h3><p>متابعة سجل الحضور والغياب ونسبة الحضور.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-results.html'">
+<span>📊</span><h3>النتائج</h3><p>مشاهدة درجات الاختبارات والواجبات والنتيجة النهائية.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-leaderboard.html'">
+<span>🏆</span><h3>لوحة المتفوقين</h3><p>ترتيب الطلاب حسب الأداء داخل المادة.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-messages.html'">
+<span>💬</span><h3>الرسائل</h3><p>مراسلة المدرس ومتابعة الردود الخاصة بالمادة.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-notifications.html'">
+<span>🔔</span><h3>الإشعارات</h3><p>عرض إشعارات المادة والتنبيهات الجديدة.</p>
+</div>
 </section>
 </main>
 </body>
