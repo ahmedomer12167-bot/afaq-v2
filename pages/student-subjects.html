@@ -3,35 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مواد الطالب - آفاق التعليمية</title>
+<title>موادي - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.btn,.save-btn,.delete-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.save-btn{background:linear-gradient(135deg,#16a34a,#22c55e)}.delete-btn{background:linear-gradient(135deg,#dc2626,#ef4444)}input,select{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 14px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.subject-card{padding:22px;border-radius:22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);transition:.3s}.subject-card:hover{transform:translateY(-6px);box-shadow:0 0 25px rgba(168,85,247,.3)}.subject-card h3{font-size:23px;margin-bottom:8px}.badge{display:inline-block;padding:5px 10px;border-radius:10px;background:#22c55e;font-size:12px;margin-top:8px}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.subject{padding:26px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.3s}.subject:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}.subject span{font-size:38px;display:block;margin-bottom:14px}.subject h3{font-size:22px;margin-bottom:8px}.subject p{color:#d6d6d6;line-height:1.7}input{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin-top:10px}@media(max-width:900px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <main class="page">
 <header class="header">
-<div><h1>📚 موادي</h1><p>المواد التي تظهر للطالب بعد الاشتراك والموافقة.</p></div>
+<div><h1>📚 موادي</h1><p>المواد المسجل بها الطالب.</p></div>
 <div><button class="btn" onclick="location.href='student-dashboard.html'">🏠 لوحة الطالب</button><button class="btn" onclick="history.back()">← رجوع</button></div>
 </header>
 <section class="box">
-<h2>طلب الانضمام لمادة</h2>
-<select id="subjectName"><option>الأحياء</option><option>الفيزياء</option><option>الكيمياء</option><option>الرياضيات</option><option>الإنكليزي</option><option>العربي</option><option>الإسلامية</option><option>الاجتماعيات</option></select>
-<input id="subjectCode" placeholder="أدخل كود المادة">
-<button class="save-btn" onclick="addSubjectRequest()">إرسال طلب الانضمام</button>
+<input id="search" placeholder="🔍 ابحث عن مادة..." oninput="filterSubjects()">
 </section>
-<section class="box">
-<h2>المواد المشترك بها</h2>
-<div id="subjectsList" class="grid"></div>
-</section>
+<section class="grid" id="subjectsGrid"></section>
 </main>
 <script>
-let subjects=JSON.parse(localStorage.getItem('afaq_student_subjects'))||[];
-function save(){localStorage.setItem('afaq_student_subjects',JSON.stringify(subjects));}
-function addSubjectRequest(){const name=document.getElementById('subjectName').value;const code=document.getElementById('subjectCode').value.trim();if(!code){alert('يرجى إدخال كود المادة');return;}subjects.unshift({name,code,status:'بانتظار موافقة المدرس',date:new Date().toLocaleString('ar')});save();document.getElementById('subjectCode').value='';render();alert('تم إرسال طلب الانضمام');}
-function deleteSubject(i){if(confirm('حذف هذه المادة من القائمة؟')){subjects.splice(i,1);save();render();}}
-function render(){const box=document.getElementById('subjectsList');if(subjects.length===0){box.innerHTML='<p>لا توجد مواد حالياً</p>';return;}box.innerHTML=subjects.map((s,i)=>`<div class="subject-card"><h3>📘 ${s.name}</h3><p>كود المادة: ${s.code}</p><p>تاريخ الطلب: ${s.date}</p><span class="badge">${s.status}</span><br><br><button class="btn" onclick="alert('ستفتح صفحة المادة للطالب لاحقاً')">فتح المادة</button> <button class="delete-btn" onclick="deleteSubject(${i})">حذف</button></div>`).join('');}
+const subjects=[
+{icon:'🧬',name:'الأحياء',teacher:'الأستاذ أحمد عمر'},
+{icon:'⚗️',name:'الكيمياء',teacher:'مدرس المادة'},
+{icon:'⚡',name:'الفيزياء',teacher:'مدرس المادة'},
+{icon:'📐',name:'الرياضيات',teacher:'مدرس المادة'},
+{icon:'🇬🇧',name:'الإنكليزي',teacher:'مدرس المادة'},
+{icon:'📖',name:'العربي',teacher:'مدرس المادة'}
+];
+function render(list=subjects){
+const grid=document.getElementById('subjectsGrid');
+grid.innerHTML=list.map(s=>`<div class="subject" onclick="location.href='student-subject-page.html'"><span>${s.icon}</span><h3>${s.name}</h3><p>${s.teacher}</p><p>اضغط للدخول إلى صفحة المادة.</p></div>`).join('');
+}
+function filterSubjects(){const v=document.getElementById('search').value.trim();render(subjects.filter(s=>s.name.includes(v)||s.teacher.includes(v)));}
 render();
 </script>
 </body>
