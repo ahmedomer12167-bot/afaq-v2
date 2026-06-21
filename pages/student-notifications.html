@@ -1,1 +1,29 @@
-
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إشعارات الطالب - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.delete-btn,.read-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.delete-btn{background:linear-gradient(135deg,#dc2626,#ef4444);padding:8px 12px}.read-btn{background:linear-gradient(135deg,#16a34a,#22c55e);padding:8px 12px}input,select{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 14px;font-size:15px}.notification{padding:16px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);margin-top:12px}.notification.unread{border-color:#a855f7;box-shadow:0 0 20px rgba(168,85,247,.25)}.notification-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.badge{display:inline-block;padding:5px 10px;border-radius:10px;background:#7c3aed;font-size:13px}.badge.new{background:#dc2626}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}.card{padding:18px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);text-align:center}.card strong{display:block;font-size:28px;margin-top:8px}@media(max-width:900px){.stats{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="header"><div><h1>🔔 إشعاراتي</h1><p>عرض إشعارات المادة والتنبيهات الجديدة الخاصة بالطالب.</p></div><div class="actions"><button class="btn" onclick="location.href='student-subject-page.html'">📚 صفحة المادة</button><button class="btn" onclick="location.href='student-dashboard.html'">🏠 لوحة الطالب</button><button class="btn" onclick="history.back()">← رجوع</button></div></header>
+<section class="stats"><div class="card"><span>🔔 الكل</span><strong id="allCount">0</strong></div><div class="card"><span>🆕 غير المقروءة</span><strong id="unreadCount">0</strong></div><div class="card"><span>✅ المقروءة</span><strong id="readCount">0</strong></div></section>
+<section class="box"><h2>بحث وتصفية</h2><input id="searchInput" placeholder="🔍 ابحث في الإشعارات..." oninput="renderNotifications()"><select id="statusFilter" onchange="renderNotifications()"><option value="all">كل الإشعارات</option><option value="unread">غير المقروءة</option><option value="read">المقروءة</option></select></section>
+<section class="box"><h2>قائمة الإشعارات</h2><div id="notificationsList"></div></section>
+</main>
+<script>
+let notifications=JSON.parse(localStorage.getItem("afaq_student_notifications"))||[{title:"اختبار جديد",message:"تم نشر اختبار جديد في مادة الأحياء.",type:"اختبار",date:"اليوم",read:false},{title:"واجب جديد",message:"تم إضافة واجب جديد، يرجى تسليمه قبل الموعد.",type:"واجب",date:"أمس",read:false},{title:"تنبيه حضور",message:"تم تسجيل حضورك في محاضرة اليوم.",type:"حضور",date:"هذا الأسبوع",read:true}];
+function saveNotifications(){localStorage.setItem("afaq_student_notifications",JSON.stringify(notifications));}
+function renderStats(){document.getElementById("allCount").textContent=notifications.length;document.getElementById("unreadCount").textContent=notifications.filter(n=>!n.read).length;document.getElementById("readCount").textContent=notifications.filter(n=>n.read).length;}
+function markRead(i){notifications[i].read=true;saveNotifications();renderNotifications();}
+function deleteNotification(i){if(confirm("هل تريد حذف هذا الإشعار؟")){notifications.splice(i,1);saveNotifications();renderNotifications();}}
+function renderNotifications(){const list=document.getElementById("notificationsList");const search=document.getElementById("searchInput").value.trim();const filter=document.getElementById("statusFilter").value;let filtered=notifications.filter(n=>{const a=n.title.includes(search)||n.message.includes(search)||n.type.includes(search);const b=filter==="all"||(filter==="unread"&&!n.read)||(filter==="read"&&n.read);return a&&b;});renderStats();if(filtered.length===0){list.innerHTML="<p>لا توجد إشعارات حالياً</p>";return;}list.innerHTML=filtered.map((n)=>{const i=notifications.indexOf(n);return `<div class="notification ${!n.read?'unread':''}"><div class="notification-head"><div><span class="badge ${!n.read?'new':''}">${!n.read?'جديد':'مقروء'}</span> <span class="badge">${n.type}</span> <strong>${n.title}</strong></div><div>${!n.read?`<button class="read-btn" onclick="markRead(${i})">تمت القراءة</button>`:''}<button class="delete-btn" onclick="deleteNotification(${i})">حذف</button></div></div><p>${n.message}</p><small>${n.date}</small></div>`;}).join("");}
+saveNotifications();renderNotifications();
+</script>
+</body>
+</html>
