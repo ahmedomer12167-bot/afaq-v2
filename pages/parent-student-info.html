@@ -1,3 +1,55 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>معلومات الطالب</title><link rel="stylesheet" href="../css/main.css"><style>
-.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.save-btn,.delete-btn,.edit-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.save-btn{background:linear-gradient(135deg,#16a34a,#22c55e)}.delete-btn{background:linear-gradient(135deg,#dc2626,#ef4444)}.edit-btn{background:linear-gradient(135deg,#2563eb,#3b82f6)}input,select,textarea{width:100%;padding:14px;border:none;border-radius:14px;margin:8px 0 12px;outline:none}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{padding:18px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px;text-align:center;border-bottom:1px solid rgba(255,255,255,.12)}.badge{padding:6px 10px;border-radius:10px;background:#7c3aed;display:inline-block;margin:3px}.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #7c3aed}.small-img{width:48px;height:48px;border-radius:50%;object-fit:cover}@media(max-width:900px){.grid,.cards{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
-</style></head><body><main class="page"><header class="header"><div><h1>👤 بيانات الطالب</h1><p>مرتبطة مباشرة بإدارة الطلاب.</p></div><div class="actions"><button class="btn" onclick="history.back()">رجوع</button></div></header><section class="box"><div class="grid"><div><img id="studentPhotoView" class="avatar"><h2 id="studentNameView"></h2><p id="studentGradeView"></p><div id="subjectsList"></div></div><div class="cards"><div class="card"><b>الاسم</b><p id="studentNameInfo"></p></div><div class="card"><b>المرحلة</b><p id="studentGradeInfo"></p></div><div class="card"><b>الهاتف</b><p id="studentPhoneInfo"></p></div><div class="card"><b>الكود</b><p id="studentCodeInfo"></p></div><div class="card"><b>ولي الأمر</b><p id="parentNameInfo"></p></div><div class="card"><b>هاتف ولي الأمر</b><p id="parentPhoneInfo"></p></div><div class="card"><b>الاشتراك</b><p id="subscriptionStatusInfo"></p></div><div class="card"><b>انتهاء الاشتراك</b><p id="subscriptionEndInfo"></p></div></div></div><div class="card"><b>ملاحظات</b><p id="studentNotesInfo"></p></div></section></main><script src="../js/afaq-data.js"></script><script>if(!AfaqData.renderCurrentStudent()){alert("سجل الدخول أولاً");location.href="parent-login.html";}</script></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معلومات الطالب - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-panel.css">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+<div class="brand"><div class="brand-icon">👨‍👩‍👦</div><div><h2>آفاق التعليمية</h2><p>لوحة ولي الأمر</p></div></div>
+<nav class="nav"><a class="" href="parent-dashboard.html">🏠 الرئيسية</a>
+<a class="active" href="parent-student-info.html">👨‍🎓 معلومات الطالب</a>
+<a class="" href="parent-results.html">📊 النتائج</a>
+<a class="" href="parent-attendance.html">✅ الحضور</a>
+<a class="" href="parent-exams.html">📝 الاختبارات</a>
+<a class="" href="parent-assignments.html">📋 الواجبات</a>
+<a class="" href="parent-notifications.html">🔔 الإشعارات</a>
+<a class="" href="parent-messages.html">💬 الرسائل</a>
+<a class="" href="parent-profile.html">👤 ملف ولي الأمر</a><a class="logout" href="../index.html">🚪 تسجيل خروج</a></nav>
+</aside>
+<main class="main">
+<section class="hero"><div><h1>👨‍🎓 معلومات الطالب</h1><p>بيانات الطالب مرتبطة مباشرة بما يضيفه المدير في إدارة الطلاب.</p></div><div class="actions"><button class="btn" onclick="history.back()">رجوع</button></div></section>
+<section class="content-grid">
+<div class="panel profile-card">
+<img id="studentPhotoView" class="avatar" alt="صورة الطالب">
+<h2 id="studentNameView">اسم الطالب</h2>
+<p id="studentGradeView">المرحلة</p>
+<div id="subjectsList"></div>
+</div>
+<div class="panel">
+<h2>البيانات الأساسية</h2>
+<div class="info-grid">
+<div class="info"><strong>الاسم الثلاثي</strong><span id="studentNameInfo">-</span></div>
+<div class="info"><strong>المرحلة الدراسية</strong><span id="studentGradeInfo">-</span></div>
+<div class="info"><strong>رقم الطالب</strong><span id="studentPhoneInfo">-</span></div>
+<div class="info"><strong>كود الطالب</strong><span id="studentCodeInfo">-</span></div>
+<div class="info"><strong>اسم ولي الأمر</strong><span id="parentNameInfo">-</span></div>
+<div class="info"><strong>رقم ولي الأمر</strong><span id="parentPhoneInfo">-</span></div>
+<div class="info"><strong>حالة الاشتراك</strong><span id="subscriptionStatusInfo">-</span></div>
+<div class="info"><strong>انتهاء الاشتراك</strong><span id="subscriptionEndInfo">-</span></div>
+</div>
+</div>
+<div class="panel full"><h2>ملاحظات</h2><p id="studentNotesInfo">-</p></div>
+</section>
+</main>
+</div>
+<script src="../js/afaq-data.js"></script>
+<script>
+const st = window.AfaqData ? AfaqData.renderCurrentStudent() : null;
+if(!st){ alert("يرجى تسجيل دخول ولي الأمر أولاً"); location.href="parent-login.html"; }
+</script>
+</body>
+</html>

@@ -1,9 +1,55 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>👤 ملف ولي الأمر - آفاق التعليمية</title><link rel="stylesheet" href="../css/main.css">
-<style>
-.page{min-height:100vh;padding:24px}.box{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
-</style></head>
-<body><main class="page"><section class="box"><h1>👤 ملف ولي الأمر</h1><p>عرض بيانات ولي الأمر.</p><div class="actions"><button class="btn" onclick="location.href='parent-dashboard.html'">🏠 لوحة ولي الأمر</button><button class="btn" onclick="history.back()">← رجوع</button></div></section>
-<section class="box"><p>هذه صفحة أساسية جاهزة، وسنطور تفاصيلها عند ربط بيانات الطالب الحقيقية.</p></section></main></body></html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ملف ولي الأمر - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-panel.css">
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+<div class="brand"><div class="brand-icon">👨‍👩‍👦</div><div><h2>آفاق التعليمية</h2><p>لوحة ولي الأمر</p></div></div>
+<nav class="nav"><a class="" href="parent-dashboard.html">🏠 الرئيسية</a>
+<a class="" href="parent-student-info.html">👨‍🎓 معلومات الطالب</a>
+<a class="" href="parent-results.html">📊 النتائج</a>
+<a class="" href="parent-attendance.html">✅ الحضور</a>
+<a class="" href="parent-exams.html">📝 الاختبارات</a>
+<a class="" href="parent-assignments.html">📋 الواجبات</a>
+<a class="" href="parent-notifications.html">🔔 الإشعارات</a>
+<a class="" href="parent-messages.html">💬 الرسائل</a>
+<a class="active" href="parent-profile.html">👤 ملف ولي الأمر</a><a class="logout" href="../index.html">🚪 تسجيل خروج</a></nav>
+</aside>
+<main class="main">
+<section class="hero"><div><h1>👤 ملف ولي الأمر</h1><p>صفحة منظمة لبيانات ولي الأمر والطالب المرتبط به.</p></div><button class="btn" onclick="history.back()">رجوع</button></section>
+<section class="content-grid">
+<div class="panel profile-card">
+<img id="studentPhotoView" class="avatar">
+<h2 id="parentNameInfo">ولي الأمر</h2>
+<p>ولي أمر الطالب: <span id="studentNameView">-</span></p>
+</div>
+<div class="panel">
+<h2>بيانات التواصل</h2>
+<div class="info-grid">
+<div class="info"><strong>اسم ولي الأمر</strong><span id="parentNameInfo2">-</span></div>
+<div class="info"><strong>هاتف ولي الأمر</strong><span id="parentPhoneInfo">-</span></div>
+<div class="info"><strong>اسم الطالب</strong><span id="studentNameInfo">-</span></div>
+<div class="info"><strong>كود الطالب</strong><span id="studentCodeInfo">-</span></div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<script src="../js/afaq-data.js"></script>
+<script>
+const st = window.AfaqData ? AfaqData.renderCurrentStudent() : null;
+if(st){
+ const p2=document.getElementById("parentNameInfo2");
+ if(p2) p2.textContent = st.parentName || "-";
+}else{
+ alert("يرجى تسجيل دخول ولي الأمر أولاً");
+ location.href="parent-login.html";
+}
+</script>
+</body>
+</html>
