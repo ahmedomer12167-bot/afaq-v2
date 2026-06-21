@@ -3,94 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💬 رسائل المادة</title>
+<title>رسائل المدرس</title>
 <link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-room.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-messages.css">
 </head>
 <body>
-<main class="room">
+<main class="afaq-mobile">
 
-<section class="topbar">
-  <div class="title">
-    <h1>💬 رسائل المادة</h1>
-    <p id="teacherInfo">هذه الصفحة تعرض بيانات المدرس الحالي فقط.</p>
+<section class="afaq-top">
+<h1>💬 رسائل المدرس</h1>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="teacher-dashboard.html">رجوع</a>
+<button class="afaq-btn" onclick="markAllRead()">قراءة الكل</button>
+</div>
+</section>
+
+
+<section class="msg-layout">
+  <div class="panel">
+    <h2>إرسال رسالة</h2>
+    <select id="sendType" onchange="resetTarget()">
+      <option value="all-students">كل طلاب المادة</option>
+      <option value="student">طالب مسجل بالمادة</option>
+      <option value="parent">ولي أمر طالب مسجل بالمادة</option>
+      <option value="admin">المدير</option>
+    </select>
+
+    <input id="searchBox" placeholder="بحث عن اسم الطالب أو ولي الأمر..." oninput="searchTargets()">
+    <div id="resultsBox" class="search-results"></div>
+    <div id="selectedBox" class="selected-box">لم يتم اختيار مستلم محدد بعد.</div>
+
+    <input id="subject" placeholder="عنوان الرسالة">
+    <textarea id="body" placeholder="نص الرسالة"></textarea>
+    <button class="afaq-btn" onclick="sendMessage()">إرسال</button>
   </div>
-  <a class="btn back" href="teacher-dashboard.html">لوحة المدرس</a>
+
+  <div class="panel">
+    <h2>الوارد</h2>
+    <div id="inboxBox"></div>
+  </div>
 </section>
 
-<section class="panel">
-  <h2>إضافة</h2>
-  <input id="titleInput" placeholder="العنوان">
-  <textarea id="description" placeholder="الوصف"></textarea>
-  <input id="studentId" placeholder="كود الطالب اختياري">
-  <button class="btn ok" onclick="saveItem()">حفظ</button>
+<section class="panel" style="margin-top:15px">
+  <h2>المرسل</h2>
+  <div id="sentBox" class="cards"></div>
 </section>
 
-<section class="panel">
-  <h2>بياناتي الخاصة</h2>
-  <div id="box" class="cards"></div>
-</section>
 
 </main>
 
 <script src="../js/afaq-data.js"></script>
-<script src="../js/afaq-teacher-auth.js"></script>
-<script src="../js/afaq-auto-stats.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-messages.js"></script>
 <script>
-const teacher = AfaqTeacherAuth.requireTeacher();
-if(teacher){
-  document.getElementById("teacherInfo").textContent =
-  teacher.fullName + " | " + teacher.grade + " | " + teacher.subject;
+
+let selected = null;
+const teacher = AfaqMessages.currentTeacher();
+if(!teacher){location.href="teacher-login.html";}
+
+function resetTarget(){
+  selected = null;
+  selectedBox.textContent = "لم يتم اختيار مستلم محدد بعد.";
+  resultsBox.innerHTML = "";
+  searchTargets();
 }
 
-function saveItem(){
-  const item = {
-    title: titleInput.value.trim(),
-    description: description.value.trim(),
-    url: document.getElementById("url") ? document.getElementById("url").value.trim() : "",
-    type: document.getElementById("type") ? document.getElementById("type").value : "",
-    score: document.getElementById("score") ? document.getElementById("score").value : "",
-    total: document.getElementById("total") ? document.getElementById("total").value : "",
-    status: document.getElementById("status") ? document.getElementById("status").value : "منشور"
-  };
+function searchTargets(){
+  const type = sendType.value;
+  const q = searchBox.value;
 
-  if(!item.title){ alert("أدخل العنوان"); return; }
-
-  AfaqTeacherAuth.addTeacherScoped("messages", item);
-  titleInput.value = "";
-  description.value = "";
-  if(document.getElementById("url")) document.getElementById("url").value = "";
-  render();
-  alert("تم الحفظ ضمن بياناتك فقط");
-}
-
-function deleteItem(id){
-  if(!confirm("حذف؟")) return;
-  const arr = AfaqTeacherAuth.read("afaq_messages").filter(x => x.id !== id);
-  AfaqTeacherAuth.write("afaq_messages", arr);
-  render();
-}
-
-function render(){
-  const arr = AfaqTeacherAuth.teacherScopedList("messages");
-  if(!arr.length){
-    box.innerHTML = '<div class="card"><h3>لا توجد بيانات حالياً</h3></div>';
+  if(type === "all-students"){
+    resultsBox.innerHTML = `<div class="search-item">سيتم الإرسال لكل طلاب مادة ${teacher.subject || ""}</div>`;
+    return;
+  }
+  if(type === "admin"){
+    resultsBox.innerHTML = "<div class='search-item'>سيتم الإرسال إلى المدير.</div>";
     return;
   }
 
-  box.innerHTML = arr.map(x => `
-    <div class="card">
-      <h3>${x.title || "عنصر"}</h3>
-      <p>${x.description || ""}</p>
-      <p>المادة: ${x.subject}</p>
-      <p>الصف: ${x.grade}</p>
-      ${x.url ? `<button class="btn" onclick="window.open('${x.url}','_blank')">فتح الملف</button>` : ""}
-      <button class="btn danger" onclick="deleteItem('${x.id}')">حذف</button>
+  const list = AfaqMessages.searchStudents(q,true);
+  resultsBox.innerHTML = list.length ? list.map((st,i)=>`
+    <div class="search-item" onclick="selectTarget(${i})">
+      ${st.name || st.fullName || st.studentName || "-"}<br>
+      <small>الصف: ${st.grade || "-"} | ولي الأمر: ${st.parentName || st.guardianName || "-"}</small>
     </div>
-  `).join("");
+  `).join("") : "<div class='search-item'>لا توجد نتائج</div>";
+
+  window.__targetList = list;
 }
 
+function selectTarget(i){
+  selected = window.__targetList[i];
+  selectedBox.textContent = "تم اختيار: " + (selected.name || selected.studentName || "-");
+}
+
+function sendMessage(){
+  if(!body.value.trim()){alert("اكتب نص الرسالة");return;}
+  const type = sendType.value;
+  const tName = teacher.fullName || teacher.name || teacher.teacherName || "المدرس";
+  const tCode = teacher.teacherCode || teacher.code;
+
+  if(type === "all-students"){
+    AfaqMessages.sendBulkToStudents(AfaqMessages.teacherStudents(), {
+      fromRole:"teacher", fromId:tCode, fromName:tName,
+      subject:subject.value, body:body.value,
+      subjectName:teacher.subject, teacherCode:tCode
+    });
+  } else if(type === "admin"){
+    AfaqMessages.addMessage({
+      fromRole:"teacher", fromId:tCode, fromName:tName,
+      toRole:"admin", toId:"admin", toName:"المدير",
+      subject:subject.value, body:body.value,
+      subjectName:teacher.subject, teacherCode:tCode
+    });
+  } else {
+    if(!selected){alert("اختر الطالب أولاً");return;}
+    const stName = selected.name || selected.fullName || selected.studentName;
+    const stId = AfaqMessages.studentId(selected);
+
+    if(type === "student"){
+      AfaqMessages.addMessage({
+        fromRole:"teacher", fromId:tCode, fromName:tName,
+        toRole:"student", toId:stId, toName:stName,
+        relatedStudentId:stId, relatedStudentName:stName,
+        subject:subject.value, body:body.value,
+        subjectName:teacher.subject, teacherCode:tCode
+      });
+    }
+
+    if(type === "parent"){
+      const pId = AfaqMessages.parentIdFromStudent(selected);
+      if(!pId){alert("لا يوجد ولي أمر مربوط بهذا الطالب");return;}
+      AfaqMessages.addMessage({
+        fromRole:"teacher", fromId:tCode, fromName:tName,
+        toRole:"parent", toId:pId, toName:selected.parentName || selected.guardianName || "ولي أمر " + stName,
+        relatedStudentId:stId, relatedStudentName:stName,
+        subject:subject.value, body:body.value,
+        subjectName:teacher.subject, teacherCode:tCode
+      });
+    }
+  }
+
+  subject.value = "";
+  body.value = "";
+  selected = null;
+  selectedBox.textContent = "لم يتم اختيار مستلم محدد بعد.";
+  render();
+  alert("تم إرسال الرسالة");
+}
+
+function render(){
+  const tCode = teacher.teacherCode || teacher.code;
+  const inbox = AfaqMessages.inbox("teacher",tCode);
+  const sent = AfaqMessages.sent("teacher",tCode);
+
+  inboxBox.innerHTML = inbox.length ? inbox.map(m=>card(m,true)).join("") : "<div class='msg-card'><h3>لا توجد رسائل واردة</h3></div>";
+  sentBox.innerHTML = sent.length ? sent.map(m=>card(m,false)).join("") : "<div class='msg-card'><h3>لا توجد رسائل مرسلة</h3></div>";
+}
+
+function card(m,isInbox){
+  return `<div class="msg-card">
+    <h3>${m.subject || "رسالة"}</h3>
+    <p>${m.body || ""}</p>
+    <p class="msg-meta">${isInbox ? "من: " + m.fromName : "إلى: " + m.toName} | ${m.createdAt}</p>
+    ${m.relatedStudentName ? `<p class="msg-meta">الطالب المرتبط: ${m.relatedStudentName}</p>` : ""}
+    ${isInbox && !m.read ? `<button class="afaq-btn" onclick="readMsg('${m.id}')">قراءة</button>` : ""}
+    <button class="afaq-btn red" onclick="delMsg('${m.id}')">حذف</button>
+  </div>`;
+}
+function readMsg(id){AfaqMessages.markRead(id);render();}
+function delMsg(id){if(confirm("حذف الرسالة؟")){AfaqMessages.deleteMessage(id);render();}}
+function markAllRead(){AfaqMessages.markAllRead("teacher",teacher.teacherCode || teacher.code);render();}
+searchTargets();
 render();
+
 </script>
 </body>
 </html>

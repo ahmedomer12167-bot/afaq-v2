@@ -1,82 +1,176 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>رسائل المدير</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-purple-mobile.css">
 <link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-messages.css">
 </head>
 <body>
 <main class="afaq-mobile">
+
 <section class="afaq-top">
 <h1>💬 رسائل المدير</h1>
 <div style="margin-top:14px">
-<a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
-<button class="afaq-btn" onclick="markAdminMessagesRead()">قراءة الرسائل</button>
+<a class="afaq-btn gray" href="admin-dashboard.html">رجوع</a>
+<button class="afaq-btn" onclick="markAllRead()">قراءة الكل</button>
 </div>
 </section>
 
-<section class="panel">
-<h2>إرسال رسالة</h2>
-<select id="toRole">
-<option value="student">طالب</option>
-<option value="teacher">مدرس</option>
-<option value="parent">ولي أمر</option>
-<option value="admin">المدير</option>
-</select>
-<input id="toId" placeholder="كود المستلم اختياري">
-<input id="subject" placeholder="عنوان الرسالة">
-<textarea id="message" placeholder="نص الرسالة"></textarea>
-<button class="afaq-btn" onclick="sendMessage()">إرسال</button>
+
+<section class="msg-layout">
+  <div class="panel">
+    <h2>إرسال رسالة</h2>
+    <label>إرسال إلى</label>
+    <select id="toRole" onchange="resetTarget()">
+      <option value="all-students">كل الطلاب</option>
+      <option value="all-teachers">كل المدرسين</option>
+      <option value="student">طالب محدد</option>
+      <option value="teacher">مدرس محدد</option>
+      <option value="parent">ولي أمر محدد</option>
+    </select>
+
+    <input id="searchBox" placeholder="بحث بالاسم أو الكود..." oninput="searchTargets()">
+    <div id="resultsBox" class="search-results"></div>
+    <div id="selectedBox" class="selected-box">لم يتم اختيار مستلم محدد بعد.</div>
+
+    <input id="subject" placeholder="عنوان الرسالة">
+    <textarea id="body" placeholder="نص الرسالة"></textarea>
+    <button class="afaq-btn" onclick="sendMessage()">إرسال</button>
+  </div>
+
+  <div class="panel">
+    <h2>الوارد</h2>
+    <div id="inboxBox"></div>
+  </div>
 </section>
 
 <section class="panel" style="margin-top:15px">
-<h2>كل الرسائل</h2>
-<div id="messagesBox" class="cards"></div>
+  <h2>المرسل</h2>
+  <div id="sentBox" class="cards"></div>
 </section>
+
+
 </main>
 
 <script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
 <script src="../js/afaq-badges.js"></script>
-<script src="../js/afaq-admin-read-tools.js"></script>
+<script src="../js/afaq-messages.js"></script>
 <script>
-function readMessages(){
- if(window.AfaqData && AfaqData.list) return AfaqData.list("messages");
- try{return JSON.parse(localStorage.getItem("afaq_messages"))||[]}catch(e){return[]}
+
+let selected = null;
+
+function resetTarget(){
+  selected = null;
+  selectedBox.textContent = "لم يتم اختيار مستلم محدد بعد.";
+  resultsBox.innerHTML = "";
+  searchTargets();
 }
-function saveMessages(arr){
- if(window.AfaqData && AfaqData.save) AfaqData.save("messages",arr);
- else localStorage.setItem("afaq_messages",JSON.stringify(arr));
+
+function searchTargets(){
+  const role = toRole.value;
+  const q = searchBox.value;
+  let list = [];
+
+  if(role === "student" || role === "parent") list = AfaqMessages.searchStudents(q,false);
+  if(role === "teacher") list = AfaqMessages.searchTeachers(q);
+
+  if(role === "all-students" || role === "all-teachers"){
+    resultsBox.innerHTML = "<div class='search-item'>سيتم الإرسال للجميع حسب الاختيار.</div>";
+    return;
+  }
+
+  resultsBox.innerHTML = list.length ? list.map((x,i)=>{
+    const name = x.name || x.fullName || x.studentName || x.teacherName || "-";
+    const code = x.code || x.studentId || x.teacherCode || "-";
+    const extra = x.subject ? ` | ${x.subject} | ${x.grade || ""}` : ` | ${x.grade || ""}`;
+    return `<div class="search-item" onclick="selectTarget(${i})">${name}<br><small>${code}${extra}</small></div>`;
+  }).join("") : "<div class='search-item'>لا توجد نتائج</div>";
+
+  window.__targetList = list;
 }
+
+function selectTarget(i){
+  const x = window.__targetList[i];
+  selected = x;
+  const name = x.name || x.fullName || x.studentName || x.teacherName || "-";
+  selectedBox.textContent = "تم اختيار: " + name;
+}
+
 function sendMessage(){
- const arr=readMessages();
- arr.unshift({
-   id:"msg-"+Date.now(),
-   fromRole:"admin",
-   toRole:toRole.value,
-   toId:toId.value.trim(),
-   subject:subject.value.trim() || "رسالة من المدير",
-   message:message.value.trim(),
-   read:false,
-   createdAt:new Date().toLocaleString("ar")
- });
- saveMessages(arr);
- subject.value=message.value=toId.value="";
- renderMessages();
- alert("تم إرسال الرسالة");
+  if(!body.value.trim()){alert("اكتب نص الرسالة");return;}
+
+  const role = toRole.value;
+
+  if(role === "all-students"){
+    AfaqMessages.sendBulkToStudents(AfaqMessages.getStudents(), {
+      fromRole:"admin", fromId:"admin", fromName:"المدير",
+      subject:subject.value, body:body.value
+    });
+  } else if(role === "all-teachers"){
+    AfaqMessages.getTeachers().forEach(t => AfaqMessages.addMessage({
+      fromRole:"admin", fromId:"admin", fromName:"المدير",
+      toRole:"teacher", toId:t.teacherCode || t.code, toName:t.fullName || t.name || t.teacherName,
+      subject:subject.value, body:body.value
+    }));
+  } else {
+    if(!selected){alert("اختر المستلم أولاً");return;}
+    const isTeacher = role === "teacher";
+    const isParent = role === "parent";
+    const toId = isTeacher ? (selected.teacherCode || selected.code) :
+      isParent ? AfaqMessages.parentIdFromStudent(selected) :
+      AfaqMessages.studentId(selected);
+    const toName = isTeacher ? (selected.fullName || selected.name || selected.teacherName) :
+      isParent ? (selected.parentName || selected.guardianName || "ولي أمر " + (selected.name || selected.studentName)) :
+      (selected.name || selected.fullName || selected.studentName);
+
+    if(isParent && !toId){alert("لا يوجد ولي أمر مربوط بهذا الطالب");return;}
+
+    AfaqMessages.addMessage({
+      fromRole:"admin", fromId:"admin", fromName:"المدير",
+      toRole:role, toId, toName,
+      relatedStudentId:isParent ? AfaqMessages.studentId(selected) : "",
+      relatedStudentName:isParent ? (selected.name || selected.studentName) : "",
+      subject:subject.value, body:body.value
+    });
+  }
+
+  subject.value = "";
+  body.value = "";
+  selected = null;
+  selectedBox.textContent = "لم يتم اختيار مستلم محدد بعد.";
+  render();
+  alert("تم إرسال الرسالة");
 }
-function renderMessages(){
- const arr=readMessages();
- messagesBox.innerHTML=arr.length?arr.map(m=>`
- <div class="card">
- <h3>${m.subject||"رسالة"}</h3>
- <p>${m.message||""}</p>
- <span class="badge">${m.toRole||"عام"}</span>
- <p><small>${m.createdAt||""}</small></p>
- </div>`).join(""):"<div class='card'><h3>لا توجد رسائل حالياً</h3></div>";
+
+function render(){
+  const inbox = AfaqMessages.inbox("admin","admin");
+  const sent = AfaqMessages.sent("admin","admin");
+
+  inboxBox.innerHTML = inbox.length ? inbox.map(m=>card(m,true)).join("") : "<div class='msg-card'><h3>لا توجد رسائل واردة</h3></div>";
+  sentBox.innerHTML = sent.length ? sent.map(m=>card(m,false)).join("") : "<div class='msg-card'><h3>لا توجد رسائل مرسلة</h3></div>";
 }
-renderMessages();
+
+function card(m,isInbox){
+  return `<div class="msg-card">
+    <h3>${m.subject || "رسالة"}</h3>
+    <p>${m.body || ""}</p>
+    <p class="msg-meta">${isInbox ? "من: " + m.fromName : "إلى: " + m.toName} | ${m.createdAt}</p>
+    ${isInbox && !m.read ? `<button class="afaq-btn" onclick="readMsg('${m.id}')">قراءة</button>` : ""}
+    <button class="afaq-btn red" onclick="delMsg('${m.id}')">حذف</button>
+  </div>`;
+}
+
+function readMsg(id){AfaqMessages.markRead(id);render();}
+function delMsg(id){if(confirm("حذف الرسالة؟")){AfaqMessages.deleteMessage(id);render();}}
+function markAllRead(){AfaqMessages.markAllRead("admin","admin");render();}
+searchTargets();
+render();
+
 </script>
 </body>
 </html>

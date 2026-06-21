@@ -1,11 +1,131 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>💬 رسائل الطالب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"><link rel="stylesheet" href="../css/afaq-badges.css"></head><body>
-<main class="room"><section class="topbar"><div class="title"><h1>💬 رسائل الطالب</h1><p>تم فتح الصفحة، وسيتم إزالة الشارة الحمراء الخاصة بهذا القسم.</p></div><a class="btn back" href="student-dashboard.html">رجوع</a></section><section class="panel"><div id="box" class="cards"></div></section></main>
-<script src="../js/afaq-data.js"></script><script src="../js/afaq-badges.js"></script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رسائل الطالب</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-messages.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>💬 رسائل الطالب</h1>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="student-dashboard.html">رجوع</a>
+<button class="afaq-btn" onclick="markAllRead()">قراءة الكل</button>
+</div>
+</section>
+
+
+<section class="msg-layout">
+  <div class="panel">
+    <h2>إرسال رسالة</h2>
+    <select id="sendType" onchange="loadTargets()">
+      <option value="admin">المدير</option>
+      <option value="teacher">مدرس المادة</option>
+    </select>
+
+    <select id="teacherSelect"></select>
+
+    <input id="subject" placeholder="عنوان الرسالة">
+    <textarea id="body" placeholder="نص الرسالة"></textarea>
+    <button class="afaq-btn" onclick="sendMessage()">إرسال</button>
+  </div>
+
+  <div class="panel">
+    <h2>الوارد</h2>
+    <div id="inboxBox"></div>
+  </div>
+</section>
+
+<section class="panel" style="margin-top:15px">
+  <h2>المرسل</h2>
+  <div id="sentBox" class="cards"></div>
+</section>
+
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-messages.js"></script>
 <script>
-if(window.AfaqBadges) AfaqBadges.markCollectionSeen("messages");
-function render(){
- const arr = window.AfaqData ? AfaqData.list("messages") : [];
- box.innerHTML = arr.length ? arr.map(x=>`<div class="card"><h3>${x.title||x.subject||x.studentName||"عنصر"}</h3><p>${x.description||x.message||x.status||""}</p><span class="badge">${x.subject||"عام"}</span></div>`).join("") : "<div class='card'><h3>لا توجد بيانات حالياً</h3></div>";
+
+const student = AfaqMessages.currentStudent();
+if(!student){location.href="student-login.html";}
+const sId = AfaqMessages.studentId(student);
+const sName = student.name || student.fullName || student.studentName || "طالب";
+
+function loadTargets(){
+  if(sendType.value === "admin"){
+    teacherSelect.style.display = "none";
+    teacherSelect.innerHTML = "";
+    return;
+  }
+  teacherSelect.style.display = "block";
+  const teachers = AfaqMessages.teachersForStudent(student);
+  teacherSelect.innerHTML = teachers.length ? teachers.map(t=>`
+    <option value="${t.teacherCode || t.code}">${t.fullName || t.name || t.teacherName} - ${t.subject || ""}</option>
+  `).join("") : "<option value=''>لا يوجد مدرس مرتبط</option>";
 }
+
+function sendMessage(){
+  if(!body.value.trim()){alert("اكتب نص الرسالة");return;}
+
+  if(sendType.value === "admin"){
+    AfaqMessages.addMessage({
+      fromRole:"student", fromId:sId, fromName:sName,
+      toRole:"admin", toId:"admin", toName:"المدير",
+      relatedStudentId:sId, relatedStudentName:sName,
+      subject:subject.value, body:body.value
+    });
+  } else {
+    const code = teacherSelect.value;
+    const t = AfaqMessages.getTeachers().find(x => (x.teacherCode || x.code) === code);
+    if(!t){alert("لا يوجد مدرس مرتبط");return;}
+
+    AfaqMessages.addMessage({
+      fromRole:"student", fromId:sId, fromName:sName,
+      toRole:"teacher", toId:code, toName:t.fullName || t.name || t.teacherName,
+      relatedStudentId:sId, relatedStudentName:sName,
+      subject:subject.value, body:body.value,
+      subjectName:t.subject, teacherCode:code
+    });
+  }
+
+  subject.value = "";
+  body.value = "";
+  render();
+  alert("تم إرسال الرسالة");
+}
+
+function render(){
+  const inbox = AfaqMessages.inbox("student",sId);
+  const sent = AfaqMessages.sent("student",sId);
+
+  inboxBox.innerHTML = inbox.length ? inbox.map(m=>card(m,true)).join("") : "<div class='msg-card'><h3>لا توجد رسائل واردة</h3></div>";
+  sentBox.innerHTML = sent.length ? sent.map(m=>card(m,false)).join("") : "<div class='msg-card'><h3>لا توجد رسائل مرسلة</h3></div>";
+}
+function card(m,isInbox){
+  return `<div class="msg-card">
+    <h3>${m.subject || "رسالة"}</h3>
+    <p>${m.body || ""}</p>
+    <p class="msg-meta">${isInbox ? "من: " + m.fromName : "إلى: " + m.toName} | ${m.createdAt}</p>
+    ${isInbox && !m.read ? `<button class="afaq-btn" onclick="readMsg('${m.id}')">قراءة</button>` : ""}
+    <button class="afaq-btn red" onclick="delMsg('${m.id}')">حذف</button>
+  </div>`;
+}
+function readMsg(id){AfaqMessages.markRead(id);render();}
+function delMsg(id){if(confirm("حذف الرسالة؟")){AfaqMessages.deleteMessage(id);render();}}
+function markAllRead(){AfaqMessages.markAllRead("student",sId);render();}
+loadTargets();
 render();
-</script></body></html>
+
+</script>
+</body>
+</html>
