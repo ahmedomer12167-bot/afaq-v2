@@ -1,61 +1,11 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>موادي</title>
-<link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
-<link rel="stylesheet" href="../css/afaq-badges.css">
-<link rel="stylesheet" href="../css/afaq-student-clean.css">
-</head>
-<body>
-<main class="afaq-mobile">
-
-<section class="afaq-top">
-<h1>📚 موادي</h1>
-<p>هذه المواد التي تمت الموافقة على دخولك إليها.</p>
-<div style="margin-top:14px">
-<a class="afaq-btn gray" href="student-dashboard.html">رجوع للوحة الطالب</a>
-</div>
-</section>
-
-<section class="student-clean-grid" id="subjectsBox"></section>
-
-</main>
-<script src="../js/afaq-data.js"></script>
-<script src="../js/afaq-full-sync.js"></script>
-<script src="../js/afaq-unified-counters.js"></script>
-<script>
-let student = AfaqFullSync.resyncCurrentStudent();
-if(!student){location.href="student-login.html";}
-function render(){
-  student = AfaqFullSync.resyncCurrentStudent() || student;
-  const subjects = Array.isArray(student.subjects) ? student.subjects : [];
-  const all = AfaqFullSync.subjects();
-
-  subjectsBox.innerHTML = subjects.length ? subjects.map(name=>{
-    const sub = all.find(s => AfaqFullSync.normalizeSubject(s.name || s.subject) === AfaqFullSync.normalizeSubject(name)) || {};
-    return `
-      <div class="student-clean-card">
-        <h3>📚 ${name}</h3>
-        <p>المدرس: ${sub.teacherName || "-"}</p>
-        <p>كود المادة: <b>${sub.subjectCode || "-"}</b></p>
-        <button class="afaq-btn" onclick="openRoom('${name}')">فتح المادة</button>
-      </div>
-    `;
-  }).join("") : `
-    <div class="student-clean-card">
-      <h3>لا توجد مواد مسجل بها</h3>
-      <p>يجب طلب دخول المادة والموافقة من المدرس أولاً.</p>
-    </div>
-  `;
-}
-function openRoom(name){
-  localStorage.setItem("afaq_current_subject", name);
-  location.href = "student-subject-room.html";
-}
-render();
-</script>
-</body>
-</html>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>مواد الطالب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-purple-mobile.css"><link rel="stylesheet" href="../css/afaq-badges.css"><link rel="stylesheet" href="../css/afaq-student-complete.css"></head><body><main class="afaq-mobile">
+<section class="afaq-top"><h1>📚 موادي والمواد المتاحة</h1><p>المواد المسجل بها تفتح مباشرة، والمواد غير المسجل بها تطلب كود المادة ثم موافقة المدرس.</p><div style="margin-top:14px"><a class="afaq-btn gray" href="student-dashboard.html">رجوع</a><button class="afaq-btn" onclick="render()">مزامنة</button></div></section>
+<section class="cardx"><h3>موادي المسجل بها</h3><div id="joinedBox" class="subject-grid"></div></section>
+<section class="cardx"><h3>كل المواد المتاحة لصفك</h3><input id="searchBox" placeholder="بحث عن مادة أو مدرس..." oninput="render()"><div id="availableBox" class="subject-grid"></div></section>
+<section class="cardx"><h3>طلبات دخول المادة</h3><div id="requestsBox"></div></section>
+</main><script src="../js/afaq-data.js"></script><script src="../js/afaq-complete-sync.js"></script><script src="../js/afaq-unified-counters.js"></script><script>
+let st=AfaqSync.currentStudent(); if(!st)location.href='student-login.html';
+function openRoom(n){localStorage.setItem('afaq_current_subject',n); location.href='student-subject-room.html'}
+function req(id){try{AfaqSync.submitJoin(id,document.getElementById('code-'+id).value); render(); alert('تم إرسال الطلب إلى المدرس')}catch(e){alert(e.message)}}
+function render(){st=AfaqSync.currentStudent(); const all=AfaqSync.visibleSubjects(st); const q=String(searchBox.value||''); const filtered=all.filter(s=>!q||String(s.name||s.subject).includes(q)||String(s.teacherName||'').includes(q)); const joined=filtered.filter(s=>AfaqSync.isJoined(s,st)); const available=filtered.filter(s=>!AfaqSync.isJoined(s,st)); joinedBox.innerHTML=joined.length?joined.map(s=>`<div class="cardx"><h3>📚 ${s.name}</h3><p>المدرس: ${s.teacherName||'-'}</p><p>كود المادة: <b>${s.subjectCode||'-'}</b></p><button class="afaq-btn" onclick="openRoom('${s.name}')">فتح المادة</button></div>`).join(''):"<div class='cardx'><h3>لا توجد مواد مسجل بها</h3></div>"; availableBox.innerHTML=available.length?available.map(s=>{const p=AfaqSync.pending(s,st);return `<div class="cardx"><h3>${s.name}</h3><p>الصف: ${s.grade||'-'}</p><p>المدرس: ${s.teacherName||'-'}</p><p>كود المادة: <b>${s.subjectCode||'-'}</b></p>${p?'<span class="pill">طلبك قيد المراجعة</span>':`<input id="code-${s.id}" placeholder="أدخل كود المادة"><button class="afaq-btn" onclick="req('${s.id}')">طلب دخول المادة</button>`}</div>`}).join(''):"<div class='cardx'><h3>لا توجد مواد أخرى متاحة</h3></div>"; const rs=AfaqSync.requests().filter(r=>r.studentId===AfaqSync.studentId(st)); requestsBox.innerHTML=rs.length?rs.map(r=>`<div class="cardx"><h3>${r.subject}</h3><p>المدرس: ${r.teacherName}</p><p>الحالة: <span class="pill">${r.status}</span></p></div>`).join(''):"<p>لا توجد طلبات</p>"} render();
+</script></body></html>

@@ -1,81 +1,16 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>غرفة المادة</title>
-<link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
-<link rel="stylesheet" href="../css/afaq-badges.css">
-<link rel="stylesheet" href="../css/afaq-student-clean.css">
-</head>
-<body>
-<main class="afaq-mobile">
-
-<section class="afaq-top">
-<h1 id="roomTitle">📚 غرفة المادة</h1>
-<p id="roomInfo">محتويات المادة المسجل بها الطالب.</p>
-<div style="margin-top:14px">
-<a class="afaq-btn gray" href="student-subjects.html">رجوع إلى موادي</a>
-</div>
-</section>
-
-<section class="big-counter">
-  <div class="counter-box"><span>✅ الحضور</span><strong id="subjectAttendanceRate">0%</strong><small>نسبة الحضور</small></div>
-  <div class="counter-box"><span>📊 الدرجة النهائية</span><strong id="subjectFinalScore">0</strong><small>نتيجة المادة</small></div>
-  <div class="counter-box"><span>📝 الصحيحة</span><strong id="correctAnswers">0</strong><small>إجابات صحيحة</small></div>
-  <div class="counter-box"><span>🔔 الإشعارات</span><strong id="subjectNotifications">0</strong><small>خاصة بالمادة</small></div>
-</section>
-
-<section class="subject-room-grid">
-  <div class="subject-room-card" onclick="location.href='student-exams.html'"><h3>📝 الاختبارات</h3><p>اختبارات هذه المادة.</p></div>
-  <div class="subject-room-card" onclick="location.href='student-assignments.html'"><h3>📋 الواجبات</h3><p>واجبات هذه المادة.</p></div>
-  <div class="subject-room-card" onclick="location.href='student-lessons.html'"><h3>📖 الدروس</h3><p>دروس وملفات المادة.</p></div>
-  <div class="subject-room-card" onclick="location.href='student-leaderboard.html'"><h3>🏆 لوحة المتفوقين</h3><p>ترتيب المتفوقين في المادة.</p></div>
-  <div class="subject-room-card" onclick="location.href='student-attendance.html'"><h3>✅ الحضور</h3><p>حضور وغياب المادة.</p></div>
-  <div class="subject-room-card" onclick="location.href='student-results.html'"><h3>📊 النتائج</h3><p>نتائج الطالب في المادة.</p></div>
-  <div class="subject-room-card" onclick="location.href='student-notifications.html'"><h3>🔔 إشعارات المادة</h3><p>إشعارات تخص هذه المادة.</p></div>
-  <div class="subject-room-card" onclick="location.href='student-messages.html'"><h3>💬 الرسائل</h3><p>رسائل المدرس والمدير.</p></div>
-</section>
-
-</main>
-
-<script src="../js/afaq-data.js"></script>
-<script src="../js/afaq-full-sync.js"></script>
-<script src="../js/afaq-unified-counters.js"></script>
-<script src="../js/afaq-badges.js"></script>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>غرفة المادة</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-purple-mobile.css"><link rel="stylesheet" href="../css/afaq-badges.css"><link rel="stylesheet" href="../css/afaq-student-complete.css"></head><body><main class="afaq-mobile">
+<section class="afaq-top"><h1 id="title">📚 غرفة المادة</h1><p id="info"></p><div style="margin-top:14px"><a class="afaq-btn gray" href="student-subjects.html">رجوع</a><button class="afaq-btn red" onclick="clearN()">حذف إشعارات المادة</button></div></section>
+<section class="counter-row"><div class="counter-box"><span>✅ الحضور</span><strong id="att">0%</strong><small>نسبة</small></div><div class="counter-box"><span>📊 الدرجة النهائية</span><strong id="fin">0</strong><small>درجة</small></div><div class="counter-box"><span>📝 الصحيحة</span><strong id="corr">0</strong><small>إجابات</small></div><div class="counter-box"><span>🔔 الإشعارات</span><strong id="notc">0</strong><small>جديد</small></div></section>
+<section class="room-grid">
+<div class="cardx" onclick="go('student-exams.html')"><h3>📝 الاختبارات</h3><p>اختبارات المادة</p></div>
+<div class="cardx" onclick="go('student-assignments.html')"><h3>📋 الواجبات</h3><p>واجبات المادة</p></div>
+<div class="cardx" onclick="go('student-lessons.html')"><h3>📖 الدروس</h3><p>دروس وملفات المادة</p></div>
+<div class="cardx" onclick="go('student-leaderboard.html')"><h3>🏆 لوحة المتفوقين</h3><p>ترتيب الطلاب</p></div>
+<div class="cardx" onclick="go('student-attendance.html')"><h3>✅ الحضور</h3><p>حضور المادة</p></div>
+<div class="cardx" onclick="go('student-results.html')"><h3>📊 النتائج</h3><p>نتائج المادة</p></div>
+<div class="cardx" onclick="go('student-notifications.html')"><h3>🔔 إشعارات المادة</h3><p>إشعارات هذه المادة</p></div>
+<div class="cardx" onclick="go('student-messages.html')"><h3>💬 الرسائل</h3><p>رسائل المادة</p></div>
+</section></main><script src="../js/afaq-data.js"></script><script src="../js/afaq-complete-sync.js"></script><script src="../js/afaq-unified-counters.js"></script>
 <script>
-function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
-let student = AfaqFullSync.resyncCurrentStudent();
-if(!student){location.href="student-login.html";}
-const sid = AfaqFullSync.studentId(student);
-const subjectName = localStorage.getItem("afaq_current_subject") || "";
-if(!subjectName){location.href="student-subjects.html";}
-
-function norm(v){return AfaqFullSync.normalizeSubject(v||"")}
-function inSubject(v){return norm(v) === norm(subjectName)}
-
-function render(){
-  const subject = AfaqFullSync.subjects().find(s => inSubject(s.name || s.subject)) || {};
-  roomTitle.textContent = "📚 " + subjectName;
-  roomInfo.innerHTML = "كود المادة: <b>" + (subject.subjectCode || "-") + "</b>";
-
-  const attend = read("afaq_attendance").filter(r => (r.studentId===sid || r.code===sid) && inSubject(r.subject));
-  const p = attend.filter(r=>String(r.status||"").includes("حاضر")).length;
-  const a = attend.filter(r=>String(r.status||"").includes("غائب")).length;
-  subjectAttendanceRate.textContent = (p+a) ? Math.round((p/(p+a))*100)+"%" : "0%";
-
-  const results = read("afaq_results").filter(r => (r.studentId===sid || r.code===sid) && inSubject(r.subject));
-  const final = results.find(r => r.type==="نهائي" || String(r.title||"").includes("نهائي")) || results[0];
-  subjectFinalScore.textContent = final ? ((final.score||0) + "/" + (final.total||100)) : "0";
-
-  const exams = read("afaq_exam_submissions").filter(r => (r.studentId===sid || r.code===sid) && inSubject(r.subject));
-  correctAnswers.textContent = exams.reduce((sum,r)=>sum + Number(r.correct || r.correctAnswers || 0),0);
-
-  const nots = read("afaq_notifications").filter(n => n.toRole==="student" && (!n.toId || n.toId===sid || n.toId===student.name || n.toId==="all") && inSubject(n.subject || n.sourceSubject));
-  subjectNotifications.textContent = nots.filter(n=>!n.read).length || nots.length;
-}
-render();
-</script>
-</body>
-</html>
+const st=AfaqSync.currentStudent(); if(!st)location.href='student-login.html'; const sub=localStorage.getItem('afaq_current_subject')||''; if(!sub)location.href='student-subjects.html'; function n(v){return AfaqSync.normalizeSubject(v)} function go(p){location.href=p} function clearN(){AfaqSync.clearNotifications(sub); render(); alert('تم حذف إشعارات المادة وتصفير العداد')} function render(){const subject=AfaqSync.subjects().find(s=>n(s.name)===n(sub))||{}; title.textContent='📚 '+sub; info.innerHTML='كود المادة: <b>'+(subject.subjectCode||'-')+'</b>'; const a=AfaqSync.records('attendance',sub),p=a.filter(x=>String(x.status||'').includes('حاضر')).length,b=a.filter(x=>String(x.status||'').includes('غائب')).length; att.textContent=(p+b)?Math.round(p/(p+b)*100)+'%':'0%'; const results=AfaqSync.records('results',sub); const f=results.find(r=>r.type==='نهائي'||String(r.title||'').includes('نهائي'))||results[0]; fin.textContent=f?(f.score||0)+'/'+(f.total||100):'0'; corr.textContent=AfaqSync.records('examSubs',sub).reduce((s,x)=>s+Number(x.correct||x.correctAnswers||0),0); const ns=AfaqSync.myNotifications(sub); notc.textContent=ns.filter(x=>!x.read).length||ns.length} render();
+</script></body></html>
