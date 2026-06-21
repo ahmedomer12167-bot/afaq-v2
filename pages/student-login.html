@@ -3,9 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>تسجيل دخول الطالب - آفاق التعليمية</title>
+
 <link rel="stylesheet" href="../css/main.css">
+
+<style>
+.login-page{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:24px;
+}
+.login-box{
+width:100%;
+max-width:560px;
+padding:32px;
+border-radius:28px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.13);
+box-shadow:0 0 35px rgba(124,58,237,.25);
+}
+.back-link{
+display:inline-block;
+margin-bottom:18px;
+color:#ddd;
+text-decoration:none;
+font-weight:bold;
+}
+.login-icon{
+width:88px;
+height:88px;
+border-radius:50%;
+margin:0 auto 18px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:44px;
+background:linear-gradient(135deg,#7c3aed,#a855f7);
+}
+h1{text-align:center;margin-bottom:8px}
+p{text-align:center;color:#d6d6d6;line-height:1.7}
+label{
+display:block;
+margin-top:16px;
+margin-bottom:8px;
+font-weight:bold;
+}
+input,select{
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+outline:none;
+font-size:16px;
+}
+.hint{
+font-size:13px;
+color:#d6d6d6;
+margin-top:7px;
+line-height:1.6;
+text-align:right;
+}
+button{
+width:100%;
+border:none;
+padding:15px;
+border-radius:14px;
+margin-top:20px;
+cursor:pointer;
+color:white;
+font-weight:bold;
+font-size:16px;
+background:linear-gradient(135deg,#16a34a,#22c55e);
+}
+.error{
+margin-top:14px;
+padding:12px;
+border-radius:14px;
+background:rgba(220,38,38,.18);
+border:1px solid rgba(220,38,38,.35);
+display:none;
+line-height:1.8;
+}
+.success{
+margin-top:14px;
+padding:12px;
+border-radius:14px;
+background:rgba(22,163,74,.18);
+border:1px solid rgba(22,163,74,.35);
+display:none;
+line-height:1.8;
+}
+</style>
 </head>
+
 <body>
 
 <section class="login-page">
@@ -17,37 +110,131 @@
 
 <h1>تسجيل دخول الطالب</h1>
 
-<p>أدخل كود الطالب الذي تم تفعيله من إدارة الطلاب</p>
+<p>
+أدخل المرحلة والكود نفسه الموجود في إدارة الطلاب.
+</p>
 
-<form>
+<label>المرحلة الدراسية</label>
+<select id="studentGradeInput">
+<option value="">اختر المرحلة</option>
+<option>الأول متوسط</option>
+<option>الثاني متوسط</option>
+<option>الثالث متوسط</option>
+<option>الرابع العلمي</option>
+<option>الخامس العلمي</option>
+<option>السادس العلمي</option>
+</select>
+
 <label>كود الطالب</label>
-<input id="studentCodeInput" type="text" placeholder="مثال: STD-2026-001">
+<input id="studentCodeInput" type="text" placeholder="مثال: 11 أو STD-2026-001">
+
+<div class="hint">
+اكتب الكود كما هو تماماً في إدارة الطلاب. مثال: إذا كان الكود 11 فاكتب 11 فقط.
+</div>
 
 <button type="button" onclick="loginStudent()">دخول الطالب</button>
-</form>
+
+<div id="errorBox" class="error"></div>
+<div id="successBox" class="success"></div>
 
 </div>
 </section>
 
-<script src="../js/afaq-data.js"></script>
 <script>
+function showError(msg){
+const box=document.getElementById("errorBox");
+const ok=document.getElementById("successBox");
+ok.style.display="none";
+box.style.display="block";
+box.innerHTML=msg;
+}
+
+function showSuccess(msg){
+const box=document.getElementById("successBox");
+const er=document.getElementById("errorBox");
+er.style.display="none";
+box.style.display="block";
+box.innerHTML=msg;
+}
+
+function getStudents(){
+try{
+return JSON.parse(localStorage.getItem("afaq_students")) || [];
+}catch(e){
+return [];
+}
+}
+
+function normalizeText(value){
+return String(value || "").trim();
+}
+
+function normalizeStudent(student){
+const id = student.studentId || student.id || student.code || ("STD-" + Date.now());
+
+return {
+studentId:id,
+id:id,
+code:student.code || id,
+name:student.name || student.studentName || "طالب",
+grade:student.grade || student.studentGrade || "غير محدد",
+phone:student.phone || student.studentPhone || "-",
+parentName:student.parentName || "-",
+parentPhone:student.parentPhone || "-",
+notes:student.notes || student.studentNotes || "لا توجد ملاحظات",
+photo:student.photo || "",
+subscriptionStatus:student.subscriptionStatus || "غير مفعل",
+subscriptionEnd:student.subscriptionEnd || "غير محدد",
+subjects:student.subjects || ["الأحياء","الكيمياء","الفيزياء"],
+createdAt:student.createdAt || ""
+};
+}
+
 function loginStudent(){
-  const code = document.getElementById("studentCodeInput").value.trim();
+const grade = normalizeText(document.getElementById("studentGradeInput").value);
+const code = normalizeText(document.getElementById("studentCodeInput").value);
 
-  if(!code){
-    alert("يرجى إدخال كود الطالب");
-    return;
-  }
+if(!grade || !code){
+showError("يرجى اختيار المرحلة وإدخال كود الطالب.");
+return;
+}
 
-  const student = AfaqData.getStudentByCode(code);
+const students = getStudents().map(normalizeStudent);
 
-  if(!student){
-    alert("لم يتم العثور على طالب بهذا الكود. تأكد أن المدير أضاف الطالب في إدارة الطلاب.");
-    return;
-  }
+if(students.length === 0){
+showError("لا يوجد طلاب محفوظون حالياً. أضف طالباً أولاً من إدارة الطلاب.");
+return;
+}
 
-  AfaqData.setCurrentStudent(student);
-  window.location.href = "student-dashboard.html";
+/* البحث بالكود والمرحلة */
+let student = students.find(s =>
+normalizeText(s.code) === code &&
+normalizeText(s.grade) === grade
+);
+
+/* بحث احتياطي بالكود فقط */
+if(!student){
+student = students.find(s => normalizeText(s.code) === code);
+}
+
+if(!student){
+showError(
+"لم يتم العثور على طالب بهذا الكود.<br>" +
+"تأكد أن الكود مكتوب كما هو في إدارة الطلاب.<br>" +
+"عدد الطلاب الموجودين حالياً: " + students.length
+);
+return;
+}
+
+/* حفظ الطالب الحالي حتى تظهر بياناته في كل صفحات الطالب وولي الأمر */
+localStorage.setItem("afaq_current_student_id", student.studentId);
+localStorage.setItem("afaq_current_student", JSON.stringify(student));
+
+showSuccess("تم العثور على الطالب: " + student.name + "<br>جاري فتح لوحة الطالب...");
+
+setTimeout(function(){
+window.location.href = "student-dashboard.html";
+},700);
 }
 </script>
 
