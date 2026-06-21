@@ -5,449 +5,193 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إدارة الطلاب - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
-
 <style>
-.management-page{
-min-height:100vh;
-padding:24px;
-}
-
-.page-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:15px;
-padding:18px 22px;
-border-radius:22px;
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.12);
-backdrop-filter:blur(14px);
-margin-bottom:24px;
-}
-
-.page-header h1{
-font-size:28px;
-}
-
-.page-header p{
-color:#d8d8d8;
-margin-top:6px;
-}
-
-.header-actions{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-}
-
-.action-btn{
-border:none;
-padding:12px 16px;
-border-radius:14px;
-cursor:pointer;
-color:white;
-font-weight:bold;
-background:linear-gradient(135deg,#7c3aed,#a855f7);
-}
-
-.danger-btn{
-background:linear-gradient(135deg,#dc2626,#ef4444);
-}
-
-.search-box,
-.form-box,
-.table-box{
-padding:22px;
-border-radius:24px;
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.13);
-margin-bottom:22px;
-}
-
-.search-box input{
-width:100%;
-padding:15px;
-border:none;
-border-radius:14px;
-outline:none;
-font-size:16px;
-}
-
-.form-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
-margin-top:18px;
-}
-
-.form-grid input,
-.form-grid select{
-padding:14px;
-border:none;
-border-radius:14px;
-outline:none;
-font-size:15px;
-}
-
-.form-box button{
-margin-top:18px;
-}
-
-.students-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-}
-
-.students-table th,
-.students-table td{
-padding:14px;
-border-bottom:1px solid rgba(255,255,255,.12);
-text-align:center;
-}
-
-.students-table th{
-color:#c084fc;
-}
-
-.status-active{
-color:#22c55e;
-font-weight:bold;
-}
-
-.status-pending{
-color:#facc15;
-font-weight:bold;
-}
-
-.mini-btn{
-border:none;
-padding:8px 10px;
-border-radius:10px;
-cursor:pointer;
-color:white;
-font-weight:bold;
-margin:2px;
-background:linear-gradient(135deg,#7c3aed,#9333ea);
-}
-
-.delete-btn{
-background:linear-gradient(135deg,#dc2626,#ef4444);
-}
-
-.profile-section{
-display:none;
-padding:22px;
-border-radius:24px;
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.13);
-}
-
-.profile-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px;
-margin-top:18px;
-}
-
-.profile-card{
-padding:18px;
-border-radius:18px;
-background:rgba(255,255,255,.07);
-text-align:center;
-}
-
-.profile-card strong{
-display:block;
-font-size:24px;
-margin-top:8px;
-}
-
-.details-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:18px;
-margin-top:20px;
-}
-
-.detail-box{
-padding:18px;
-border-radius:18px;
-background:rgba(255,255,255,.07);
-}
-
-.detail-box h3{
-margin-bottom:12px;
-color:#c084fc;
-}
-
-.detail-box li{
-margin-bottom:8px;
-line-height:1.7;
-}
-
-@media(max-width:900px){
-.page-header{
-flex-direction:column;
-align-items:flex-start;
-}
-
-.form-grid,
-.profile-grid,
-.details-grid{
-grid-template-columns:1fr;
-}
-
-.students-table{
-font-size:13px;
-}
-}
+.page{min-height:100vh;padding:24px}.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.header{display:flex;justify-content:space-between;align-items:center;gap:15px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn,.save-btn,.delete-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.save-btn{background:linear-gradient(135deg,#16a34a,#22c55e);width:100%;margin-top:10px}.delete-btn{background:linear-gradient(135deg,#dc2626,#ef4444);padding:8px 12px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}input,select,textarea{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 5px;font-size:15px}textarea{min-height:95px;resize:vertical}.hint{font-size:13px;color:#d6d6d6;margin-bottom:12px;line-height:1.6}.photo-box{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.student-photo{width:110px;height:110px;border-radius:50%;object-fit:cover;background:#374151;border:3px solid #7c3aed}.table{width:100%;border-collapse:collapse;margin-top:15px}.table th,.table td{padding:12px;text-align:center;border-bottom:1px solid rgba(255,255,255,.12)}.table th{color:#c084fc}.small-img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #7c3aed}@media(max-width:900px){.form-grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.table{font-size:13px}}
 </style>
 </head>
-
 <body>
+<main class="page">
 
-<main class="management-page">
-
-<header class="page-header">
+<header class="header">
 <div>
-<h1>إدارة الطلاب</h1>
-<p>إضافة الطلاب، البحث، عرض الملف الكامل، الاشتراك، الحضور والنتائج.</p>
+<h1>👨‍🎓 إدارة الطلاب</h1>
+<p>إضافة الطلاب وإدارة بياناتهم وصورهم من لوحة المدير.</p>
 </div>
-
-<div class="header-actions">
-<button class="action-btn" onclick="location.href='admin-dashboard.html'">🏠 لوحة المدير</button>
-<button class="action-btn" onclick="history.back()">← رجوع</button>
-<button class="action-btn danger-btn" onclick="clearStudents()">تفريغ الطلاب</button>
+<div class="actions">
+<button class="btn" onclick="location.href='admin-dashboard.html'">🏠 لوحة المدير</button>
+<button class="btn" onclick="history.back()">← رجوع</button>
 </div>
 </header>
 
-<section class="search-box">
-<input type="text" id="studentSearch" placeholder="🔍 ابحث عن طالب بالاسم أو الصف أو رقم الهاتف..." oninput="filterStudents()">
-</section>
+<section class="box">
+<h2>إضافة / تحديث طالب</h2>
 
-<section class="form-box">
-<h2>إضافة طالب جديد</h2>
+<div class="photo-box">
+<img id="photoPreview" class="student-photo" alt="صورة الطالب">
+<div>
+<label>📷 صورة الطالب</label>
+<input id="studentPhoto" type="file" accept="image/*" onchange="previewPhoto(event)">
+<p class="hint">اختر صورة واضحة للطالب من جهاز المدير. الطالب لا يستطيع تغيير هذه الصورة من حسابه.</p>
+</div>
+</div>
 
 <div class="form-grid">
-<input id="studentName" type="text" placeholder="الاسم الثلاثي">
+<div>
+<input id="studentName" placeholder="الاسم الثلاثي">
+<p class="hint">أدخل الاسم الثلاثي الكامل كما هو في السجلات الدراسية.</p>
+</div>
 
+<div>
 <select id="studentGrade">
-<option value="">اختر الصف</option>
+<option value="">اختر المرحلة الدراسية</option>
 <option>الأول متوسط</option>
 <option>الثاني متوسط</option>
 <option>الثالث متوسط</option>
-<option>الرابع الإعدادي</option>
-<option>الخامس الإعدادي</option>
-<option>السادس الإعدادي</option>
+<option>الرابع العلمي</option>
+<option>الخامس العلمي</option>
+<option>السادس العلمي</option>
 </select>
-
-<input id="studentPhone" type="text" placeholder="رقم الهاتف">
-
-<input id="parentCode" type="text" placeholder="رمز ولي الأمر">
-
-<select id="subscriptionStatus">
-<option value="غير مفعل">حالة الاشتراك</option>
-<option>فعال</option>
-<option>بانتظار الموافقة</option>
-<option>منتهي</option>
-</select>
-
-<input id="subscriptionEnd" type="date">
+<p class="hint">اختر المرحلة الدراسية الحالية للطالب.</p>
 </div>
 
-<button class="action-btn" onclick="addStudent()">➕ إضافة الطالب</button>
+<div>
+<input id="studentPhone" placeholder="رقم هاتف الطالب">
+<p class="hint">رقم هاتف الطالب للتواصل واستلام الإشعارات.</p>
+</div>
+
+<div>
+<input id="studentCode" placeholder="كود الطالب">
+<p class="hint">كود تعريفي فريد يستخدمه الطالب لتسجيل الدخول إلى المنصة.</p>
+</div>
+
+<div>
+<input id="parentName" placeholder="اسم ولي الأمر">
+<p class="hint">اكتب الاسم الكامل لولي أمر الطالب.</p>
+</div>
+
+<div>
+<input id="parentPhone" placeholder="رقم هاتف ولي الأمر">
+<p class="hint">رقم الهاتف المستخدم للتواصل بخصوص الحضور والدرجات والإشعارات.</p>
+</div>
+</div>
+
+<textarea id="studentNotes" placeholder="ملاحظات الطالب"></textarea>
+<p class="hint">يمكن إضافة أي ملاحظات أو معلومات مهمة تخص الطالب.</p>
+
+<button class="save-btn" onclick="saveStudent()">💾 حفظ الطالب</button>
 </section>
 
-<section class="table-box">
+<section class="box">
 <h2>قائمة الطلاب</h2>
-
-<table class="students-table">
+<input id="searchInput" placeholder="🔍 ابحث عن طالب..." oninput="renderStudents()">
+<table class="table">
 <thead>
 <tr>
+<th>الصورة</th>
 <th>الاسم</th>
-<th>الصف</th>
+<th>المرحلة</th>
 <th>الهاتف</th>
-<th>الاشتراك</th>
-<th>انتهاء الاشتراك</th>
-<th>الإجراءات</th>
+<th>ولي الأمر</th>
+<th>الكود</th>
+<th>إجراء</th>
 </tr>
 </thead>
-
-<tbody id="studentsTableBody">
-<tr>
-<td colspan="6">لا يوجد طلاب حالياً</td>
-</tr>
-</tbody>
+<tbody id="studentsBody"></tbody>
 </table>
-</section>
-
-<section class="profile-section" id="studentProfile">
-<h2>ملف الطالب الكامل</h2>
-<p id="profileName"></p>
-
-<div class="profile-grid">
-<div class="profile-card">عدد الحضور <strong id="presentCount">0</strong></div>
-<div class="profile-card">عدد الغياب <strong id="absentCount">0</strong></div>
-<div class="profile-card">الاختبارات <strong id="quizCount">0</strong></div>
-<div class="profile-card">المستوى <strong id="studentLevel">مبتدئ</strong></div>
-</div>
-
-<div class="details-grid">
-
-<div class="detail-box">
-<h3>الواجبات</h3>
-<ul>
-<li>لا توجد واجبات مسجلة حالياً</li>
-</ul>
-</div>
-
-<div class="detail-box">
-<h3>الاختبارات</h3>
-<ul>
-<li>لا توجد اختبارات مسجلة حالياً</li>
-</ul>
-</div>
-
-<div class="detail-box">
-<h3>المواد المشتركة</h3>
-<ul>
-<li>لم يتم تفعيل مواد بعد</li>
-</ul>
-</div>
-
-<div class="detail-box">
-<h3>معلومات ولي الأمر</h3>
-<ul id="parentInfo">
-<li>رمز ولي الأمر: غير محدد</li>
-</ul>
-</div>
-
-</div>
 </section>
 
 </main>
 
 <script>
-let students = JSON.parse(localStorage.getItem("afaq_students")) || [];
+let students=JSON.parse(localStorage.getItem("afaq_students"))||[];
+let selectedPhoto="";
 
-function saveStudents(){
-localStorage.setItem("afaq_students", JSON.stringify(students));
+function previewPhoto(event){
+const file=event.target.files[0];
+if(!file)return;
+const reader=new FileReader();
+reader.onload=function(e){
+selectedPhoto=e.target.result;
+document.getElementById("photoPreview").src=selectedPhoto;
+};
+reader.readAsDataURL(file);
 }
 
-function renderStudents(list = students){
-const tbody = document.getElementById("studentsTableBody");
+function defaultPhoto(){
+return "data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%' height='100%' rx='60' fill='#7c3aed'/><text x='50%' y='58%' text-anchor='middle' font-size='48' fill='white'>👨‍🎓</text></svg>`);
+}
 
-if(list.length === 0){
-tbody.innerHTML = `<tr><td colspan="6">لا يوجد طلاب حالياً</td></tr>`;
+function saveStudent(){
+const name=studentName.value.trim();
+const grade=studentGrade.value;
+const phone=studentPhone.value.trim();
+const code=studentCode.value.trim();
+const pName=parentName.value.trim();
+const pPhone=parentPhone.value.trim();
+const notes=studentNotes.value.trim();
+
+if(!name||!grade||!code){
+alert("يرجى إدخال الاسم والمرحلة وكود الطالب");
 return;
 }
 
-tbody.innerHTML = "";
+const student={name,grade,phone,code,parentName:pName,parentPhone:pPhone,notes,photo:selectedPhoto||defaultPhoto(),createdAt:new Date().toLocaleString("ar")};
 
-list.forEach((student, index)=>{
-tbody.innerHTML += `
+students.unshift(student);
+localStorage.setItem("afaq_students",JSON.stringify(students));
+localStorage.setItem("afaq_current_student",JSON.stringify(student));
+
+clearForm();
+renderStudents();
+alert("تم حفظ الطالب بنجاح");
+}
+
+function clearForm(){
+studentName.value="";
+studentGrade.value="";
+studentPhone.value="";
+studentCode.value="";
+parentName.value="";
+parentPhone.value="";
+studentNotes.value="";
+studentPhoto.value="";
+selectedPhoto="";
+photoPreview.src=defaultPhoto();
+}
+
+function deleteStudent(i){
+if(confirm("هل تريد حذف هذا الطالب؟")){
+students.splice(i,1);
+localStorage.setItem("afaq_students",JSON.stringify(students));
+renderStudents();
+}
+}
+
+function renderStudents(){
+const body=document.getElementById("studentsBody");
+const s=document.getElementById("searchInput").value.trim();
+const filtered=students.filter(st=>st.name.includes(s)||st.grade.includes(s)||st.code.includes(s));
+
+if(filtered.length===0){
+body.innerHTML="<tr><td colspan='7'>لا يوجد طلاب حالياً</td></tr>";
+return;
+}
+
+body.innerHTML=filtered.map((st,i)=>`
 <tr>
-<td>${student.name}</td>
-<td>${student.grade}</td>
-<td>${student.phone}</td>
-<td class="${student.subscription === 'فعال' ? 'status-active' : 'status-pending'}">${student.subscription}</td>
-<td>${student.endDate || "غير محدد"}</td>
-<td>
-<button class="mini-btn" onclick="showProfile(${index})">عرض الملف</button>
-<button class="mini-btn delete-btn" onclick="deleteStudent(${index})">حذف</button>
-</td>
+<td><img class="small-img" src="${st.photo||defaultPhoto()}"></td>
+<td>${st.name}</td>
+<td>${st.grade}</td>
+<td>${st.phone||"-"}</td>
+<td>${st.parentName||"-"}</td>
+<td>${st.code}</td>
+<td><button class="delete-btn" onclick="deleteStudent(${i})">حذف</button></td>
 </tr>
-`;
-});
+`).join("");
 }
 
-function addStudent(){
-const name = document.getElementById("studentName").value.trim();
-const grade = document.getElementById("studentGrade").value;
-const phone = document.getElementById("studentPhone").value.trim();
-const parentCode = document.getElementById("parentCode").value.trim();
-const subscription = document.getElementById("subscriptionStatus").value;
-const endDate = document.getElementById("subscriptionEnd").value;
-
-if(!name || !grade || !phone){
-alert("يرجى إدخال الاسم والصف ورقم الهاتف");
-return;
-}
-
-students.unshift({
-name,
-grade,
-phone,
-parentCode,
-subscription,
-endDate,
-present:0,
-absent:0,
-quizzes:0,
-level:"مبتدئ"
-});
-
-saveStudents();
-renderStudents();
-
-document.getElementById("studentName").value = "";
-document.getElementById("studentGrade").value = "";
-document.getElementById("studentPhone").value = "";
-document.getElementById("parentCode").value = "";
-document.getElementById("subscriptionStatus").value = "غير مفعل";
-document.getElementById("subscriptionEnd").value = "";
-}
-
-function deleteStudent(index){
-if(confirm("هل أنت متأكد من حذف هذا الطالب؟")){
-students.splice(index,1);
-saveStudents();
-renderStudents();
-}
-}
-
-function clearStudents(){
-if(confirm("سيتم حذف جميع الطلاب. هل أنت متأكد؟")){
-students = [];
-saveStudents();
-renderStudents();
-document.getElementById("studentProfile").style.display = "none";
-}
-}
-
-function showProfile(index){
-const student = students[index];
-
-document.getElementById("studentProfile").style.display = "block";
-document.getElementById("profileName").textContent =
-`${student.name} - ${student.grade} - الهاتف: ${student.phone}`;
-
-document.getElementById("presentCount").textContent = student.present;
-document.getElementById("absentCount").textContent = student.absent;
-document.getElementById("quizCount").textContent = student.quizzes;
-document.getElementById("studentLevel").textContent = student.level;
-
-document.getElementById("parentInfo").innerHTML =
-`<li>رمز ولي الأمر: ${student.parentCode || "غير محدد"}</li>`;
-
-document.getElementById("studentProfile").scrollIntoView({behavior:"smooth"});
-}
-
-function filterStudents(){
-const value = document.getElementById("studentSearch").value.trim();
-
-const filtered = students.filter(student =>
-student.name.includes(value) ||
-student.grade.includes(value) ||
-student.phone.includes(value)
-);
-
-renderStudents(filtered);
-}
-
+photoPreview.src=defaultPhoto();
 renderStudents();
 </script>
-
 </body>
 </html>
