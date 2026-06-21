@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>طلبات دخول المواد - المدير</title>
+<title>طلبات دخول المادة</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-purple-mobile.css">
 <link rel="stylesheet" href="../css/afaq-badges.css">
@@ -15,7 +15,10 @@
 <section class="afaq-top">
 <h1>📚 طلبات دخول المادة</h1>
 <p>هنا تظهر طلبات الطلاب لدخول المادة بعد إدخال كود المادة.</p>
-<div style="margin-top:14px"><a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a></div>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
+<button class="afaq-btn" onclick="renderRequests()">تحديث</button>
+</div>
 </section>
 
 <section class="panel">
@@ -35,14 +38,14 @@
 <script src="../js/afaq-data.js"></script>
 <script src="../js/afaq-unified-counters.js"></script>
 <script src="../js/afaq-badges.js"></script>
-<script src="../js/afaq-subject-join.js"></script>
+<script src="../js/afaq-full-sync.js"></script>
 <script>
 
 
 function renderRequests(){
   const q = String(searchBox.value || "").trim();
   const status = statusFilter.value;
-  let list = AfaqSubjectJoin.requests();
+  let list = AfaqFullSync.requests();
 
   if(status) list = list.filter(r => r.status === status);
   if(q){
@@ -81,9 +84,9 @@ function renderRequests(){
 
 function approve(id){
   try{
-    AfaqSubjectJoin.approveRequest(id);
+    AfaqFullSync.approveRequest(id);
     renderRequests();
-    alert("تم قبول الطالب ومزامنة البيانات.");
+    alert("تم قبول الطالب في المادة ومزامنة البيانات في جميع اللوحات.");
   }catch(e){
     alert(e.message);
   }
@@ -92,7 +95,7 @@ function approve(id){
 function rejectReq(id){
   try{
     const note = document.getElementById("note-" + id).value;
-    AfaqSubjectJoin.rejectRequest(id, note);
+    AfaqFullSync.rejectRequest(id, note);
     renderRequests();
     alert("تم رفض الطلب.");
   }catch(e){

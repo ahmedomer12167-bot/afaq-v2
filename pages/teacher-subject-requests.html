@@ -15,7 +15,10 @@
 <section class="afaq-top">
 <h1>📚 طلبات دخول المادة</h1>
 <p>هنا تظهر طلبات الطلاب لدخول المادة بعد إدخال كود المادة.</p>
-<div style="margin-top:14px"><a class="afaq-btn gray" href="teacher-dashboard.html">رجوع للمدرس</a></div>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="teacher-dashboard.html">رجوع للمدرس</a>
+<button class="afaq-btn" onclick="renderRequests()">تحديث</button>
+</div>
 </section>
 
 <section class="panel">
@@ -35,15 +38,15 @@
 <script src="../js/afaq-data.js"></script>
 <script src="../js/afaq-unified-counters.js"></script>
 <script src="../js/afaq-badges.js"></script>
-<script src="../js/afaq-subject-join.js"></script>
+<script src="../js/afaq-full-sync.js"></script>
 <script>
-const teacher = AfaqSubjectJoin.currentTeacher();
+const teacher = AfaqFullSync.currentTeacher();
 if(!teacher){location.href="teacher-login.html";}
 
 function renderRequests(){
   const q = String(searchBox.value || "").trim();
   const status = statusFilter.value;
-  let list = AfaqSubjectJoin.teacherRequests();
+  let list = AfaqFullSync.teacherRequests();
 
   if(status) list = list.filter(r => r.status === status);
   if(q){
@@ -82,9 +85,9 @@ function renderRequests(){
 
 function approve(id){
   try{
-    AfaqSubjectJoin.approveRequest(id);
+    AfaqFullSync.approveRequest(id);
     renderRequests();
-    alert("تم قبول الطالب في المادة ومزامنة البيانات في اللوحات.");
+    alert("تم قبول الطالب في المادة ومزامنة البيانات في جميع اللوحات.");
   }catch(e){
     alert(e.message);
   }
@@ -93,7 +96,7 @@ function approve(id){
 function rejectReq(id){
   try{
     const note = document.getElementById("note-" + id).value;
-    AfaqSubjectJoin.rejectRequest(id, note);
+    AfaqFullSync.rejectRequest(id, note);
     renderRequests();
     alert("تم رفض الطلب.");
   }catch(e){
