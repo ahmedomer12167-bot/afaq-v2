@@ -10,33 +10,37 @@
 <body>
 <main class="afaq-mobile">
 <section class="afaq-top">
-  <h1>🎓 لوحة الطالب</h1>
-  <p>واجهة كبيرة ومريحة للموبايل مع غرف مستقلة.</p>
-  <div class="afaq-profile"><img id="studentPhotoView"><div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><p>الحالة: <span id="subscriptionStatusInfo">-</span></p></div></div>
-  <div style="margin-top:14px"><a class="afaq-btn gray" href="../index.html">الرئيسية</a></div>
+<h1>🎓 لوحة الطالب</h1>
+<div class="afaq-profile"><img id="studentPhotoView"><div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><p>الحالة: <span id="subscriptionStatusInfo">-</span></p></div></div>
+<div style="margin-top:14px"><a class="afaq-btn gray" href="../index.html">الرئيسية</a></div>
 </section>
-<section class="afaq-stats"><div class="afaq-stat"><div class="icon">📖</div><h3>الدروس</h3><strong data-count="studentLessons">0</strong></div>
+<section class="afaq-stats">
+<div class="afaq-stat"><div class="icon">📚</div><h3>موادي</h3><strong data-count="studentSubjects">0</strong></div>
+<div class="afaq-stat"><div class="icon">📖</div><h3>الدروس</h3><strong data-count="studentLessons">0</strong></div>
 <div class="afaq-stat"><div class="icon">📝</div><h3>الاختبارات</h3><strong data-count="studentExams">0</strong></div>
 <div class="afaq-stat"><div class="icon">📋</div><h3>الواجبات</h3><strong data-count="studentAssignments">0</strong></div>
+<div class="afaq-stat"><div class="icon">✅</div><h3>الحضور</h3><strong data-count="studentAttendanceRate">0</strong></div>
+<div class="afaq-stat"><div class="icon">📈</div><h3>المعدل</h3><strong data-count="studentAverageScore">0</strong></div>
 <div class="afaq-stat"><div class="icon">📊</div><h3>النتائج</h3><strong data-count="studentResults">0</strong></div>
-<div class="afaq-stat"><div class="icon">✅</div><h3>الحضور</h3><strong data-count="attendanceRate">0</strong></div>
-<div class="afaq-stat"><div class="icon">📈</div><h3>المعدل</h3><strong data-count="averageScore">0</strong></div>
-<div class="afaq-stat"><div class="icon">💬</div><h3>الرسائل</h3><strong data-count="studentMessages">0</strong></div>
-<div class="afaq-stat"><div class="icon">🔔</div><h3>إشعارات</h3><strong data-count="unreadStudent">0</strong></div></section>
-<section class="afaq-grid"><div class="afaq-tile" data-badge="" onclick="location.href='student-profile.html'"><div class="icon">👤</div><h3>الملف الشخصي</h3><p>بيانات الطالب.</p></div>
+<div class="afaq-stat"><div class="icon">🔔</div><h3>إشعارات</h3><strong data-count="studentNotifications">0</strong></div>
+</section>
+<section class="afaq-grid">
+<div class="afaq-tile" data-badge="" onclick="location.href='student-profile.html'"><div class="icon">👤</div><h3>الملف الشخصي</h3><p>بيانات الطالب.</p></div>
 <div class="afaq-tile" data-badge="" onclick="location.href='student-subjects.html'"><div class="icon">📚</div><h3>المواد</h3><p>طلب دخول المواد.</p></div>
-<div class="afaq-tile" data-badge="lessons" onclick="location.href='student-lessons.html'"><div class="icon">📖</div><h3>الدروس</h3><p>دروس وملفات جديدة.</p></div>
-<div class="afaq-tile" data-badge="exams" onclick="location.href='student-exams.html'"><div class="icon">📝</div><h3>الاختبارات</h3><p>اختبارات منشورة.</p></div>
-<div class="afaq-tile" data-badge="assignments" onclick="location.href='student-assignments.html'"><div class="icon">📋</div><h3>الواجبات</h3><p>واجبات مطلوبة.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='student-attendance.html'"><div class="icon">✅</div><h3>الحضور</h3><p>سجل الحضور والغياب.</p></div>
-<div class="afaq-tile" data-badge="results" onclick="location.href='student-results.html'"><div class="icon">📊</div><h3>النتائج</h3><p>درجات ونتائج جديدة.</p></div>
-<div class="afaq-tile" data-badge="messages" onclick="location.href='student-messages.html'"><div class="icon">💬</div><h3>الرسائل</h3><p>رسائل جديدة.</p></div>
-<div class="afaq-tile" data-badge="notifications" onclick="location.href='student-notifications.html'"><div class="icon">🔔</div><h3>الإشعارات</h3><p>تنبيهات جديدة.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='student-leaderboard.html'"><div class="icon">🏆</div><h3>المتفوقون</h3><p>لوحة الشرف.</p></div></section>
+<div class="afaq-tile" data-badge="lessons" onclick="location.href='student-lessons.html'"><div class="icon">📖</div><h3>الدروس</h3><p>دروس الطالب.</p></div>
+<div class="afaq-tile" data-badge="exams" onclick="location.href='student-exams.html'"><div class="icon">📝</div><h3>الاختبارات</h3><p>اختبارات الطالب.</p></div>
+<div class="afaq-tile" data-badge="assignments" onclick="location.href='student-assignments.html'"><div class="icon">📋</div><h3>الواجبات</h3><p>واجبات الطالب.</p></div>
+<div class="afaq-tile" data-badge="" onclick="location.href='student-attendance.html'"><div class="icon">✅</div><h3>الحضور</h3><p>تسجيل الحضور.</p></div>
+<div class="afaq-tile" data-badge="results" onclick="location.href='student-results.html'"><div class="icon">📊</div><h3>النتائج</h3><p>نتائج الطالب.</p></div>
+<div class="afaq-tile" data-badge="" onclick="location.href='student-leaderboard.html'"><div class="icon">🏆</div><h3>المتفوقون</h3><p>لوحة الشرف.</p></div>
+<div class="afaq-tile" data-badge="messages" onclick="location.href='student-messages.html'"><div class="icon">💬</div><h3>الرسائل</h3><p>رسائل الطالب.</p></div>
+<div class="afaq-tile" data-badge="notifications" onclick="location.href='student-notifications.html'"><div class="icon">🔔</div><h3>الإشعارات</h3><p>إشعارات الطالب.</p></div>
+</section>
 </main>
 <script src="../js/afaq-data.js"></script>
 <script src="../js/afaq-auto-stats.js"></script>
 <script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
 <script>if(window.AfaqData&&AfaqData.renderCurrentStudent)AfaqData.renderCurrentStudent();</script>
 </body>
 </html>
