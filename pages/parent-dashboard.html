@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة ولي الأمر - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.dashboard{min-height:100vh;padding:24px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:24px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.logout{background:linear-gradient(135deg,#dc2626,#ef4444)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}
+.card,.tile{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);transition:.3s}
+.card{text-align:center}
+.card span,.tile span{font-size:36px;display:block;margin-bottom:12px}
+.card strong{font-size:30px;display:block}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tile{cursor:pointer;min-height:150px}
+.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}
+.tile h3{font-size:22px;margin-bottom:8px}
+.tile p{color:#d6d6d6;line-height:1.7}
+@media(max-width:900px){.stats,.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<main class="dashboard">
+
+<header class="header">
+<div>
+<h1>👨‍👩‍👦 لوحة ولي الأمر</h1>
+<p>متابعة الطالب، الحضور، النتائج، الواجبات، الاختبارات، الرسائل والإشعارات.</p>
+</div>
+<div class="actions">
+<button class="btn" onclick="window.location.href='../index.html'">🏠 الرئيسية</button>
+<button class="btn logout" onclick="window.location.href='../index.html'">تسجيل الخروج</button>
+</div>
+</header>
+
+<section class="stats">
+<div class="card"><span>👨‍🎓</span><h3>الطلاب المرتبطون</h3><strong>1</strong></div>
+<div class="card"><span>📚</span><h3>المواد</h3><strong>3</strong></div>
+<div class="card"><span>✅</span><h3>نسبة الحضور</h3><strong>92%</strong></div>
+<div class="card"><span>📊</span><h3>المعدل</h3><strong>88%</strong></div>
+</section>
+
+<section class="grid">
+<div class="tile" onclick="window.location.href='parent-student-info.html'"><span>👨‍🎓</span><h3>معلومات الطالب</h3><p>عرض بيانات الطالب، المرحلة، المواد، وحالة الاشتراك.</p></div>
+<div class="tile" onclick="window.location.href='parent-results.html'"><span>📊</span><h3>النتائج</h3><p>متابعة نتائج الاختبارات والواجبات والنتيجة النهائية.</p></div>
+<div class="tile" onclick="window.location.href='parent-attendance.html'"><span>✅</span><h3>الحضور والغياب</h3><p>عرض سجل حضور وغياب الطالب ونسبة الحضور.</p></div>
+<div class="tile" onclick="window.location.href='parent-exams.html'"><span>📝</span><h3>الاختبارات</h3><p>متابعة الاختبارات المنشورة والمنجزة ودرجاتها.</p></div>
+<div class="tile" onclick="window.location.href='parent-assignments.html'"><span>📋</span><h3>الواجبات</h3><p>متابعة الواجبات، حالة التسليم، والدرجات.</p></div>
+<div class="tile" onclick="window.location.href='parent-notifications.html'"><span>🔔</span><h3>الإشعارات</h3><p>متابعة إشعارات المدرس والإدارة.</p></div>
+<div class="tile" onclick="window.location.href='parent-messages.html'"><span>💬</span><h3>الرسائل</h3><p>مراسلة الإدارة أو المدرس ومتابعة الردود.</p></div>
+<div class="tile" onclick="window.location.href='parent-profile.html'"><span>👤</span><h3>ملف ولي الأمر</h3><p>عرض وتعديل بيانات ولي الأمر.</p></div>
+</section>
+
+</main>
+</body>
+</html>
