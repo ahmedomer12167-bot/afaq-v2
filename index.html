@@ -1,144 +1,32 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>آفاق التعليمية</title>
-  <link rel="stylesheet" href="css/main.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آفاق التعليمية</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/afaq-purple-mobile.css">
 </head>
 <body>
-
-<header class="navbar">
-  <div class="brand">
-    <div class="logo">📖</div>
-    <h2>آفاق التعليمية</h2>
-  </div>
-
-  <nav>
-    <a href="#">الرئيسية</a>
-    <a href="#features">المميزات</a>
-    <a href="#accounts">الحسابات</a>
-    <a href="#contact">تواصل معنا</a>
-  </nav>
-
-  <button class="login-btn" onclick="scrollToAccounts()">تسجيل الدخول</button>
-</header>
-
-<section class="hero">
-  <div class="hero-text">
-    <h1>منصة <span>آفاق</span> التعليمية</h1>
-    <p>
-      منصة تعليمية متكاملة للدروس والاختبارات والواجبات الإلكترونية،
-      تساعد الطلاب والمدرسين وأولياء الأمور على متابعة العملية التعليمية بسهولة.
-    </p>
-
-    <div class="hero-actions">
-      <button class="main-btn" onclick="scrollToAccounts()">ابدأ الآن 🚀</button>
-      <button class="light-btn" onclick="scrollToAccounts()">تسجيل الدخول ←</button>
-    </div>
-  </div>
-
-  <div class="hero-visual">
-    <div class="laptop">▶</div>
-    <div class="float-card card1">📚 دروس</div>
-    <div class="float-card card2">📝 اختبارات</div>
-    <div class="float-card card3">📊 نتائج</div>
-    <div class="float-card card4">💬 تواصل</div>
-  </div>
+<main class="afaq-mobile">
+<section class="afaq-top" style="text-align:center">
+<h1>📘 آفاق التعليمية</h1>
+<p>منصة تعليمية متكاملة للدروس والاختبارات الإلكترونية.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn" href="pages/student-login.html">دخول الطالب</a>
+<a class="afaq-btn" href="pages/teacher-login.html">دخول المدرس</a>
+<a class="afaq-btn" href="pages/parent-login.html">دخول ولي الأمر</a>
+<a class="afaq-btn gray" href="pages/admin-login.html">دخول المدير</a>
+</div>
 </section>
-
-<section class="stats">
-  <div class="stat-card">
-    <div class="icon">👨‍🎓</div>
-    <h3>الطلاب</h3>
-    <strong id="studentsCount">0</strong>
-    <small>طالب وطالبة</small>
-  </div>
-
-  <div class="stat-card">
-    <div class="icon">👨‍🏫</div>
-    <h3>المدرسون</h3>
-    <strong id="teachersCount">0</strong>
-    <small>مدرس ومدرسة</small>
-  </div>
-
-  <div class="stat-card">
-    <div class="icon">📚</div>
-    <h3>المواد</h3>
-    <strong id="subjectsCount">8</strong>
-    <small>مادة تعليمية</small>
-  </div>
-
-  <div class="stat-card">
-    <div class="icon">📝</div>
-    <h3>الاختبارات</h3>
-    <strong id="quizzesCount">0</strong>
-    <small>اختبار متاح</small>
-  </div>
+<section class="afaq-stats">
+<div class="afaq-stat"><div class="icon">👨‍🎓</div><h3>الطلاب</h3><strong id="homeStudentsCount" data-count="homeStudents">0</strong></div>
+<div class="afaq-stat"><div class="icon">👨‍🏫</div><h3>المدرسون</h3><strong id="homeTeachersCount" data-count="homeTeachers">0</strong></div>
+<div class="afaq-stat"><div class="icon">📚</div><h3>المواد</h3><strong id="homeSubjectsCount" data-count="homeSubjects">0</strong></div>
+<div class="afaq-stat"><div class="icon">💳</div><h3>الاشتراكات</h3><strong id="homeSubscriptionsCount" data-count="homeSubscriptions">0</strong></div>
 </section>
-
-<section class="features" id="features">
-  <h2>مميزات المنصة</h2>
-
-  <div class="features-grid">
-    <div>📚 دروس إلكترونية</div>
-    <div>📝 اختبارات تفاعلية</div>
-    <div>📋 واجبات إلكترونية</div>
-    <div>✅ متابعة الحضور</div>
-    <div>📊 نتائج ومستويات</div>
-    <div>💬 مراسلات داخلية</div>
-  </div>
-</section>
-
-<section class="accounts" id="accounts">
-  <h2>اختر نوع الحساب للبدء</h2>
-  <p>اختر حسابك للوصول إلى الخدمات المناسبة لك</p>
-
-  <div class="accounts-grid">
-    <div class="account-card student">
-      <div class="big-icon">🎓</div>
-      <h3>الطالب</h3>
-      <p>الوصول إلى الدروس والاختبارات والواجبات ومتابعة النتائج.</p>
-      <button onclick="location.href='pages/student-login.html'">دخول الطالب ←</button>
-    </div>
-
-    <div class="account-card teacher">
-      <div class="big-icon">👨‍🏫</div>
-      <h3>المدرس</h3>
-      <p>إدارة الدروس والاختبارات والطلاب وتقييم الأداء.</p>
-      <button onclick="location.href='pages/teacher-login.html'">دخول المدرس ←</button>
-    </div>
-
-    <div class="account-card parent">
-      <div class="big-icon">👨‍👩‍👦</div>
-      <h3>ولي الأمر</h3>
-      <p>متابعة مستوى الأبناء والنتائج والتواصل مع المدرسين.</p>
-      <button onclick="location.href='pages/parent-login.html'">دخول ولي الأمر ←</button>
-    </div>
-
-    <div class="account-card admin">
-      <div class="big-icon">⚙️</div>
-      <h3>المدير</h3>
-      <p>إدارة المنصة والمستخدمين والاشتراكات والتقارير.</p>
-      <button onclick="location.href='pages/admin-login.html'">دخول المدير ←</button>
-    </div>
-  </div>
-</section>
-
-<section class="bottom-info">
-  <div>🔒 آمن وموثوق</div>
-  <div>⚡ سريع وسهل الاستخدام</div>
-  <div>📱 يعمل على الهاتف</div>
-  <div>🔄 تحديث فوري</div>
-</section>
-
-<footer id="contact">
-  <h3>آفاق التعليمية</h3>
-  <p>جميع الحقوق محفوظة</p>
-</footer>
-
-<button id="backToTop">⬆</button>
-
-<script src="js/app.js"></script>
+</main>
+<script src="js/afaq-data.js"></script>
+<script src="js/afaq-unified-counters.js"></script>
 </body>
 </html>
