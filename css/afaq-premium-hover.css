@@ -1,0 +1,215 @@
+
+/* =========================================================
+   AFAQ PREMIUM 3D HOVER EFFECTS
+   تأثيرات احترافية للبطاقات والأزرار والعدادات
+   ========================================================= */
+
+/* بطاقات تسجيل الدخول في الواجهة الرئيسية */
+.role-card,
+.afaq-tile,
+.stat-card,
+.home-stat,
+.stat,
+.afaq-card {
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition:
+    transform .28s ease,
+    box-shadow .28s ease,
+    border-color .28s ease,
+    background .28s ease,
+    filter .28s ease;
+  will-change: transform;
+}
+
+/* خط ضوئي متحرك */
+.role-card::before,
+.afaq-tile::before,
+.stat-card::before,
+.home-stat::before,
+.stat::before,
+.afaq-card::before {
+  content: "";
+  position: absolute;
+  top: -80%;
+  right: -120%;
+  width: 80%;
+  height: 260%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,.18),
+    rgba(216,180,254,.35),
+    transparent
+  );
+  transform: rotate(25deg);
+  opacity: 0;
+  transition: .55s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* عند المرور */
+.role-card:hover,
+.afaq-tile:hover,
+.stat-card:hover,
+.home-stat:hover,
+.stat:hover,
+.afaq-card:hover {
+  transform: translateY(-12px) scale(1.025);
+  border-color: rgba(216,180,254,.75) !important;
+  box-shadow:
+    0 24px 55px rgba(0,0,0,.38),
+    0 0 22px rgba(168,85,247,.35),
+    0 0 45px rgba(168,85,247,.22),
+    inset 0 1px 0 rgba(255,255,255,.25) !important;
+  filter: saturate(1.12);
+}
+
+.role-card:hover::before,
+.afaq-tile:hover::before,
+.stat-card:hover::before,
+.home-stat:hover::before,
+.stat:hover::before,
+.afaq-card:hover::before {
+  right: 140%;
+  opacity: 1;
+}
+
+/* تحريك الأيقونات داخل البطاقات */
+.role-card:hover .role-icon,
+.afaq-tile:hover .icon,
+.stat-card:hover .stat-icon,
+.home-stat:hover .icon,
+.stat:hover .icon,
+.afaq-card:hover .icon,
+.afaq-card:hover .ico {
+  transform: translateY(-7px) scale(1.08) rotate(-3deg);
+  box-shadow:
+    0 18px 35px rgba(168,85,247,.42),
+    0 0 22px rgba(216,180,254,.32);
+}
+
+.role-icon,
+.afaq-tile .icon,
+.stat-card .stat-icon,
+.home-stat .icon,
+.stat .icon,
+.afaq-card .icon,
+.afaq-card .ico {
+  transition:
+    transform .28s ease,
+    box-shadow .28s ease,
+    filter .28s ease;
+  position: relative;
+  z-index: 3;
+}
+
+/* زر الدخول مع سهم متحرك */
+.role-card a,
+.home-btn,
+.hero-btn,
+.btn,
+.afaq-btn,
+.login-pill {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    filter .25s ease;
+}
+
+.role-card a:hover,
+.home-btn:hover,
+.hero-btn:hover,
+.btn:hover,
+.afaq-btn:hover,
+.login-pill:hover {
+  transform: translateY(-4px) scale(1.03);
+  filter: brightness(1.08);
+  box-shadow:
+    0 18px 36px rgba(124,58,237,.40),
+    0 0 24px rgba(168,85,247,.28);
+}
+
+.role-card a::after,
+.home-btn::after,
+.hero-btn::after,
+.btn::after,
+.afaq-btn::after,
+.login-pill::after {
+  content: "  ➜";
+  display: inline-block;
+  transform: translateX(8px);
+  opacity: 0;
+  transition: .25s ease;
+}
+
+.role-card a:hover::after,
+.home-btn:hover::after,
+.hero-btn:hover::after,
+.btn:hover::after,
+.afaq-btn:hover::after,
+.login-pill:hover::after {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* العداد عند التحديث */
+.counter-flash,
+[data-count].counter-flash,
+strong.counter-flash {
+  animation: afaqCounterFlash .55s ease;
+}
+
+@keyframes afaqCounterFlash {
+  0% {
+    transform: scale(1);
+    color: #fff;
+    text-shadow: none;
+  }
+  40% {
+    transform: scale(1.22);
+    color: #d8b4fe;
+    text-shadow:
+      0 0 12px rgba(216,180,254,.75),
+      0 0 28px rgba(168,85,247,.55);
+  }
+  100% {
+    transform: scale(1);
+    color: #fff;
+    text-shadow: none;
+  }
+}
+
+/* نبضة خفيفة للبطاقات المهمة */
+.role-card:hover h3,
+.afaq-tile:hover h3,
+.afaq-card:hover h3 {
+  text-shadow:
+    0 0 12px rgba(216,180,254,.42),
+    0 8px 22px rgba(0,0,0,.25);
+}
+
+/* إلغاء الميل الثقيل على الموبايل للحفاظ على السرعة */
+@media (max-width: 750px) {
+  .role-card:hover,
+  .afaq-tile:hover,
+  .stat-card:hover,
+  .home-stat:hover,
+  .stat:hover,
+  .afaq-card:hover {
+    transform: translateY(-6px) scale(1.012);
+  }
+
+  .role-card::before,
+  .afaq-tile::before,
+  .stat-card::before,
+  .home-stat::before,
+  .stat::before,
+  .afaq-card::before {
+    display: none;
+  }
+}
