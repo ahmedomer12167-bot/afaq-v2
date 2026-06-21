@@ -1,10 +1,272 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>إدارة المواد</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body>
-<main class="room"><section class="topbar"><div class="title"><h1>📚 إدارة المواد وربطها بالمدرس</h1><p>المدير هو من يضيف المادة ويربطها بالمدرس.</p></div><a class="btn back" href="admin-dashboard.html">لوحة المدير</a></section>
-<section class="panel"><h2>إضافة مادة</h2><input id="subjectName" placeholder="اسم المادة"><select id="grade"><option>السادس العلمي</option><option>الخامس العلمي</option><option>الرابع العلمي</option><option>الثالث متوسط</option></select><input id="teacherCode" placeholder="كود المدرس"><input id="teacherName" placeholder="اسم المدرس"><button class="btn ok" onclick="saveSubject()">حفظ المادة</button></section>
-<section class="panel"><h2>المواد</h2><div id="box" class="cards"></div></section></main>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة المواد - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<style>
+.teacher-info-box{
+  padding:14px;
+  border-radius:18px;
+  background:rgba(168,85,247,.18);
+  border:1px solid rgba(255,255,255,.18);
+  margin:8px 0 12px;
+  line-height:1.8;
+}
+.small-note{color:#eadcff;font-size:13px;line-height:1.7;margin-top:-5px}
+</style>
+</head>
+
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+  <h1>📚 إدارة المواد</h1>
+  <div style="margin-top:14px">
+    <a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>إضافة مادة وربطها بالمدرس</h2>
+
+  <label>اسم المادة</label>
+  <select id="subjectName">
+    <option value="">اختر المادة</option>
+    <option>الأحياء</option>
+    <option>الكيمياء</option>
+    <option>الفيزياء</option>
+    <option>الرياضيات</option>
+    <option>الإنكليزي</option>
+    <option>العربي</option>
+    <option>الإسلامية</option>
+  </select>
+
+  <label>الصف</label>
+  <select id="grade">
+    <option value="">اختر الصف</option>
+    <option>أول متوسط</option>
+    <option>ثاني متوسط</option>
+    <option>ثالث متوسط</option>
+    <option>رابع إعدادي</option>
+    <option>خامس إعدادي</option>
+    <option>سادس إعدادي</option>
+  </select>
+
+  <label>كود المدرس</label>
+  <input id="teacherCode" placeholder="اكتب كود المدرس كما هو في إدارة المدرسين" oninput="syncTeacherData()">
+
+  <label>كود المادة</label>
+  <input id="subjectCode" placeholder="كود المادة سيتم مطابقته مع المدرس إن وجد">
+
+  <label>اسم المدرس</label>
+  <input id="teacherName" placeholder="يظهر تلقائياً بعد كتابة كود المدرس" readonly>
+
+  <div id="teacherInfo" class="teacher-info-box" style="display:none"></div>
+  <p class="small-note">عند كتابة كود المدرس، سيتم جلب اسم المدرس والصف والمادة وكود المادة من إدارة المدرسين لتجنب الأخطاء.</p>
+
+  <button class="afaq-btn" onclick="saveSubject()">حفظ المادة</button>
+</section>
+
+<section class="panel" style="margin-top:15px">
+  <h2>المواد المضافة</h2>
+  <div id="subjectsBox" class="cards"></div>
+</section>
+
+</main>
+
 <script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-teacher-auth.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
+<script src="../js/afaq-badges.js"></script>
+
 <script>
-function saveSubject(){if(!subjectName.value||!teacherCode.value){alert("أدخل المادة وكود المدرس");return;}AfaqData.upsertSubject({name:subjectName.value,grade:grade.value,teacherCode:teacherCode.value,teacherName:teacherName.value});AfaqData.addNotification("teacher",teacherCode.value,"تم ربط مادة بك","تم ربطك بمادة "+subjectName.value,"مادة");subjectName.value=teacherCode.value=teacherName.value="";render();}
-function render(){const arr=AfaqData.subjects();box.innerHTML=arr.length?arr.map(s=>`<div class="card"><h3>${s.name}</h3><p>المرحلة: ${s.grade}</p><p>المدرس: ${s.teacherName||s.teacherCode}</p></div>`).join(""):"<div class='card'><h3>لا توجد مواد</h3></div>"}render();
+function read(key){
+  try { return JSON.parse(localStorage.getItem(key)) || []; }
+  catch(e){ return []; }
+}
+
+function write(key,value){
+  localStorage.setItem(key, JSON.stringify(value));
+  window.dispatchEvent(new Event("afaqDataUpdated"));
+}
+
+function getTeachers(){
+  if(window.AfaqTeacherAuth && AfaqTeacherAuth.teachers){
+    return AfaqTeacherAuth.teachers().map(AfaqTeacherAuth.normalizeTeacher);
+  }
+  return read("afaq_teachers");
+}
+
+function getSubjects(){
+  if(window.AfaqData && AfaqData.subjects) return AfaqData.subjects();
+  return read("afaq_subjects");
+}
+
+function saveSubjects(list){
+  if(window.AfaqData && AfaqData.save) AfaqData.save("subjects", list);
+  else write("afaq_subjects", list);
+}
+
+function syncTeacherData(){
+  const code = teacherCode.value.trim();
+  const teachers = getTeachers();
+  const teacher = teachers.find(t =>
+    String(t.teacherCode || t.code || "").trim() === code
+  );
+
+  if(!teacher){
+    teacherName.value = "";
+    teacherInfo.style.display = "none";
+    return;
+  }
+
+  teacherName.value = teacher.fullName || teacher.name || teacher.teacherName || "";
+  subjectCode.value = teacher.subjectCode || subjectCode.value || "";
+  subjectName.value = teacher.subject || subjectName.value || "";
+  grade.value = normalizeGrade(teacher.grade || grade.value || "");
+
+  teacherInfo.style.display = "block";
+  teacherInfo.innerHTML = `
+    <b>تم العثور على المدرس:</b><br>
+    الاسم: ${teacherName.value || "-"}<br>
+    الصف: ${grade.value || "-"}<br>
+    المادة: ${subjectName.value || "-"}<br>
+    كود المادة: ${subjectCode.value || "-"}
+  `;
+}
+
+function normalizeGrade(value){
+  const v = String(value || "").trim();
+
+  const map = {
+    "الأول متوسط":"أول متوسط",
+    "اول متوسط":"أول متوسط",
+    "أول متوسط":"أول متوسط",
+    "الثاني متوسط":"ثاني متوسط",
+    "ثاني متوسط":"ثاني متوسط",
+    "الثالث متوسط":"ثالث متوسط",
+    "ثالث متوسط":"ثالث متوسط",
+    "الرابع العلمي":"رابع إعدادي",
+    "رابع العلمي":"رابع إعدادي",
+    "الرابع الاعدادي":"رابع إعدادي",
+    "رابع إعدادي":"رابع إعدادي",
+    "الخامس العلمي":"خامس إعدادي",
+    "خامس العلمي":"خامس إعدادي",
+    "الخامس الاعدادي":"خامس إعدادي",
+    "خامس إعدادي":"خامس إعدادي",
+    "السادس العلمي":"سادس إعدادي",
+    "سادس العلمي":"سادس إعدادي",
+    "السادس الاعدادي":"سادس إعدادي",
+    "سادس إعدادي":"سادس إعدادي"
+  };
+
+  return map[v] || v;
+}
+
+function saveSubject(){
+  const subject = subjectName.value.trim();
+  const selectedGrade = grade.value.trim();
+  const tCode = teacherCode.value.trim();
+  const sCode = subjectCode.value.trim();
+  const tName = teacherName.value.trim();
+
+  if(!subject || !selectedGrade || !tCode || !sCode || !tName){
+    alert("يرجى إدخال المادة والصف وكود المدرس وكود المادة. اسم المدرس يجب أن يظهر تلقائياً من إدارة المدرسين.");
+    return;
+  }
+
+  const teachers = getTeachers();
+  const teacher = teachers.find(t =>
+    String(t.teacherCode || t.code || "").trim() === tCode &&
+    String(t.subjectCode || "").trim() === sCode
+  );
+
+  if(!teacher){
+    alert("لا يوجد مدرس مطابق لهذا الكود وكود المادة. تأكد من إضافته أولاً في إدارة المدرسين.");
+    return;
+  }
+
+  const item = {
+    id: subject + "-" + selectedGrade + "-" + tCode + "-" + sCode,
+    name: subject,
+    subject,
+    grade: selectedGrade,
+    teacherCode: tCode,
+    subjectCode: sCode,
+    teacherName: tName,
+    createdAt: new Date().toLocaleString("ar")
+  };
+
+  const list = getSubjects();
+  const index = list.findIndex(s =>
+    String(s.name || s.subject || "").trim() === subject &&
+    String(s.grade || "").trim() === selectedGrade &&
+    String(s.teacherCode || "").trim() === tCode &&
+    String(s.subjectCode || "").trim() === sCode
+  );
+
+  if(index >= 0) list[index] = {...list[index], ...item};
+  else list.unshift(item);
+
+  saveSubjects(list);
+
+  if(window.AfaqData && AfaqData.addNotification){
+    AfaqData.addNotification(
+      "teacher",
+      tCode,
+      "تم ربط مادة بك",
+      "تم ربطك بمادة " + subject + " للصف " + selectedGrade,
+      "مادة",
+      subject
+    );
+  }
+
+  clearForm();
+  renderSubjects();
+  alert("تم حفظ المادة وربطها بالمدرس بنجاح");
+}
+
+function deleteSubject(id){
+  if(!confirm("هل تريد حذف هذه المادة؟")) return;
+  const list = getSubjects().filter(s => String(s.id) !== String(id));
+  saveSubjects(list);
+  renderSubjects();
+}
+
+function clearForm(){
+  subjectName.value = "";
+  grade.value = "";
+  teacherCode.value = "";
+  subjectCode.value = "";
+  teacherName.value = "";
+  teacherInfo.style.display = "none";
+}
+
+function renderSubjects(){
+  const list = getSubjects();
+
+  if(!list.length){
+    subjectsBox.innerHTML = '<div class="card"><h3>لا توجد مواد حالياً</h3><p>أضف أول مادة واربطها بمدرس.</p></div>';
+    return;
+  }
+
+  subjectsBox.innerHTML = list.map(s => `
+    <div class="card">
+      <h3>${s.name || s.subject}</h3>
+      <p>الصف: ${s.grade || "-"}</p>
+      <p>المدرس: ${s.teacherName || "-"}</p>
+      <p>كود المدرس: <b>${s.teacherCode || "-"}</b></p>
+      <p>كود المادة: <b>${s.subjectCode || "-"}</b></p>
+      <button class="afaq-btn red" onclick="deleteSubject('${s.id}')">حذف</button>
+    </div>
+  `).join("");
+}
+
+renderSubjects();
 </script>
-</body></html>
+</body>
+</html>
