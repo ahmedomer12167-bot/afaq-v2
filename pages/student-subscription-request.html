@@ -1,58 +1,8 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>طلب اشتراك جديد</title>
-<link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-room.css">
-</head>
-<body>
-<main class="room">
-<section class="topbar">
-<div class="title">
-<h1>💳 طلب اشتراك جديد</h1>
-<p>أرسل بياناتك إلى المدير للموافقة وإنشاء كود دخول.</p>
-</div>
-<a class="btn back" href="student-login.html">رجوع</a>
-</section>
-
-<section class="panel">
-<h2>بيانات الطالب</h2>
-<input id="studentName" placeholder="الاسم الثلاثي">
-<select id="studentGrade">
-<option>الأول متوسط</option>
-<option>الثاني متوسط</option>
-<option>الثالث متوسط</option>
-<option>الرابع العلمي</option>
-<option>الخامس العلمي</option>
-<option>السادس العلمي</option>
-</select>
-<input id="studentPhone" placeholder="رقم هاتف الطالب">
-<input id="parentName" placeholder="اسم ولي الأمر">
-<input id="parentPhone" placeholder="رقم هاتف ولي الأمر">
-<textarea id="notes" placeholder="ملاحظات إضافية"></textarea>
-<button class="btn" onclick="sendRequest()">إرسال الطلب</button>
-</section>
-</main>
-
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>طلب اشتراك</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body>
+<main class="room"><section class="topbar"><div class="title"><h1>💳 طلب اشتراك</h1><p>يرسل الطلب إلى المدير وتظهر له إشعارات.</p></div><a class="btn back" href="student-login.html">رجوع</a></section>
+<section class="panel"><input id="name" placeholder="اسم الطالب الثلاثي"><select id="grade"><option>السادس العلمي</option><option>الخامس العلمي</option><option>الرابع العلمي</option><option>الثالث متوسط</option></select><input id="phone" placeholder="هاتف الطالب"><input id="parentName" placeholder="اسم ولي الأمر"><input id="parentPhone" placeholder="هاتف ولي الأمر"><textarea id="notes" placeholder="ملاحظات"></textarea><button class="btn ok" onclick="send()">إرسال الطلب</button></section></main>
 <script src="../js/afaq-data.js"></script>
 <script>
-function sendRequest(){
- const name = studentName.value.trim();
- if(!name){alert("أدخل اسم الطالب");return;}
- AfaqData.add("subscriptionRequests",{
-   name,
-   grade:studentGrade.value,
-   phone:studentPhone.value.trim(),
-   parentName:parentName.value.trim(),
-   parentPhone:parentPhone.value.trim(),
-   notes:notes.value.trim(),
-   status:"قيد المراجعة"
- });
- alert("تم إرسال طلب الاشتراك إلى المدير.");
- location.href = "student-login.html";
-}
+function send(){if(!name.value){alert("أدخل الاسم");return;}AfaqData.add("subscriptionRequests",{name:name.value,grade:grade.value,phone:phone.value,parentName:parentName.value,parentPhone:parentPhone.value,notes:notes.value,status:"قيد المراجعة"});AfaqData.addNotification("admin","admin","طلب اشتراك جديد","الطالب "+name.value+" أرسل طلب اشتراك","اشتراك");alert("تم إرسال طلب الاشتراك للمدير");location.href="student-login.html";}
 </script>
-</body>
-</html>
+</body></html>

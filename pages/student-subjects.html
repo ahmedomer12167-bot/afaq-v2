@@ -1,96 +1,13 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>موادي</title>
-<link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-room.css">
-</head>
-<body>
-<main class="room">
-<section class="topbar">
-<div class="title">
-<h1>📚 موادي</h1>
-<p>لا يمكنك دخول أي مادة إلا بعد موافقة المدرس.</p>
-</div>
-<a class="btn back" href="student-dashboard.html">لوحة الطالب</a>
-</section>
-
-<section class="panel">
-<h2>المواد الموافق عليها</h2>
-<div id="approvedSubjects" class="cards"></div>
-</section>
-
-<section class="panel">
-<h2>طلب دخول مادة</h2>
-<select id="subjectSelect">
-<option>الأحياء</option>
-<option>الكيمياء</option>
-<option>الفيزياء</option>
-<option>الرياضيات</option>
-<option>الإنكليزي</option>
-<option>العربي</option>
-<option>الإسلامية</option>
-</select>
-<textarea id="requestNote" placeholder="ملاحظة للمدرس"></textarea>
-<button class="btn" onclick="sendSubjectRequest()">إرسال الطلب</button>
-</section>
-
-<section class="panel">
-<h2>طلباتي</h2>
-<div id="myRequests" class="cards"></div>
-</section>
-</main>
-
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>موادي</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body>
+<main class="room"><section class="topbar"><div class="title"><h1>📚 موادي</h1><p>الطالب لا يدخل المادة إلا بعد موافقة المدرس.</p></div><a class="btn back" href="student-dashboard.html">لوحة الطالب</a></section>
+<section class="panel"><h2>المواد المتاحة من المدير</h2><div id="available" class="cards"></div></section>
+<section class="panel"><h2>المواد المفعلة لي</h2><div id="approved" class="cards"></div></section>
+<section class="panel"><h2>طلباتي</h2><div id="requests" class="cards"></div></section></main>
 <script src="../js/afaq-data.js"></script>
 <script>
-function currentStudent(){
- const st = AfaqData.getCurrentStudent();
- if(!st){
-   alert("سجل الدخول أولاً");
-   location.href = "student-login.html";
- }
- return st;
-}
-function sendSubjectRequest(){
- const st = currentStudent();
- const subject = subjectSelect.value;
- const reqs = AfaqData.list("subjectRequests");
- const old = reqs.find(r=>r.studentId===st.studentId && r.subject===subject && r.status==="قيد المراجعة");
- if(old){alert("لديك طلب سابق قيد المراجعة لهذه المادة");return;}
- AfaqData.add("subjectRequests",{
-   studentId:st.studentId,
-   code:st.code,
-   studentName:st.name,
-   grade:st.grade,
-   subject,
-   note:requestNote.value.trim(),
-   status:"قيد المراجعة"
- });
- requestNote.value = "";
- render();
- alert("تم إرسال طلب دخول المادة إلى المدرس.");
-}
-function openSubject(subject){
- const st = currentStudent();
- if(!AfaqData.canEnterSubject(st,subject)){
-   alert("لا يمكنك دخول هذه المادة قبل موافقة المدرس.");
-   return;
- }
- AfaqData.setCurrentSubject(subject);
- location.href = "student-subject-page.html";
-}
-function render(){
- const st = currentStudent();
- const subjects = st.subjects || [];
- approvedSubjects.innerHTML = subjects.length ? subjects.map(s=>`
- <div class="card"><h3>${s}</h3><p>تمت موافقة المدرس.</p><button class="btn" onclick="openSubject('${s}')">دخول المادة</button></div>
- `).join("") : '<div class="card"><h3>لا توجد مواد مفعلة</h3><p>أرسل طلب دخول مادة إلى المدرس.</p></div>';
- const reqs = AfaqData.list("subjectRequests").filter(r=>r.studentId===st.studentId || r.code===st.code);
- myRequests.innerHTML = reqs.length ? reqs.map(r=>`<div class="card"><h3>${r.subject}</h3><p>${r.note || ""}</p><span class="badge">${r.status}</span></div>`).join("") : '<div class="card"><h3>لا توجد طلبات</h3></div>';
-}
-render();
+const st=AfaqData.getCurrentStudent();if(!st){location.href="student-login.html"}
+function requestSubject(name,teacherCode){const old=AfaqData.list("subjectRequests").find(r=>r.studentId===st.studentId&&r.subject===name&&r.status==="قيد المراجعة");if(old){alert("لديك طلب قيد المراجعة");return;}AfaqData.add("subjectRequests",{studentId:st.studentId,code:st.code,studentName:st.name,grade:st.grade,subject:name,teacherCode,status:"قيد المراجعة"});AfaqData.addNotification("teacher",teacherCode,"طلب انضمام جديد",st.name+" طلب الانضمام إلى "+name,"مادة");render();alert("تم إرسال الطلب للمدرس");}
+function openSub(name){if(!AfaqData.canEnterSubject(st,name)){alert("لم تتم الموافقة بعد");return;}AfaqData.setCurrentSubject(name);location.href="student-subject-page.html";}
+function render(){const subs=AfaqData.subjects().filter(s=>!s.grade||s.grade===st.grade);available.innerHTML=subs.length?subs.map(s=>`<div class="card"><h3>${s.name}</h3><p>المدرس: ${s.teacherName||s.teacherCode}</p><button class="btn ok" onclick="requestSubject('${s.name}','${s.teacherCode}')">طلب الانضمام</button></div>`).join(""):"<div class='card'><h3>لا توجد مواد أضافها المدير</h3></div>";approved.innerHTML=(st.subjects||[]).length?st.subjects.map(s=>`<div class="card"><h3>${s}</h3><button class="btn" onclick="openSub('${s}')">دخول المادة</button></div>`).join(""):"<div class='card'><h3>لا توجد مواد مفعلة</h3></div>";const req=AfaqData.list("subjectRequests").filter(r=>r.studentId===st.studentId);requests.innerHTML=req.length?req.map(r=>`<div class="card"><h3>${r.subject}</h3><span class="badge">${r.status}</span></div>`).join(""):"<div class='card'><h3>لا توجد طلبات</h3></div>"}render();
 </script>
-</body>
-</html>
+</body></html>
