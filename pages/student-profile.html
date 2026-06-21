@@ -1,32 +1,54 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>👤 الملف الشخصي - آفاق التعليمية</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الملف الشخصي للطالب</title>
 <link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-room.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-student-clean.css">
 </head>
 <body>
+<main class="afaq-mobile">
 
-<main class="room">
-<section class="topbar"><div class="title"><h1>👤 الملف الشخصي</h1><p>غرفة مستقلة لبيانات الطالب.</p></div><div class="actions"><a class="btn back" href="student-dashboard.html">رجوع للوحة</a></div></section>
-<section class="content">
-<div class="panel">
-<div class="hero-card"><img id="studentPhotoView" class="avatar"><div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><div id="subjectsList"></div></div></div>
+<section class="afaq-top">
+<h1>👤 الملف الشخصي</h1>
+<p>بيانات الطالب محفوظة ومثبتة من بيانات المدير والاشتراك.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="student-dashboard.html">رجوع للطالب</a>
 </div>
-<div class="panel"><h2>البيانات</h2><div class="info-grid">
-<div class="info"><strong>الاسم</strong><span id="studentNameInfo">-</span></div>
-<div class="info"><strong>المرحلة</strong><span id="studentGradeInfo">-</span></div>
-<div class="info"><strong>هاتف الطالب</strong><span id="studentPhoneInfo">-</span></div>
-<div class="info"><strong>الكود</strong><span id="studentCodeInfo">-</span></div>
-<div class="info"><strong>ولي الأمر</strong><span id="parentNameInfo">-</span></div>
-<div class="info"><strong>هاتف ولي الأمر</strong><span id="parentPhoneInfo">-</span></div>
-<div class="info"><strong>الاشتراك</strong><span id="subscriptionStatusInfo">-</span></div>
-<div class="info"><strong>انتهاء الاشتراك</strong><span id="subscriptionEndInfo">-</span></div>
-</div></div>
-<div class="panel"><h2>ملاحظات</h2><p id="studentNotesInfo">-</p></div>
-</section></main>
+</section>
+
+<section class="profile-card">
+<h3>معلومات الطالب</h3>
+<div class="profile-list" id="profileBox"></div>
+</section>
+
+</main>
+
 <script src="../js/afaq-data.js"></script>
-<script>if(window.AfaqData){const st=AfaqData.renderCurrentStudent(); if(!st) location.href="student-login.html";}</script>
+<script src="../js/afaq-full-sync.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script>
+let student = AfaqFullSync.resyncCurrentStudent();
+if(!student){location.href="student-login.html";}
+
+function safe(v){return v && String(v).trim() ? String(v).trim() : "-";}
+function render(){
+  const subjects = Array.isArray(student.subjects) ? student.subjects.join("، ") : "-";
+  profileBox.innerHTML = `
+    <div class="profile-item"><b>اسم الطالب الثلاثي</b><span>${safe(student.name || student.studentName || student.fullName)}</span></div>
+    <div class="profile-item"><b>كود الطالب</b><span>${safe(student.code || student.studentId || student.studentCode)}</span></div>
+    <div class="profile-item"><b>الصف</b><span>${safe(student.grade)}</span></div>
+    <div class="profile-item"><b>اسم ولي الأمر الثلاثي</b><span>${safe(student.parentName || student.guardianName)}</span></div>
+    <div class="profile-item"><b>حالة الاشتراك</b><span>${safe(student.subscriptionStatus)}</span></div>
+    <div class="profile-item"><b>المبلغ</b><span>${safe(student.amount)}</span></div>
+    <div class="profile-item"><b>المواد المسجل بها</b><span>${safe(subjects)}</span></div>
+    <div class="profile-item"><b>المستوى</b><span>${safe(student.level || "مبتدئ")}</span></div>
+  `;
+}
+render();
+</script>
 </body>
 </html>

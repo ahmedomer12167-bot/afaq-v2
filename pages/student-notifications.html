@@ -1,11 +1,73 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>🔔 إشعارات الطالب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"><link rel="stylesheet" href="../css/afaq-badges.css"></head><body>
-<main class="room"><section class="topbar"><div class="title"><h1>🔔 إشعارات الطالب</h1><p>تم فتح الصفحة، وسيتم إزالة الشارة الحمراء الخاصة بهذا القسم.</p></div><a class="btn back" href="student-dashboard.html">رجوع</a></section><section class="panel"><div id="box" class="cards"></div></section></main>
-<script src="../js/afaq-data.js"></script><script src="../js/afaq-badges.js"></script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إشعارات الطالب</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-student-clean.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>🔔 الإشعارات</h1>
+<p>جميع إشعارات الطالب: واجبات، اختبارات، نتائج، حضور، ورسائل.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="student-dashboard.html">رجوع للطالب</a>
+<button class="afaq-btn" onclick="markAllRead()">قراءة الكل</button>
+</div>
+</section>
+
+<section class="panel">
+<h2>كل الإشعارات</h2>
+<div id="notificationsBox"></div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-full-sync.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script src="../js/afaq-badges.js"></script>
 <script>
-if(window.AfaqBadges) AfaqBadges.markCollectionSeen("notifications");
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+function write(key,value){localStorage.setItem(key,JSON.stringify(value));window.dispatchEvent(new Event("afaqDataUpdated"))}
+let student = AfaqFullSync.resyncCurrentStudent();
+if(!student){location.href="student-login.html";}
+const sid = AfaqFullSync.studentId(student);
+
+function myNotifications(){
+  return read("afaq_notifications").filter(n =>
+    n.toRole === "student" &&
+    (!n.toId || n.toId === sid || n.toId === student.name || n.toId === "all")
+  );
+}
+
 function render(){
- const arr = window.AfaqData ? AfaqData.list("notifications") : [];
- box.innerHTML = arr.length ? arr.map(x=>`<div class="card"><h3>${x.title||x.subject||x.studentName||"عنصر"}</h3><p>${x.description||x.message||x.status||""}</p><span class="badge">${x.subject||"عام"}</span></div>`).join("") : "<div class='card'><h3>لا توجد بيانات حالياً</h3></div>";
+  const list = myNotifications();
+  notificationsBox.innerHTML = list.length ? list.map(n=>`
+    <div class="notification-card">
+      <h3>${n.title || "إشعار"}</h3>
+      <p>${n.body || n.message || ""}</p>
+      <p>النوع: ${n.type || n.source || "-"}</p>
+      <p>المادة: ${n.subject || n.sourceSubject || "-"}</p>
+      <span class="status-pill">${n.read ? "مقروء" : "جديد"}</span>
+      <p>${n.createdAt || ""}</p>
+    </div>
+  `).join("") : "<div class='notification-card'><h3>لا توجد إشعارات حالياً</h3></div>";
+}
+function markAllRead(){
+  const all = read("afaq_notifications").map(n=>{
+    if(n.toRole === "student" && (!n.toId || n.toId === sid || n.toId === student.name || n.toId === "all")) return {...n, read:true};
+    return n;
+  });
+  write("afaq_notifications", all);
+  render();
 }
 render();
-</script></body></html>
+</script>
+</body>
+</html>

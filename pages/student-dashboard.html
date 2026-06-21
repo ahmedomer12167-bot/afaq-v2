@@ -1,46 +1,109 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة الطالب</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-purple-mobile.css">
 <link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-student-clean.css">
 </head>
 <body>
 <main class="afaq-mobile">
+
 <section class="afaq-top">
-<h1>🎓 لوحة الطالب</h1>
-<div class="afaq-profile"><img id="studentPhotoView"><div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><p>الحالة: <span id="subscriptionStatusInfo">-</span></p></div></div>
-<div style="margin-top:14px"><a class="afaq-btn gray" href="../index.html">الرئيسية</a></div>
+  <h1>🎓 لوحة الطالب</h1>
+  <p id="welcomeText">مرحباً بك في منصة آفاق التعليمية.</p>
+  <div style="margin-top:14px">
+    <a class="afaq-btn gray" href="../index.html">الرئيسية</a>
+    <a class="afaq-btn" href="student-profile.html">الملف الشخصي</a>
+  </div>
 </section>
-<section class="afaq-stats">
-<div class="afaq-stat"><div class="icon">📚</div><h3>موادي</h3><strong data-count="studentSubjects">0</strong></div>
-<div class="afaq-stat"><div class="icon">📖</div><h3>الدروس</h3><strong data-count="studentLessons">0</strong></div>
-<div class="afaq-stat"><div class="icon">📝</div><h3>الاختبارات</h3><strong data-count="studentExams">0</strong></div>
-<div class="afaq-stat"><div class="icon">📋</div><h3>الواجبات</h3><strong data-count="studentAssignments">0</strong></div>
-<div class="afaq-stat"><div class="icon">✅</div><h3>الحضور</h3><strong data-count="studentAttendanceRate">0</strong></div>
-<div class="afaq-stat"><div class="icon">📈</div><h3>المعدل</h3><strong data-count="studentAverageScore">0</strong></div>
-<div class="afaq-stat"><div class="icon">📊</div><h3>النتائج</h3><strong data-count="studentResults">0</strong></div>
-<div class="afaq-stat"><div class="icon">🔔</div><h3>إشعارات</h3><strong data-count="studentNotifications">0</strong></div>
+
+<section class="big-counter">
+  <div class="counter-box"><span>📚 موادي</span><strong id="subjectsCount">0</strong><small>مواد مسجل بها</small></div>
+  <div class="counter-box"><span>🔔 الإشعارات</span><strong id="notificationsCount">0</strong><small>إشعارات الطالب</small></div>
+  <div class="counter-box"><span>📊 النتائج النهائية</span><strong id="finalResultsCount">0</strong><small>نتائج المواد</small></div>
+  <div class="counter-box"><span>✅ الحضور</span><strong id="attendanceRate">0%</strong><small>نسبة الحضور</small></div>
 </section>
-<section class="afaq-grid">
-<div class="afaq-tile" data-badge="" onclick="location.href='student-profile.html'"><div class="icon">👤</div><h3>الملف الشخصي</h3><p>بيانات الطالب.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='student-subjects.html'"><div class="icon">📚</div><h3>المواد</h3><p>طلب دخول المواد.</p></div>
-<div class="afaq-tile" data-badge="lessons" onclick="location.href='student-lessons.html'"><div class="icon">📖</div><h3>الدروس</h3><p>دروس الطالب.</p></div>
-<div class="afaq-tile" data-badge="exams" onclick="location.href='student-exams.html'"><div class="icon">📝</div><h3>الاختبارات</h3><p>اختبارات الطالب.</p></div>
-<div class="afaq-tile" data-badge="assignments" onclick="location.href='student-assignments.html'"><div class="icon">📋</div><h3>الواجبات</h3><p>واجبات الطالب.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='student-attendance.html'"><div class="icon">✅</div><h3>الحضور</h3><p>تسجيل الحضور.</p></div>
-<div class="afaq-tile" data-badge="results" onclick="location.href='student-results.html'"><div class="icon">📊</div><h3>النتائج</h3><p>نتائج الطالب.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='student-leaderboard.html'"><div class="icon">🏆</div><h3>المتفوقون</h3><p>لوحة الشرف.</p></div>
-<div class="afaq-tile" data-badge="messages" onclick="location.href='student-messages.html'"><div class="icon">💬</div><h3>الرسائل</h3><p>رسائل الطالب.</p></div>
-<div class="afaq-tile" data-badge="notifications" onclick="location.href='student-notifications.html'"><div class="icon">🔔</div><h3>الإشعارات</h3><p>إشعارات الطالب.</p></div>
+
+<section class="student-clean-grid">
+  <div class="student-clean-card" onclick="location.href='student-subjects.html'">
+    <h3>📚 موادي</h3>
+    <p>عرض المواد المسجل بها الطالب وفتح غرفة كل مادة.</p>
+    <button class="afaq-btn">فتح موادي</button>
+  </div>
+
+  <div class="student-clean-card" onclick="location.href='student-notifications.html'">
+    <h3>🔔 الإشعارات</h3>
+    <p>كل إشعارات الطالب: واجبات، اختبارات، نتائج، حضور، ورسائل.</p>
+    <button class="afaq-btn">فتح الإشعارات</button>
+  </div>
 </section>
+
+<section class="student-clean-card" style="margin-top:15px">
+  <h3>📊 النتائج النهائية للمواد</h3>
+  <div id="finalResultsBox"></div>
+</section>
+
 </main>
+
 <script src="../js/afaq-data.js"></script>
-<script src="../js/afaq-auto-stats.js"></script>
-<script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-full-sync.js"></script>
 <script src="../js/afaq-unified-counters.js"></script>
-<script>if(window.AfaqData&&AfaqData.renderCurrentStudent)AfaqData.renderCurrentStudent();</script>
+<script src="../js/afaq-badges.js"></script>
+<script>
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+let student = AfaqFullSync.resyncCurrentStudent();
+if(!student){location.href="student-login.html";}
+const sid = AfaqFullSync.studentId(student);
+
+function myNotifications(){
+  return read("afaq_notifications").filter(n =>
+    n.toRole === "student" &&
+    (!n.toId || n.toId === sid || n.toId === student.name || n.toId === "all")
+  );
+}
+
+function myFinalResults(){
+  return read("afaq_results").filter(r =>
+    (r.studentId === sid || r.code === sid) &&
+    (r.type === "نهائي" || r.type === "نتيجة نهائية" || String(r.title||"").includes("نهائي"))
+  );
+}
+
+function attendanceRate(){
+  const rec = read("afaq_attendance").filter(r => r.studentId === sid || r.code === sid);
+  const present = rec.filter(r => String(r.status||"").includes("حاضر")).length;
+  const absent = rec.filter(r => String(r.status||"").includes("غائب")).length;
+  const total = present + absent;
+  return total ? Math.round((present/total)*100) + "%" : "0%";
+}
+
+function render(){
+  student = AfaqFullSync.resyncCurrentStudent() || student;
+  welcomeText.textContent = "مرحباً " + (student.name || student.studentName || "طالب") + " - " + (student.grade || "");
+
+  const subjects = Array.isArray(student.subjects) ? student.subjects : [];
+  const notifications = myNotifications();
+  const finals = myFinalResults();
+
+  subjectsCount.textContent = subjects.length;
+  notificationsCount.textContent = notifications.filter(n=>!n.read).length || notifications.length;
+  finalResultsCount.textContent = finals.length;
+  attendanceRate.textContent = attendanceRate();
+
+  finalResultsBox.innerHTML = finals.length ? finals.map(r=>`
+    <div class="result-card">
+      <h3>${student.name || student.studentName || "-"}</h3>
+      <p>المادة: ${r.subject || "-"}</p>
+      <p>النتيجة النهائية: <b>${r.score || 0} / ${r.total || 100}</b></p>
+      <span class="status-pill">${r.createdAt || ""}</span>
+    </div>
+  `).join("") : "<div class='result-card'><h3>لا توجد نتائج نهائية حالياً</h3></div>";
+}
+render();
+</script>
 </body>
 </html>

@@ -3,143 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مواد الطالب</title>
+<title>موادي</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-purple-mobile.css">
 <link rel="stylesheet" href="../css/afaq-badges.css">
-<link rel="stylesheet" href="../css/afaq-subject-join.css">
-<style>
-.debug-box{font-size:13px;color:#d8b4fe;margin-top:8px;line-height:1.8}
-</style>
+<link rel="stylesheet" href="../css/afaq-student-clean.css">
 </head>
 <body>
 <main class="afaq-mobile">
 
 <section class="afaq-top">
-<h1>📚 المواد</h1>
-<p>تظهر هنا جميع المواد المطابقة لصف الطالب. الطالب يرى كود المادة فقط، ولا يظهر له كود المدرس.</p>
+<h1>📚 موادي</h1>
+<p>هذه المواد التي تمت الموافقة على دخولك إليها.</p>
 <div style="margin-top:14px">
-  <a class="afaq-btn gray" href="student-dashboard.html">رجوع للطالب</a>
-  <button class="afaq-btn" onclick="syncAndRender()">مزامنة البيانات</button>
+<a class="afaq-btn gray" href="student-dashboard.html">رجوع للوحة الطالب</a>
 </div>
 </section>
 
-<section class="panel">
-<h2>كل المواد المتاحة</h2>
-<div id="studentInfo" class="debug-box"></div>
-<input id="searchBox" placeholder="بحث عن مادة أو مدرس..." oninput="renderSubjects()">
-<div id="subjectsBox" class="join-grid"></div>
-</section>
-
-<section class="panel" style="margin-top:15px">
-<h2>طلبات دخول المادة</h2>
-<div id="requestsBox"></div>
-</section>
+<section class="student-clean-grid" id="subjectsBox"></section>
 
 </main>
-
 <script src="../js/afaq-data.js"></script>
-<script src="../js/afaq-unified-counters.js"></script>
-<script src="../js/afaq-badges.js"></script>
 <script src="../js/afaq-full-sync.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
 <script>
 let student = AfaqFullSync.resyncCurrentStudent();
 if(!student){location.href="student-login.html";}
-
-function syncAndRender(){
-  student = AfaqFullSync.resyncCurrentStudent();
-  AfaqFullSync.ensureSubjectsNormalized();
-  renderSubjects();
-  alert("تمت مزامنة بيانات الطالب والمواد");
-}
-
-function renderSubjects(){
+function render(){
   student = AfaqFullSync.resyncCurrentStudent() || student;
-  const q = String(searchBox.value || "").trim();
-  let list = AfaqFullSync.visibleSubjectsForStudent(student);
+  const subjects = Array.isArray(student.subjects) ? student.subjects : [];
+  const all = AfaqFullSync.subjects();
 
-  if(q){
-    list = list.filter(s =>
-      String(s.name || s.subject || "").includes(q) ||
-      String(s.teacherName || "").includes(q) ||
-      String(s.grade || "").includes(q)
-    );
-  }
-
-  studentInfo.innerHTML = `
-    الطالب: <b>${student.name || student.studentName || "-"}</b> |
-    الصف: <b>${student.grade || "-"}</b> |
-    عدد المواد المتاحة: <b>${list.length}</b>
-  `;
-
-  subjectsBox.innerHTML = list.length ? list.map(s=>{
-    const joined = AfaqFullSync.isStudentJoined(s, student);
-    const pending = AfaqFullSync.existingRequest(s, student);
-    const subjectName = s.name || s.subject || "-";
-    const subjectCode = s.subjectCode || "-";
-
+  subjectsBox.innerHTML = subjects.length ? subjects.map(name=>{
+    const sub = all.find(s => AfaqFullSync.normalizeSubject(s.name || s.subject) === AfaqFullSync.normalizeSubject(name)) || {};
     return `
-      <div class="subject-card">
-        <h3>${subjectName}</h3>
-        <p>الصف: ${s.grade || "-"}</p>
-        <p>المدرس: ${s.teacherName || "-"}</p>
-        <p>كود المادة: <b>${subjectCode}</b></p>
-        <div class="secure-note">كود المدرس مخفي عن الطالب للحفاظ على خصوصية بيانات المدرس.</div>
-
-        ${joined ? `<span class="status-pill">مسجل في المادة</span>` : ""}
-        ${pending ? `<span class="status-pill">طلبك قيد المراجعة</span>` : ""}
-
-        ${!joined && !pending ? `
-          <input id="code-${s.id}" placeholder="أدخل كود المادة">
-          <button class="afaq-btn" onclick="requestJoin('${s.id}')">طلب دخول المادة</button>
-        ` : `
-          <button class="afaq-btn gray" onclick="openSubject('${subjectName}')">فتح المادة</button>
-        `}
+      <div class="student-clean-card">
+        <h3>📚 ${name}</h3>
+        <p>المدرس: ${sub.teacherName || "-"}</p>
+        <p>كود المادة: <b>${sub.subjectCode || "-"}</b></p>
+        <button class="afaq-btn" onclick="openRoom('${name}')">فتح المادة</button>
       </div>
     `;
   }).join("") : `
-    <div class="subject-card">
-      <h3>لا توجد مواد متاحة لهذا الصف حالياً</h3>
-      <p>تأكد أن المدير أضاف المادة بنفس الصف: ${student.grade || "-"}</p>
-      <p>أو اضغط مزامنة البيانات.</p>
+    <div class="student-clean-card">
+      <h3>لا توجد مواد مسجل بها</h3>
+      <p>يجب طلب دخول المادة والموافقة من المدرس أولاً.</p>
     </div>
   `;
-
-  renderRequests();
 }
-
-function requestJoin(id){
-  try{
-    const code = document.getElementById("code-" + id).value;
-    AfaqFullSync.submitJoinRequest(id, code);
-    renderSubjects();
-    alert("تم إرسال طلب دخول المادة إلى المدرس للموافقة.");
-  }catch(e){
-    alert(e.message);
-  }
+function openRoom(name){
+  localStorage.setItem("afaq_current_subject", name);
+  location.href = "student-subject-room.html";
 }
-
-function openSubject(subjectName){
-  localStorage.setItem("afaq_current_subject", subjectName);
-  alert("تم فتح المادة: " + subjectName);
-}
-
-function renderRequests(){
-  const list = AfaqFullSync.studentRequests();
-  requestsBox.innerHTML = list.length ? list.map(r=>`
-    <div class="request-card">
-      <h3>${r.subject}</h3>
-      <p>المدرس: ${r.teacherName}</p>
-      <p>الصف: ${r.grade}</p>
-      <p>كود المادة: <b>${r.subjectCode || "-"}</b></p>
-      <p>تاريخ الطلب: ${r.createdAt}</p>
-      <span class="status-pill">${r.status}</span>
-      ${r.note ? `<p>ملاحظة: ${r.note}</p>` : ""}
-    </div>
-  `).join("") : "<div class='request-card'><h3>لا توجد طلبات حالياً</h3></div>";
-}
-
-renderSubjects();
+render();
 </script>
 </body>
 </html>

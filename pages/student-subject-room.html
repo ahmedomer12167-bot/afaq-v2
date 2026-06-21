@@ -7,32 +7,75 @@
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-purple-mobile.css">
 <link rel="stylesheet" href="../css/afaq-badges.css">
-<link rel="stylesheet" href="../css/afaq-subject-join.css">
+<link rel="stylesheet" href="../css/afaq-student-clean.css">
 </head>
 <body>
 <main class="afaq-mobile">
+
 <section class="afaq-top">
 <h1 id="roomTitle">📚 غرفة المادة</h1>
-<p id="roomInfo">يتم عرض كود المادة فقط دون كود المدرس.</p>
+<p id="roomInfo">محتويات المادة المسجل بها الطالب.</p>
 <div style="margin-top:14px">
-<a class="afaq-btn gray" href="student-subjects.html">رجوع للمواد</a>
+<a class="afaq-btn gray" href="student-subjects.html">رجوع إلى موادي</a>
 </div>
 </section>
 
-<section class="join-grid">
-<div class="subject-card" onclick="location.href='student-lessons.html'"><h3>📖 الدروس</h3><p>ملفات ودروس المادة</p></div>
-<div class="subject-card" onclick="location.href='student-exams.html'"><h3>📝 الاختبارات</h3><p>اختبارات المادة</p></div>
-<div class="subject-card" onclick="location.href='student-assignments.html'"><h3>📋 الواجبات</h3><p>واجبات المادة</p></div>
-<div class="subject-card" onclick="location.href='student-results.html'"><h3>📊 النتائج</h3><p>نتائج المادة</p></div>
+<section class="big-counter">
+  <div class="counter-box"><span>✅ الحضور</span><strong id="subjectAttendanceRate">0%</strong><small>نسبة الحضور</small></div>
+  <div class="counter-box"><span>📊 الدرجة النهائية</span><strong id="subjectFinalScore">0</strong><small>نتيجة المادة</small></div>
+  <div class="counter-box"><span>📝 الصحيحة</span><strong id="correctAnswers">0</strong><small>إجابات صحيحة</small></div>
+  <div class="counter-box"><span>🔔 الإشعارات</span><strong id="subjectNotifications">0</strong><small>خاصة بالمادة</small></div>
 </section>
+
+<section class="subject-room-grid">
+  <div class="subject-room-card" onclick="location.href='student-exams.html'"><h3>📝 الاختبارات</h3><p>اختبارات هذه المادة.</p></div>
+  <div class="subject-room-card" onclick="location.href='student-assignments.html'"><h3>📋 الواجبات</h3><p>واجبات هذه المادة.</p></div>
+  <div class="subject-room-card" onclick="location.href='student-lessons.html'"><h3>📖 الدروس</h3><p>دروس وملفات المادة.</p></div>
+  <div class="subject-room-card" onclick="location.href='student-leaderboard.html'"><h3>🏆 لوحة المتفوقين</h3><p>ترتيب المتفوقين في المادة.</p></div>
+  <div class="subject-room-card" onclick="location.href='student-attendance.html'"><h3>✅ الحضور</h3><p>حضور وغياب المادة.</p></div>
+  <div class="subject-room-card" onclick="location.href='student-results.html'"><h3>📊 النتائج</h3><p>نتائج الطالب في المادة.</p></div>
+  <div class="subject-room-card" onclick="location.href='student-notifications.html'"><h3>🔔 إشعارات المادة</h3><p>إشعارات تخص هذه المادة.</p></div>
+  <div class="subject-room-card" onclick="location.href='student-messages.html'"><h3>💬 الرسائل</h3><p>رسائل المدرس والمدير.</p></div>
+</section>
+
 </main>
+
 <script src="../js/afaq-data.js"></script>
 <script src="../js/afaq-full-sync.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script src="../js/afaq-badges.js"></script>
 <script>
-const subjectName = localStorage.getItem("afaq_current_subject") || "المادة";
-const subject = AfaqFullSync.subjects().find(s => AfaqFullSync.normalizeSubject(s.name || s.subject) === AfaqFullSync.normalizeSubject(subjectName)) || {};
-roomTitle.textContent = "📚 " + subjectName;
-roomInfo.innerHTML = "كود المادة: <b>" + (subject.subjectCode || "-") + "</b>";
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+let student = AfaqFullSync.resyncCurrentStudent();
+if(!student){location.href="student-login.html";}
+const sid = AfaqFullSync.studentId(student);
+const subjectName = localStorage.getItem("afaq_current_subject") || "";
+if(!subjectName){location.href="student-subjects.html";}
+
+function norm(v){return AfaqFullSync.normalizeSubject(v||"")}
+function inSubject(v){return norm(v) === norm(subjectName)}
+
+function render(){
+  const subject = AfaqFullSync.subjects().find(s => inSubject(s.name || s.subject)) || {};
+  roomTitle.textContent = "📚 " + subjectName;
+  roomInfo.innerHTML = "كود المادة: <b>" + (subject.subjectCode || "-") + "</b>";
+
+  const attend = read("afaq_attendance").filter(r => (r.studentId===sid || r.code===sid) && inSubject(r.subject));
+  const p = attend.filter(r=>String(r.status||"").includes("حاضر")).length;
+  const a = attend.filter(r=>String(r.status||"").includes("غائب")).length;
+  subjectAttendanceRate.textContent = (p+a) ? Math.round((p/(p+a))*100)+"%" : "0%";
+
+  const results = read("afaq_results").filter(r => (r.studentId===sid || r.code===sid) && inSubject(r.subject));
+  const final = results.find(r => r.type==="نهائي" || String(r.title||"").includes("نهائي")) || results[0];
+  subjectFinalScore.textContent = final ? ((final.score||0) + "/" + (final.total||100)) : "0";
+
+  const exams = read("afaq_exam_submissions").filter(r => (r.studentId===sid || r.code===sid) && inSubject(r.subject));
+  correctAnswers.textContent = exams.reduce((sum,r)=>sum + Number(r.correct || r.correctAnswers || 0),0);
+
+  const nots = read("afaq_notifications").filter(n => n.toRole==="student" && (!n.toId || n.toId===sid || n.toId===student.name || n.toId==="all") && inSubject(n.subject || n.sourceSubject));
+  subjectNotifications.textContent = nots.filter(n=>!n.read).length || nots.length;
+}
+render();
 </script>
 </body>
 </html>
