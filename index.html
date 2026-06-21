@@ -4,28 +4,53 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>آفاق التعليمية</title>
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="css/afaq-home-old-style.css">
 </head>
 <body>
-<main class="afaq-mobile">
-<section class="afaq-top" style="text-align:center">
-<h1>📘 آفاق التعليمية</h1>
-<p>منصة تعليمية متكاملة للدروس والاختبارات الإلكترونية.</p>
-<div style="margin-top:14px">
-<a class="afaq-btn" href="pages/student-login.html">دخول الطالب</a>
-<a class="afaq-btn" href="pages/teacher-login.html">دخول المدرس</a>
-<a class="afaq-btn" href="pages/parent-login.html">دخول ولي الأمر</a>
-<a class="afaq-btn gray" href="pages/admin-login.html">دخول المدير</a>
-</div>
+
+<main class="home-wrap">
+
+<section class="home-hero">
+  <div class="hero-icon">📘</div>
+  <h1>آفاق التعليمية</h1>
+  <p>منصة تعليمية حديثة للدروس والاختبارات الإلكترونية، مصممة لتسهيل متابعة الطالب على المدير والمدرس وولي الأمر.</p>
+
+  <div class="home-actions">
+    <a class="home-btn" href="pages/student-login.html">دخول الطالب</a>
+    <a class="home-btn" href="pages/teacher-login.html">دخول المدرس</a>
+    <a class="home-btn" href="pages/parent-login.html">دخول ولي الأمر</a>
+    <a class="home-btn dark" href="pages/admin-login.html">دخول المدير</a>
+  </div>
 </section>
-<section class="afaq-stats">
-<div class="afaq-stat"><div class="icon">👨‍🎓</div><h3>الطلاب</h3><strong id="homeStudentsCount" data-count="homeStudents">0</strong></div>
-<div class="afaq-stat"><div class="icon">👨‍🏫</div><h3>المدرسون</h3><strong id="homeTeachersCount" data-count="homeTeachers">0</strong></div>
-<div class="afaq-stat"><div class="icon">📚</div><h3>المواد</h3><strong id="homeSubjectsCount" data-count="homeSubjects">0</strong></div>
-<div class="afaq-stat"><div class="icon">💳</div><h3>الاشتراكات</h3><strong id="homeSubscriptionsCount" data-count="homeSubscriptions">0</strong></div>
+
+<section class="home-stats">
+  <div class="home-stat">
+    <div class="icon">👨‍🎓</div>
+    <strong id="homeStudentsCount" data-count="homeStudents">0</strong>
+    <span>الطلاب</span>
+  </div>
+
+  <div class="home-stat">
+    <div class="icon">👨‍🏫</div>
+    <strong id="homeTeachersCount" data-count="homeTeachers">0</strong>
+    <span>المدرسون</span>
+  </div>
+
+  <div class="home-stat">
+    <div class="icon">📚</div>
+    <strong id="homeSubjectsCount" data-count="homeSubjects">0</strong>
+    <span>المواد</span>
+  </div>
+
+  <div class="home-stat">
+    <div class="icon">💳</div>
+    <strong id="homeSubscriptionsCount" data-count="homeSubscriptions">0</strong>
+    <span>الاشتراكات</span>
+  </div>
 </section>
+
 </main>
+
 <script src="js/afaq-data.js"></script>
 <script src="js/afaq-unified-counters.js"></script>
 </body>
