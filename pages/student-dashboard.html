@@ -1,6 +1,112 @@
 <!DOCTYPE html>
-<html><body>
-<script>
-location.href='student-profile.html';
-</script>
-</body></html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الطالب - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<style>
+.dashboard{min-height:100vh;padding:24px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:24px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.logout{background:linear-gradient(135deg,#dc2626,#ef4444)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}
+.card,.tile{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);transition:.3s}
+.card{text-align:center}
+.card span,.tile span{font-size:36px;display:block;margin-bottom:12px}
+.card strong{font-size:30px;display:block}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tile{cursor:pointer;min-height:150px}
+.tile:hover{transform:translateY(-8px);box-shadow:0 0 30px rgba(168,85,247,.35);border-color:#a855f7}
+.tile h3{font-size:22px;margin-bottom:8px}
+.tile p{color:#d6d6d6;line-height:1.7}
+@media(max-width:900px){.stats,.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<main class="dashboard">
+
+<header class="header">
+<div>
+<h1>🎓 لوحة الطالب</h1>
+<p>مرحباً بك في منصة آفاق التعليمية. تابع موادك ودروسك ونتائجك من هنا.</p>
+</div>
+<div class="actions">
+<button class="btn" onclick="location.href='../index.html'">🏠 الرئيسية</button>
+<button class="btn logout" onclick="location.href='../index.html'">تسجيل الخروج</button>
+</div>
+</header>
+
+<section class="stats">
+<div class="card"><span>⭐</span><h3>النقاط</h3><strong>0</strong></div>
+<div class="card"><span>🎖️</span><h3>المستوى</h3><strong>مبتدئ</strong></div>
+<div class="card"><span>📝</span><h3>الاختبارات</h3><strong>0</strong></div>
+<div class="card"><span>✅</span><h3>الصحيحة</h3><strong>0</strong></div>
+</section>
+
+<section class="grid">
+<div class="tile" onclick="location.href='student-subjects.html'">
+<span>📚</span>
+<h3>موادي</h3>
+<p>الدخول إلى المواد المسجل بها الطالب.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-lessons.html'">
+<span>📖</span>
+<h3>الدروس</h3>
+<p>عرض آخر الدروس والملفات التعليمية.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-exams.html'">
+<span>📝</span>
+<h3>الاختبارات</h3>
+<p>عرض الاختبارات المنشورة وحلها.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-assignments.html'">
+<span>📋</span>
+<h3>الواجبات</h3>
+<p>متابعة الواجبات وتسليم الحلول.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-attendance.html'">
+<span>✅</span>
+<h3>الحضور</h3>
+<p>متابعة سجل الحضور والغياب.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-results.html'">
+<span>📊</span>
+<h3>النتائج</h3>
+<p>عرض درجات الاختبارات والواجبات والنتيجة النهائية.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-leaderboard.html'">
+<span>🏆</span>
+<h3>لوحة المتفوقين</h3>
+<p>مشاهدة ترتيب الطلاب داخل المادة.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-messages.html'">
+<span>💬</span>
+<h3>الرسائل</h3>
+<p>مراسلة المدرس ومتابعة الردود.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-notifications.html'">
+<span>🔔</span>
+<h3>الإشعارات</h3>
+<p>عرض التنبيهات والإشعارات الجديدة.</p>
+</div>
+
+<div class="tile" onclick="location.href='student-profile.html'">
+<span>👤</span>
+<h3>الملف الشخصي</h3>
+<p>عرض وتعديل بيانات الطالب وولي الأمر.</p>
+</div>
+</section>
+
+</main>
+</body>
+</html>
