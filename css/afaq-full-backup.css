@@ -1,0 +1,26 @@
+
+.backup-card{
+  padding:18px;
+  border-radius:24px;
+  background:rgba(255,255,255,.085);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 18px 40px rgba(0,0,0,.22);
+  margin-bottom:14px;
+}
+.backup-card h3{margin:0 0 10px}
+.backup-card p{margin:6px 0;color:#eadcff;line-height:1.8}
+.backup-list{
+  max-height:340px;
+  overflow:auto;
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  padding:12px;
+}
+.backup-list div{
+  padding:8px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:#eadcff;
+}
+.ok{color:#86efac!important}
+.bad{color:#fca5a5!important}
