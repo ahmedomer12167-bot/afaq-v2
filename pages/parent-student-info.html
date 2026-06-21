@@ -1,9 +1,78 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>👨‍🎓 معلومات الطالب - آفاق التعليمية</title><link rel="stylesheet" href="../css/main.css">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معلومات الطالب لولي الأمر - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
 <style>
-.page{min-height:100vh;padding:24px}.box{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
-</style></head>
-<body><main class="page"><section class="box"><h1>👨‍🎓 معلومات الطالب</h1><p>عرض بيانات الطالب المرتبط بولي الأمر.</p><div class="actions"><button class="btn" onclick="location.href='parent-dashboard.html'">🏠 لوحة ولي الأمر</button><button class="btn" onclick="history.back()">← رجوع</button></div></section>
-<section class="box"><p>هذه صفحة أساسية جاهزة، وسنطور تفاصيلها عند ربط بيانات الطالب الحقيقية.</p></section></main></body></html>
+.page{min-height:100vh;padding:24px}
+.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.profile-grid{display:grid;grid-template-columns:280px 1fr;gap:22px}
+.avatar-box{text-align:center;padding:22px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.avatar{width:135px;height:135px;border-radius:50%;object-fit:cover;margin:0 auto 15px;border:3px solid #7c3aed;background:#374151}
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.info{padding:16px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.info strong{display:block;color:#c084fc;margin-bottom:8px}
+.hint{font-size:13px;color:#d6d6d6;line-height:1.6;margin-top:8px}
+.subjects{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{padding:7px 12px;border-radius:12px;background:#7c3aed}
+@media(max-width:900px){.profile-grid,.info-grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<main class="page">
+
+<header class="header">
+<div>
+<h1>👤 معلومات الطالب لولي الأمر</h1>
+<p>هذه الصفحة تعرض بيانات الطالب المرتبط بولي الأمر.</p>
+</div>
+<div class="actions">
+<button class="btn" onclick="location.href='parent-dashboard.html'">🏠 لوحة ولي الأمر</button>
+<button class="btn" onclick="history.back()">← رجوع</button>
+</div>
+</header>
+
+<section class="profile-grid">
+<div class="avatar-box">
+<img id="studentPhotoView" class="avatar" alt="صورة الطالب">
+<h2 id="studentNameView">اسم الطالب</h2>
+<p id="studentGradeView">المرحلة الدراسية</p>
+<div id="subjectsList" class="subjects"></div>
+<p class="hint">صورة الطالب وبياناته تُدار من لوحة المدير فقط.</p>
+</div>
+
+<div class="box">
+<h2>بيانات الطالب</h2>
+
+<div class="info-grid">
+<div class="info"><strong>الاسم الثلاثي</strong><span id="studentNameInfo">-</span><p class="hint">الاسم الكامل كما أضافه المدير.</p></div>
+<div class="info"><strong>المرحلة الدراسية</strong><span id="studentGradeInfo">-</span><p class="hint">مرحلة الطالب الحالية.</p></div>
+<div class="info"><strong>رقم هاتف الطالب</strong><span id="studentPhoneInfo">-</span><p class="hint">رقم التواصل الخاص بالطالب.</p></div>
+<div class="info"><strong>كود الطالب</strong><span id="studentCodeInfo">-</span><p class="hint">الكود المستخدم لتسجيل الدخول.</p></div>
+<div class="info"><strong>اسم ولي الأمر</strong><span id="parentNameInfo">-</span><p class="hint">ولي الأمر المرتبط بحساب الطالب.</p></div>
+<div class="info"><strong>رقم ولي الأمر</strong><span id="parentPhoneInfo">-</span><p class="hint">رقم التواصل مع ولي الأمر.</p></div>
+<div class="info"><strong>حالة الاشتراك</strong><span id="subscriptionStatusInfo">-</span><p class="hint">تُحدّث من إدارة الطلاب/الاشتراكات.</p></div>
+<div class="info"><strong>انتهاء الاشتراك</strong><span id="subscriptionEndInfo">-</span><p class="hint">تاريخ انتهاء اشتراك الطالب.</p></div>
+</div>
+
+<div class="info" style="margin-top:15px">
+<strong>ملاحظات الطالب</strong>
+<span id="studentNotesInfo">لا توجد ملاحظات</span>
+<p class="hint">ملاحظات الإدارة عن الطالب.</p>
+</div>
+</div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script>
+AfaqData.renderStudentMiniProfile();
+</script>
+</body>
+</html>
