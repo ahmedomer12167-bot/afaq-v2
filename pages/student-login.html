@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<title>تسجيل دخول الطالب</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دخول الطالب</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-room.css">
-
 </head>
 <body>
 <main class="room">
 <section class="panel" style="max-width:520px;margin:auto">
 <h1>🎓 دخول الطالب</h1>
+<p>الدخول متاح فقط للطلاب الذين تمت الموافقة على اشتراكهم من المدير.</p>
 <input id="code" placeholder="كود الطالب">
 <button class="btn" onclick="login()">دخول</button>
 <a class="btn back" href="student-subscription-request.html">طلب اشتراك جديد</a>
@@ -22,15 +22,18 @@
 <script src="../js/afaq-data.js"></script>
 <script>
 function login(){
- const c=code.value.trim();
- const st=window.AfaqData ? AfaqData.findStudent(c) : null;
- if(!st){msg.textContent="الكود غير صحيح أو الطالب غير موجود";return;}
- if(st.subscriptionStatus !== "مفعل"){
-   msg.textContent="اشتراكك غير مفعل. أرسل طلب اشتراك أو راجع الإدارة.";
+ const c = code.value.trim();
+ const st = window.AfaqData ? AfaqData.findStudent(c) : null;
+ if(!st){
+   msg.textContent = "الكود غير صحيح أو الطالب غير موجود.";
+   return;
+ }
+ if(!AfaqData.hasActiveSubscription(st)){
+   msg.textContent = "اشتراكك غير مفعل. أرسل طلب اشتراك أو راجع الإدارة.";
    return;
  }
  AfaqData.setCurrentStudent(st);
- location.href="student-dashboard.html";
+ location.href = "student-dashboard.html";
 }
 </script>
 </body>
