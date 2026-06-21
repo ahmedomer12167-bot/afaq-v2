@@ -11,8 +11,10 @@
 <main class="afaq-mobile">
 <section class="afaq-top">
 <h1>💬 رسائل المدير</h1>
-<p>صفحة رسائل المدير تعمل وتعرض كل الرسائل الموحدة.</p>
+<div style="margin-top:14px">
 <a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
+<button class="afaq-btn" onclick="markAdminMessagesRead()">قراءة الرسائل</button>
+</div>
 </section>
 
 <section class="panel">
@@ -37,6 +39,7 @@
 
 <script src="../js/afaq-data.js"></script>
 <script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-admin-read-tools.js"></script>
 <script>
 function readMessages(){
  if(window.AfaqData && AfaqData.list) return AfaqData.list("messages");
@@ -74,7 +77,6 @@ function renderMessages(){
  </div>`).join(""):"<div class='card'><h3>لا توجد رسائل حالياً</h3></div>";
 }
 renderMessages();
-if(window.AfaqBadges) AfaqBadges.markCollectionSeen("messages");
 </script>
 </body>
 </html>
