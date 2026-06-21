@@ -1,70 +1,65 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة المدير - آفاق التعليمية</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة المدير</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-room.css">
+<link rel="stylesheet" href="../css/afaq-3d-dashboard.css">
 </head>
 <body>
-<main class="room">
-
-<section class="topbar">
-  <div class="title">
+<main class="afaq-dashboard">
+<section class="afaq-hero">
+  <div class="afaq-hero-info">
     <h1>👨‍💼 لوحة المدير</h1>
-    <p>جميع العدادات تتحدث تلقائياً بعد الإضافة أو الحذف أو التفريغ.</p>
+    <p>لوحة تحكم كبيرة ومنظمة بتصميم ثلاثي الأبعاد.</p>
   </div>
-  <div class="actions">
-    <a class="btn back" href="../index.html">الرئيسية</a>
-    <button class="btn danger" onclick="clearAllData()">حذف جميع البيانات</button>
+  <div class="afaq-hero-actions">
+    <a class="afaq-btn gray" href="../index.html">الرئيسية</a>
+  </div>
+  
+</section>
+
+<section class="afaq-stats">
+<div class="afaq-stat"><div class="ico">👨‍🎓</div><h3>الطلاب</h3><strong data-count="students">0</strong></div>
+<div class="afaq-stat"><div class="ico">👨‍🏫</div><h3>المدرسون</h3><strong data-count="teachers">0</strong></div>
+<div class="afaq-stat"><div class="ico">📚</div><h3>المواد</h3><strong data-count="subjects">0</strong></div>
+<div class="afaq-stat"><div class="ico">💳</div><h3>طلبات الاشتراك</h3><strong data-count="subscriptionRequests">0</strong></div>
+<div class="afaq-stat"><div class="ico">📖</div><h3>الدروس</h3><strong data-count="lessons">0</strong></div>
+<div class="afaq-stat"><div class="ico">📝</div><h3>الاختبارات</h3><strong data-count="exams">0</strong></div>
+<div class="afaq-stat"><div class="ico">📋</div><h3>الواجبات</h3><strong data-count="assignments">0</strong></div>
+<div class="afaq-stat"><div class="ico">📊</div><h3>النتائج</h3><strong data-count="results">0</strong></div>
+</section>
+
+<div class="afaq-section-title"><h2>إدارة الأقسام</h2></div>
+<section class="afaq-grid">
+<div class="afaq-card" onclick="location.href='students-management.html'"><div class="ico">👨‍🎓</div><h3>إدارة الطلاب</h3><p>إضافة وتعديل وحذف الطلاب.</p></div>
+<div class="afaq-card" onclick="location.href='teachers-management.html'"><div class="ico">👨‍🏫</div><h3>إدارة المدرسين</h3><p>إضافة المدرسين وربطهم بالمواد.</p></div>
+<div class="afaq-card" onclick="location.href='subjects-management.html'"><div class="ico">📚</div><h3>إدارة المواد</h3><p>إضافة المواد وربطها بالمدرس.</p></div>
+<div class="afaq-card" onclick="location.href='subscription-requests-management.html'"><div class="ico">💳</div><h3>طلبات الاشتراك</h3><p>قبول طلبات الطلاب وتفعيلهم.</p></div>
+<div class="afaq-card" onclick="location.href='admin-unified-data-center.html'"><div class="ico">🧩</div><h3>مركز البيانات</h3><p>عرض كل بيانات المنصة الموحدة.</p></div>
+<div class="afaq-card" onclick="location.href='notifications-center.html'"><div class="ico">🔔</div><h3>الإشعارات</h3><p>متابعة إشعارات النظام.</p></div>
+<div class="afaq-card" onclick="location.href='reset-data.html'"><div class="ico">🧹</div><h3>تصفير البيانات</h3><p>حذف بيانات الاختبار والبدء من الصفر.</p></div>
+<div class="afaq-card" onclick="location.href='admin-unified-data-center.html'"><div class="ico">📈</div><h3>التقارير</h3><p>مراجعة عامة للمنصة.</p></div>
+</section>
+
+<section class="afaq-mini">
+  <div class="afaq-panel">
+    <h3>🔔 آخر الإشعارات</h3>
+    <div class="afaq-row"><span>الإشعارات الجديدة</span><span class="badge" data-count="notifications">0</span></div>
+    <div class="afaq-row"><span>الرسائل</span><span class="badge" data-count="messages">0</span></div>
+  </div>
+  <div class="afaq-panel">
+    <h3>📊 ملخص سريع</h3>
+    <div class="afaq-row"><span>الحضور</span><span class="badge" data-count="attendanceRate">0%</span></div>
+    <div class="afaq-row"><span>المعدل</span><span class="badge" data-count="averageScore">0%</span></div>
   </div>
 </section>
-
-<section class="grid4">
-  <div class="panel"><h3>👨‍🎓 الطلاب</h3><h1 data-count="students">0</h1></div>
-  <div class="panel"><h3>👨‍🏫 المدرسون</h3><h1 data-count="teachers">0</h1></div>
-  <div class="panel"><h3>📚 المواد</h3><h1 data-count="subjects">0</h1></div>
-  <div class="panel"><h3>💳 طلبات الاشتراك</h3><h1 data-count="subscriptionRequests">0</h1></div>
-</section>
-
-<section class="grid4">
-  <div class="panel"><h3>📖 الدروس</h3><h1 data-count="lessons">0</h1></div>
-  <div class="panel"><h3>📝 الاختبارات</h3><h1 data-count="exams">0</h1></div>
-  <div class="panel"><h3>📋 الواجبات</h3><h1 data-count="assignments">0</h1></div>
-  <div class="panel"><h3>📊 النتائج</h3><h1 data-count="results">0</h1></div>
-</section>
-
-<section class="grid4">
-  <div class="panel"><h3>✅ الحضور</h3><h1 data-count="present">0</h1></div>
-  <div class="panel"><h3>❌ الغياب</h3><h1 data-count="absent">0</h1></div>
-  <div class="panel"><h3>💬 الرسائل</h3><h1 data-count="messages">0</h1></div>
-  <div class="panel"><h3>🔔 الإشعارات</h3><h1 data-count="notifications">0</h1></div>
-</section>
-
-<section class="panel">
-  <h2>إدارة المنصة</h2>
-  <div class="cards">
-    <div class="card"><h3>إدارة الطلاب</h3><p>إضافة وتعديل وحذف الطلاب.</p><a class="btn" href="students-management.html">فتح</a></div>
-    <div class="card"><h3>إدارة المدرسين</h3><p>إضافة المدرسين وربطهم بالمواد.</p><a class="btn" href="teachers-management.html">فتح</a></div>
-    <div class="card"><h3>إدارة المواد</h3><p>إضافة المواد وربطها بالمدرس.</p><a class="btn" href="subjects-management.html">فتح</a></div>
-    <div class="card"><h3>طلبات الاشتراك</h3><p>قبول طلبات الطلاب.</p><a class="btn" href="subscription-requests-management.html">فتح</a></div>
-    <div class="card"><h3>مركز البيانات</h3><p>عرض كل البيانات الموحدة.</p><a class="btn" href="admin-unified-data-center.html">فتح</a></div>
-    <div class="card"><h3>الإشعارات</h3><p>متابعة إشعارات النظام.</p><a class="btn" href="notifications-center.html">فتح</a></div>
-  </div>
-</section>
-
 </main>
-
 <script src="../js/afaq-data.js"></script>
 <script src="../js/afaq-auto-stats.js"></script>
 <script>
-function clearAllData(){
-  if(!confirm("هل تريد حذف جميع بيانات المنصة؟")) return;
-  Object.keys(localStorage).filter(k => k.startsWith("afaq_")).forEach(k => localStorage.removeItem(k));
-  if(window.AfaqStats) AfaqStats.updateCounters();
-  alert("تم حذف جميع البيانات وتحديث العدادات.");
-}
+if(window.AfaqData && AfaqData.renderCurrentStudent) AfaqData.renderCurrentStudent();
 </script>
 </body>
 </html>
