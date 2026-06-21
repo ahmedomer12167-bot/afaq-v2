@@ -1,13 +1,114 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>موادي</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body>
-<main class="room"><section class="topbar"><div class="title"><h1>📚 موادي</h1><p>الطالب لا يدخل المادة إلا بعد موافقة المدرس.</p></div><a class="btn back" href="student-dashboard.html">لوحة الطالب</a></section>
-<section class="panel"><h2>المواد المتاحة من المدير</h2><div id="available" class="cards"></div></section>
-<section class="panel"><h2>المواد المفعلة لي</h2><div id="approved" class="cards"></div></section>
-<section class="panel"><h2>طلباتي</h2><div id="requests" class="cards"></div></section></main>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مواد الطالب</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-subject-join.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>📚 المواد</h1>
+<p>تظهر هنا جميع المواد الخاصة بصفك. عند فتح أي مادة سيُطلب منك كود المادة ثم يرسل الطلب إلى المدرس للموافقة.</p>
+<div style="margin-top:14px"><a class="afaq-btn gray" href="student-dashboard.html">رجوع للطالب</a></div>
+</section>
+
+<section class="panel">
+<h2>كل المواد المتاحة</h2>
+<input id="searchBox" placeholder="بحث عن مادة أو مدرس..." oninput="renderSubjects()">
+<div id="subjectsBox" class="join-grid"></div>
+</section>
+
+<section class="panel" style="margin-top:15px">
+<h2>طلبات دخول المادة</h2>
+<div id="requestsBox"></div>
+</section>
+
+</main>
+
 <script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-subject-join.js"></script>
 <script>
-const st=AfaqData.getCurrentStudent();if(!st){location.href="student-login.html"}
-function requestSubject(name,teacherCode){const old=AfaqData.list("subjectRequests").find(r=>r.studentId===st.studentId&&r.subject===name&&r.status==="قيد المراجعة");if(old){alert("لديك طلب قيد المراجعة");return;}AfaqData.add("subjectRequests",{studentId:st.studentId,code:st.code,studentName:st.name,grade:st.grade,subject:name,teacherCode,status:"قيد المراجعة"});AfaqData.addNotification("teacher",teacherCode,"طلب انضمام جديد",st.name+" طلب الانضمام إلى "+name,"مادة");render();alert("تم إرسال الطلب للمدرس");}
-function openSub(name){if(!AfaqData.canEnterSubject(st,name)){alert("لم تتم الموافقة بعد");return;}AfaqData.setCurrentSubject(name);location.href="student-subject-page.html";}
-function render(){const subs=AfaqData.subjects().filter(s=>!s.grade||s.grade===st.grade);available.innerHTML=subs.length?subs.map(s=>`<div class="card"><h3>${s.name}</h3><p>المدرس: ${s.teacherName||s.teacherCode}</p><button class="btn ok" onclick="requestSubject('${s.name}','${s.teacherCode}')">طلب الانضمام</button></div>`).join(""):"<div class='card'><h3>لا توجد مواد أضافها المدير</h3></div>";approved.innerHTML=(st.subjects||[]).length?st.subjects.map(s=>`<div class="card"><h3>${s}</h3><button class="btn" onclick="openSub('${s}')">دخول المادة</button></div>`).join(""):"<div class='card'><h3>لا توجد مواد مفعلة</h3></div>";const req=AfaqData.list("subjectRequests").filter(r=>r.studentId===st.studentId);requests.innerHTML=req.length?req.map(r=>`<div class="card"><h3>${r.subject}</h3><span class="badge">${r.status}</span></div>`).join(""):"<div class='card'><h3>لا توجد طلبات</h3></div>"}render();
+const student = AfaqSubjectJoin.currentStudent();
+if(!student){location.href="student-login.html";}
+
+function renderSubjects(){
+  const q = String(searchBox.value || "").trim();
+  let list = AfaqSubjectJoin.visibleSubjectsForStudent(student);
+
+  if(q){
+    list = list.filter(s =>
+      String(s.name || s.subject || "").includes(q) ||
+      String(s.teacherName || "").includes(q) ||
+      String(s.grade || "").includes(q)
+    );
+  }
+
+  subjectsBox.innerHTML = list.length ? list.map(s=>{
+    const joined = AfaqSubjectJoin.isStudentJoined(s, student);
+    const pending = AfaqSubjectJoin.existingRequest(s, student);
+    const subjectName = s.name || s.subject || "-";
+    return `
+      <div class="subject-card">
+        <h3>${subjectName}</h3>
+        <p>الصف: ${s.grade || "-"}</p>
+        <p>المدرس: ${s.teacherName || "-"}</p>
+        <p>كود المدرس: ${s.teacherCode || "-"}</p>
+        ${joined ? `<span class="status-pill">مسجل في المادة</span>` : ""}
+        ${pending ? `<span class="status-pill">طلبك قيد المراجعة</span>` : ""}
+        ${!joined && !pending ? `
+          <input id="code-${s.id}" placeholder="أدخل كود المادة">
+          <button class="afaq-btn" onclick="requestJoin('${s.id}')">طلب دخول المادة</button>
+        ` : `
+          <button class="afaq-btn gray" onclick="openSubject('${subjectName}')">فتح المادة</button>
+        `}
+      </div>
+    `;
+  }).join("") : "<div class='subject-card'><h3>لا توجد مواد متاحة لصفك حالياً</h3></div>";
+
+  renderRequests();
+}
+
+function requestJoin(id){
+  try{
+    const code = document.getElementById("code-" + id).value;
+    AfaqSubjectJoin.submitJoinRequest(id, code);
+    renderSubjects();
+    alert("تم إرسال طلب دخول المادة إلى المدرس للموافقة.");
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+function openSubject(subjectName){
+  localStorage.setItem("afaq_current_subject", subjectName);
+  alert("تم فتح المادة: " + subjectName);
+  // يمكن لاحقاً تحويلها إلى صفحة غرفة المادة
+  // location.href = "student-subject-room.html";
+}
+
+function renderRequests(){
+  const list = AfaqSubjectJoin.studentRequests();
+  requestsBox.innerHTML = list.length ? list.map(r=>`
+    <div class="request-card">
+      <h3>${r.subject}</h3>
+      <p>المدرس: ${r.teacherName}</p>
+      <p>الصف: ${r.grade}</p>
+      <p>تاريخ الطلب: ${r.createdAt}</p>
+      <span class="status-pill">${r.status}</span>
+      ${r.note ? `<p>ملاحظة: ${r.note}</p>` : ""}
+    </div>
+  `).join("") : "<div class='request-card'><h3>لا توجد طلبات حالياً</h3></div>";
+}
+
+renderSubjects();
 </script>
-</body></html>
+</body>
+</html>
