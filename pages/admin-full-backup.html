@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نسخة ZIP كاملة للمنصة</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-full-backup.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>📦 نسخة ZIP كاملة للمنصة</h1>
+<p>هذا الزر ينشئ نسخة ZIP من ملفات المنصة الحالية مع بيانات المنصة المخزنة.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
+</div>
+</section>
+
+<section class="backup-card">
+<h3>إنشاء نسخة كاملة</h3>
+<p>في كل مرة تضغط الزر سيتم جلب أحدث نسخة من الملفات الحالية وإنشاء ZIP جديد.</p>
+<button class="afaq-btn" onclick="AfaqFullPlatformBackup.createFullBackup()">📦 إنشاء وتحميل ZIP كامل</button>
+<p id="backupStatus"></p>
+</section>
+
+<section class="backup-card">
+<h3>حالة الملفات داخل النسخة</h3>
+<div id="backupFilesList" class="backup-list">
+اضغط زر إنشاء النسخة لعرض الملفات التي تم حفظها.
+</div>
+</section>
+
+</main>
+
+<script src="../js/afaq-full-platform-backup.js"></script>
+</body>
+</html>
