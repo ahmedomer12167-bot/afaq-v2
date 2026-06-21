@@ -1,29 +1,40 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة ولي الأمر</title>
 <link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-room.css">
-<link rel="stylesheet" href="../css/afaq-3d-dashboard.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
 <link rel="stylesheet" href="../css/afaq-badges.css">
-</head><body>
-<main class="afaq-dashboard">
-<section class="afaq-hero"><div class="afaq-hero-info"><h1>👨‍👩‍👦 لوحة ولي الأمر</h1><p>متابعة الطالب مع شارات حمراء للتحديثات الجديدة.</p></div><div class="afaq-hero-actions"><a class="afaq-btn gray" href="../index.html">الرئيسية</a></div><div class="afaq-user"><img id="studentPhotoView" class="afaq-avatar"><div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><p>الحالة: <span id="subscriptionStatusInfo">-</span></p></div></div></section>
-<section class="afaq-stats"><div class="afaq-stat"><div class="ico">📖</div><h3>الدروس</h3><strong data-count="studentLessons">0</strong></div>
-<div class="afaq-stat"><div class="ico">📝</div><h3>الاختبارات</h3><strong data-count="studentExams">0</strong></div>
-<div class="afaq-stat"><div class="ico">📋</div><h3>الواجبات</h3><strong data-count="studentAssignments">0</strong></div>
-<div class="afaq-stat"><div class="ico">🔔</div><h3>إشعارات</h3><strong data-count="unreadStudent">0</strong></div></section>
-<div class="afaq-section-title"><h2>الأقسام</h2></div>
-<section class="afaq-grid"><div id="" data-badge="" class="afaq-card" onclick="location.href='parent-student-info.html'"><div class="ico">👨‍🎓</div><h3>معلومات الطالب</h3><p>بيانات الطالب.</p></div>
-<div id="badgeResults" data-badge="results" class="afaq-card" onclick="location.href='parent-results.html'"><div class="ico">📊</div><h3>النتائج</h3><p>نتائج الطالب.</p></div>
-<div id="" data-badge="" class="afaq-card" onclick="location.href='parent-attendance.html'"><div class="ico">✅</div><h3>الحضور</h3><p>الحضور والغياب.</p></div>
-<div id="badgeExams" data-badge="exams" class="afaq-card" onclick="location.href='parent-exams.html'"><div class="ico">📝</div><h3>الاختبارات</h3><p>اختبارات الطالب.</p></div>
-<div id="badgeAssignments" data-badge="assignments" class="afaq-card" onclick="location.href='parent-assignments.html'"><div class="ico">📋</div><h3>الواجبات</h3><p>واجبات الطالب.</p></div>
-<div id="badgeMessages" data-badge="messages" class="afaq-card" onclick="location.href='parent-messages.html'"><div class="ico">💬</div><h3>الرسائل</h3><p>رسائل جديدة.</p></div>
-<div id="badgeNotifications" data-badge="notifications" class="afaq-card" onclick="location.href='parent-notifications.html'"><div class="ico">🔔</div><h3>الإشعارات</h3><p>إشعارات جديدة.</p></div>
-<div id="" data-badge="" class="afaq-card" onclick="location.href='parent-reports.html'"><div class="ico">📈</div><h3>التقارير</h3><p>تقارير الطالب.</p></div></section>
+</head>
+<body>
+<main class="afaq-mobile">
+<section class="afaq-top">
+  <h1>👨‍👩‍👦 لوحة ولي الأمر</h1>
+  <p>متابعة الطالب بأزرار كبيرة ومتناسقة.</p>
+  <div class="afaq-profile"><img id="studentPhotoView"><div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><p>الحالة: <span id="subscriptionStatusInfo">-</span></p></div></div>
+  <div style="margin-top:14px"><a class="afaq-btn gray" href="../index.html">الرئيسية</a></div>
+</section>
+<section class="afaq-stats"><div class="afaq-stat"><div class="icon">📖</div><h3>الدروس</h3><strong data-count="studentLessons">0</strong></div>
+<div class="afaq-stat"><div class="icon">📝</div><h3>الاختبارات</h3><strong data-count="studentExams">0</strong></div>
+<div class="afaq-stat"><div class="icon">📋</div><h3>الواجبات</h3><strong data-count="studentAssignments">0</strong></div>
+<div class="afaq-stat"><div class="icon">📊</div><h3>النتائج</h3><strong data-count="studentResults">0</strong></div>
+<div class="afaq-stat"><div class="icon">✅</div><h3>الحضور</h3><strong data-count="attendanceRate">0</strong></div>
+<div class="afaq-stat"><div class="icon">📈</div><h3>المعدل</h3><strong data-count="averageScore">0</strong></div>
+<div class="afaq-stat"><div class="icon">💬</div><h3>الرسائل</h3><strong data-count="studentMessages">0</strong></div>
+<div class="afaq-stat"><div class="icon">🔔</div><h3>إشعارات</h3><strong data-count="unreadStudent">0</strong></div></section>
+<section class="afaq-grid"><div class="afaq-tile" data-badge="" onclick="location.href='parent-student-info.html'"><div class="icon">👨‍🎓</div><h3>معلومات الطالب</h3><p>بيانات الطالب المرتبط.</p></div>
+<div class="afaq-tile" data-badge="results" onclick="location.href='parent-results.html'"><div class="icon">📊</div><h3>النتائج</h3><p>متابعة الدرجات.</p></div>
+<div class="afaq-tile" data-badge="" onclick="location.href='parent-attendance.html'"><div class="icon">✅</div><h3>الحضور</h3><p>متابعة الحضور والغياب.</p></div>
+<div class="afaq-tile" data-badge="exams" onclick="location.href='parent-exams.html'"><div class="icon">📝</div><h3>الاختبارات</h3><p>متابعة الاختبارات.</p></div>
+<div class="afaq-tile" data-badge="assignments" onclick="location.href='parent-assignments.html'"><div class="icon">📋</div><h3>الواجبات</h3><p>متابعة الواجبات.</p></div>
+<div class="afaq-tile" data-badge="messages" onclick="location.href='parent-messages.html'"><div class="icon">💬</div><h3>الرسائل</h3><p>رسائل ولي الأمر.</p></div>
+<div class="afaq-tile" data-badge="notifications" onclick="location.href='parent-notifications.html'"><div class="icon">🔔</div><h3>الإشعارات</h3><p>تنبيهات الطالب.</p></div>
+<div class="afaq-tile" data-badge="" onclick="location.href='parent-reports.html'"><div class="icon">📈</div><h3>التقارير</h3><p>تقارير مختصرة.</p></div></section>
 </main>
 <script src="../js/afaq-data.js"></script>
 <script src="../js/afaq-auto-stats.js"></script>
 <script src="../js/afaq-badges.js"></script>
 <script>if(window.AfaqData&&AfaqData.renderCurrentStudent)AfaqData.renderCurrentStudent();</script>
-</body></html>
+</body>
+</html>

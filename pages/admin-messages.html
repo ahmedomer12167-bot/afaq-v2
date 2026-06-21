@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رسائل المدير</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+</head>
+<body>
+<main class="afaq-mobile">
+<section class="afaq-top">
+<h1>💬 رسائل المدير</h1>
+<p>صفحة رسائل المدير تعمل وتعرض كل الرسائل الموحدة.</p>
+<a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
+</section>
+
+<section class="panel">
+<h2>إرسال رسالة</h2>
+<select id="toRole">
+<option value="student">طالب</option>
+<option value="teacher">مدرس</option>
+<option value="parent">ولي أمر</option>
+<option value="admin">المدير</option>
+</select>
+<input id="toId" placeholder="كود المستلم اختياري">
+<input id="subject" placeholder="عنوان الرسالة">
+<textarea id="message" placeholder="نص الرسالة"></textarea>
+<button class="afaq-btn" onclick="sendMessage()">إرسال</button>
+</section>
+
+<section class="panel" style="margin-top:15px">
+<h2>كل الرسائل</h2>
+<div id="messagesBox" class="cards"></div>
+</section>
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-badges.js"></script>
+<script>
+function readMessages(){
+ if(window.AfaqData && AfaqData.list) return AfaqData.list("messages");
+ try{return JSON.parse(localStorage.getItem("afaq_messages"))||[]}catch(e){return[]}
+}
+function saveMessages(arr){
+ if(window.AfaqData && AfaqData.save) AfaqData.save("messages",arr);
+ else localStorage.setItem("afaq_messages",JSON.stringify(arr));
+}
+function sendMessage(){
+ const arr=readMessages();
+ arr.unshift({
+   id:"msg-"+Date.now(),
+   fromRole:"admin",
+   toRole:toRole.value,
+   toId:toId.value.trim(),
+   subject:subject.value.trim() || "رسالة من المدير",
+   message:message.value.trim(),
+   read:false,
+   createdAt:new Date().toLocaleString("ar")
+ });
+ saveMessages(arr);
+ subject.value=message.value=toId.value="";
+ renderMessages();
+ alert("تم إرسال الرسالة");
+}
+function renderMessages(){
+ const arr=readMessages();
+ messagesBox.innerHTML=arr.length?arr.map(m=>`
+ <div class="card">
+ <h3>${m.subject||"رسالة"}</h3>
+ <p>${m.message||""}</p>
+ <span class="badge">${m.toRole||"عام"}</span>
+ <p><small>${m.createdAt||""}</small></p>
+ </div>`).join(""):"<div class='card'><h3>لا توجد رسائل حالياً</h3></div>";
+}
+renderMessages();
+if(window.AfaqBadges) AfaqBadges.markCollectionSeen("messages");
+</script>
+</body>
+</html>
