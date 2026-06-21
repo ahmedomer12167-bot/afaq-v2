@@ -10,35 +10,94 @@
 
 <main class="room">
 <section class="topbar">
-<div class="title"><h1>👨‍👩‍👦 لوحة ولي الأمر</h1><p>متابعة الطالب من غرف مستقلة واضحة.</p></div>
-<div class="actions"><a class="btn back" href="../index.html">الرئيسية</a></div>
+<div class="title">
+<h1>👨‍👩‍👦 لوحة ولي الأمر</h1>
+<p>متابعة الطالب من غرف مستقلة واضحة.</p>
+</div>
+<div class="actions">
+<a class="btn back" href="../index.html">الرئيسية</a>
+</div>
 </section>
+
 <section class="hero-card">
 <img id="studentPhotoView" class="avatar">
-<div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><p>الاشتراك: <span id="subscriptionStatusInfo">-</span></p></div>
+<div>
+<h2 id="studentNameView">اسم الطالب</h2>
+<p id="studentGradeView">المرحلة</p>
+<p>الاشتراك: <span id="subscriptionStatusInfo">-</span></p>
+</div>
 </section>
+
 <section class="stats">
 <div class="stat"><span>📊</span><h3>المعدل</h3><strong>92%</strong></div>
 <div class="stat"><span>✅</span><h3>الحضور</h3><strong>96%</strong></div>
 <div class="stat"><span>📋</span><h3>الواجبات</h3><strong>5</strong></div>
 <div class="stat"><span>📝</span><h3>الاختبارات</h3><strong>8</strong></div>
 </section>
+
 <section class="dashboard-grid">
-<div class="tile" onclick="location.href='parent-student-info.html'"><div class="icon">👤</div><h3>معلومات الطالب</h3><p>بيانات الطالب المرتبط.</p></div>
-<div class="tile" onclick="location.href='parent-student-info.html'"><div class="icon">📖</div><h3>معلومات الطالب</h3><p>غرفة معلومات الطالب والملفات.</p></div>
-<div class="tile" onclick="location.href='parent-exams.html'"><div class="icon">📝</div><h3>الاختبارات</h3><p>غرفة الاختبارات.</p></div>
-<div class="tile" onclick="location.href='parent-assignments.html'"><div class="icon">📋</div><h3>الواجبات</h3><p>غرفة الواجبات.</p></div>
-<div class="tile" onclick="location.href='parent-attendance.html'"><div class="icon">✅</div><h3>الحضور</h3><p>غرفة سجل الحضور.</p></div>
-<div class="tile" onclick="location.href='parent-results.html'"><div class="icon">📊</div><h3>النتائج</h3><p>غرفة الدرجات والنتائج.</p></div>
-<div class="tile" onclick="location.href='parent-notifications.html'"><div class="icon">🔔</div><h3>الإشعارات</h3><p>غرفة التنبيهات.</p></div>
-<div class="tile" onclick="location.href='parent-messages.html'"><div class="icon">💬</div><h3>الرسائل</h3><p>غرفة الرسائل.</p></div>
-<div class="tile" onclick="location.href='parent-profile.html'"><div class="icon">🏆</div><h3>ملف ولي الأمر</h3><p>بيانات ولي الأمر.</p></div>
+<div class="tile" onclick="location.href='parent-student-info.html'">
+<div class="icon">👨‍🎓</div>
+<h3>معلومات الطالب</h3>
+<p>بيانات الطالب المرتبط والصورة والمرحلة والاشتراك.</p>
+</div>
+
+<div class="tile" onclick="location.href='parent-results.html'">
+<div class="icon">📊</div>
+<h3>النتائج</h3>
+<p>غرفة الدرجات والنتائج النهائية.</p>
+</div>
+
+<div class="tile" onclick="location.href='parent-attendance.html'">
+<div class="icon">✅</div>
+<h3>الحضور</h3>
+<p>غرفة سجل الحضور والغياب.</p>
+</div>
+
+<div class="tile" onclick="location.href='parent-exams.html'">
+<div class="icon">📝</div>
+<h3>الاختبارات</h3>
+<p>غرفة الاختبارات المنشورة ودرجاتها.</p>
+</div>
+
+<div class="tile" onclick="location.href='parent-assignments.html'">
+<div class="icon">📋</div>
+<h3>الواجبات</h3>
+<p>غرفة الواجبات وحالة التسليم.</p>
+</div>
+
+<div class="tile" onclick="location.href='parent-notifications.html'">
+<div class="icon">🔔</div>
+<h3>الإشعارات</h3>
+<p>غرفة التنبيهات والإعلانات الجديدة.</p>
+</div>
+
+<div class="tile" onclick="location.href='parent-messages.html'">
+<div class="icon">💬</div>
+<h3>الرسائل</h3>
+<p>غرفة الرسائل والتواصل مع المدرس أو الإدارة.</p>
+</div>
+
+<div class="tile" onclick="location.href='parent-profile.html'">
+<div class="icon">👤</div>
+<h3>ملف ولي الأمر</h3>
+<p>بيانات ولي الأمر ومعلومات التواصل.</p>
+</div>
+
+<div class="tile" onclick="location.href='parent-reports.html'">
+<div class="icon">📈</div>
+<h3>التقارير</h3>
+<p>غرفة التقارير ومتابعة أداء الطالب.</p>
+</div>
 </section>
 </main>
 
 <script src="../js/afaq-data.js"></script>
 <script>
-if(window.AfaqData){ const st=AfaqData.getCurrentStudent(); if(st) AfaqData.renderCurrentStudent(); }
+if(window.AfaqData){
+  const st = AfaqData.getCurrentStudent();
+  if(st) AfaqData.renderCurrentStudent();
+}
 </script>
 </body>
 </html>
