@@ -10,11 +10,12 @@
 .header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}
 .header{display:flex;justify-content:space-between;align-items:center;gap:15px}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn,.save-btn,.delete-btn,.edit-btn,.cancel-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.btn,.save-btn,.delete-btn,.edit-btn,.cancel-btn,.clean-btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}
 .save-btn{background:linear-gradient(135deg,#16a34a,#22c55e);width:100%;margin-top:10px}
 .delete-btn{background:linear-gradient(135deg,#dc2626,#ef4444);padding:8px 12px}
 .edit-btn{background:linear-gradient(135deg,#2563eb,#3b82f6);padding:8px 12px}
 .cancel-btn{background:linear-gradient(135deg,#64748b,#94a3b8);width:100%;margin-top:10px}
+.clean-btn{background:linear-gradient(135deg,#f59e0b,#f97316)}
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
 input,select,textarea{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 5px;font-size:15px}
 textarea{min-height:95px;resize:vertical}
@@ -41,6 +42,7 @@ textarea{min-height:95px;resize:vertical}
 </div>
 <div class="actions">
 <button class="btn" onclick="location.href='admin-dashboard.html'">🏠 لوحة المدير</button>
+<button class="clean-btn" onclick="cleanOldLargePhotos()">🧹 إصلاح حفظ الصور</button>
 <button class="btn" onclick="history.back()">← رجوع</button>
 </div>
 </header>
@@ -53,7 +55,7 @@ textarea{min-height:95px;resize:vertical}
 <div>
 <label>📷 صورة الطالب</label>
 <input id="studentPhoto" type="file" accept="image/*" onchange="previewPhoto(event)">
-<p class="hint">اختر صورة واضحة للطالب. سيتم ضغط الصورة تلقائياً حتى تُحفظ بدون مشكلة.</p>
+<p class="hint">اختر صورة واضحة. سيتم ضغطها تلقائياً بحجم صغير جداً حتى يتم حفظ الطالب بدون مشكلة.</p>
 </div>
 </div>
 
@@ -140,14 +142,29 @@ textarea{min-height:95px;resize:vertical}
 
 </main>
 
-<script src="../js/afaq-data.js"></script>
 <script>
-let students = AfaqData.getStudents().map(AfaqData.normalizeStudent);
+const STUDENTS_KEY="afaq_students";
+const CURRENT_STUDENT_KEY="afaq_current_student";
+const CURRENT_STUDENT_ID_KEY="afaq_current_student_id";
+
+let students = loadStudents();
 let selectedPhoto = "";
 let editingStudentId = null;
 
 function defaultPhoto(){
-return AfaqData.defaultPhoto();
+return "data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%' height='100%' rx='60' fill='#7c3aed'/><text x='50%' y='58%' text-anchor='middle' font-size='48' fill='white'>👨‍🎓</text></svg>`);
+}
+
+function loadStudents(){
+try{
+return JSON.parse(localStorage.getItem(STUDENTS_KEY)) || [];
+}catch(e){
+return [];
+}
+}
+
+function saveStudentsToStorage(){
+localStorage.setItem(STUDENTS_KEY, JSON.stringify(students));
 }
 
 function compressImage(file, callback){
@@ -158,7 +175,7 @@ const img = new Image();
 
 img.onload = function(){
 const canvas = document.createElement("canvas");
-const maxSize = 300;
+const maxSize = 120;
 let width = img.width;
 let height = img.height;
 
@@ -180,8 +197,19 @@ canvas.height = height;
 const ctx = canvas.getContext("2d");
 ctx.drawImage(img,0,0,width,height);
 
-const compressed = canvas.toDataURL("image/jpeg",0.65);
+let compressed = canvas.toDataURL("image/jpeg",0.35);
+
+/* إذا بقيت الصورة كبيرة، نحفظ صورة افتراضية حتى لا يفشل حفظ الطالب */
+if(compressed.length > 45000){
+compressed = defaultPhoto();
+}
+
 callback(compressed);
+};
+
+img.onerror = function(){
+alert("تعذر قراءة الصورة. جرّب صورة أخرى.");
+callback(defaultPhoto());
 };
 
 img.src = e.target.result;
@@ -200,6 +228,26 @@ document.getElementById("photoPreview").src = selectedPhoto;
 });
 }
 
+function normalizeStudent(student){
+const id = student.studentId || student.code || ("STD-" + Date.now());
+return {
+studentId:id,
+id:id,
+code:student.code || id,
+name:student.name || "طالب",
+grade:student.grade || "غير محدد",
+phone:student.phone || "-",
+parentName:student.parentName || "-",
+parentPhone:student.parentPhone || "-",
+notes:student.notes || "لا توجد ملاحظات",
+photo:student.photo || defaultPhoto(),
+subscriptionStatus:student.subscriptionStatus || "غير مفعل",
+subscriptionEnd:student.subscriptionEnd || "غير محدد",
+subjects:student.subjects || ["الأحياء","الكيمياء","الفيزياء"],
+createdAt:student.createdAt || new Date().toLocaleString("ar")
+};
+}
+
 function saveStudent(){
 const name = studentName.value.trim();
 const grade = studentGrade.value;
@@ -216,9 +264,10 @@ alert("يرجى إدخال الاسم والمرحلة وكود الطالب");
 return;
 }
 
-const currentPhoto = selectedPhoto || photoPreview.src || defaultPhoto();
+const oldStudent = students.find(s => s.studentId === editingStudentId || s.code === code);
+const currentPhoto = selectedPhoto || (oldStudent && oldStudent.photo) || defaultPhoto();
 
-const student = {
+const student = normalizeStudent({
 studentId: editingStudentId || code,
 id: editingStudentId || code,
 code,
@@ -231,19 +280,45 @@ notes,
 photo:currentPhoto,
 subscriptionStatus:subStatus,
 subscriptionEnd:subEnd,
-subjects:["الأحياء","الكيمياء","الفيزياء"],
-createdAt:new Date().toLocaleString("ar")
-};
+subjects: oldStudent?.subjects || ["الأحياء","الكيمياء","الفيزياء"],
+createdAt: oldStudent?.createdAt || new Date().toLocaleString("ar")
+});
+
+const index = students.findIndex(s => s.studentId === student.studentId || s.code === student.code);
+
+if(index >= 0){
+students[index] = student;
+}else{
+students.unshift(student);
+}
 
 try{
-AfaqData.upsertStudent(student);
-students = AfaqData.getStudents().map(AfaqData.normalizeStudent);
+saveStudentsToStorage();
+localStorage.setItem(CURRENT_STUDENT_ID_KEY, student.studentId);
+localStorage.setItem(CURRENT_STUDENT_KEY, JSON.stringify(student));
 clearForm();
 renderStudents();
 alert("تم حفظ الطالب بنجاح");
 }catch(err){
-alert("لم يتم الحفظ. غالباً الصورة كبيرة جداً. اختر صورة أصغر أو جرّب صورة أخرى.");
-console.error(err);
+/* محاولة ثانية بدون صورة في حال امتلأ التخزين */
+student.photo = defaultPhoto();
+
+const secondIndex = students.findIndex(s => s.studentId === student.studentId || s.code === student.code);
+if(secondIndex >= 0){
+students[secondIndex] = student;
+}
+
+try{
+saveStudentsToStorage();
+localStorage.setItem(CURRENT_STUDENT_ID_KEY, student.studentId);
+localStorage.setItem(CURRENT_STUDENT_KEY, JSON.stringify(student));
+clearForm();
+renderStudents();
+alert("تم حفظ الطالب، لكن لم تُحفظ الصورة لأن مساحة المتصفح ممتلئة. اضغط زر: إصلاح حفظ الصور، ثم جرّب صورة صغيرة.");
+}catch(e2){
+alert("لم يتم حفظ الطالب. اضغط زر: إصلاح حفظ الصور ثم جرّب مرة أخرى.");
+console.error(e2);
+}
 }
 }
 
@@ -264,6 +339,7 @@ parentPhone.value = st.parentPhone || "";
 studentNotes.value = st.notes || "";
 subscriptionStatus.value = st.subscriptionStatus || "غير مفعل";
 subscriptionEnd.value = st.subscriptionEnd && st.subscriptionEnd !== "غير محدد" ? st.subscriptionEnd : "";
+
 selectedPhoto = st.photo || defaultPhoto();
 photoPreview.src = selectedPhoto;
 
@@ -297,8 +373,31 @@ cancelEditBtn.style.display="none";
 
 function deleteStudent(studentId){
 if(confirm("هل تريد حذف هذا الطالب؟")){
-AfaqData.deleteStudent(studentId);
-students = AfaqData.getStudents().map(AfaqData.normalizeStudent);
+students = students.filter(s => s.studentId !== studentId && s.code !== studentId);
+saveStudentsToStorage();
+renderStudents();
+}
+}
+
+function cleanOldLargePhotos(){
+if(!confirm("سيتم ضغط/حذف الصور الكبيرة القديمة حتى يعمل حفظ الطلاب. هل تريد المتابعة؟")) return;
+
+students = students.map(s=>{
+if(s.photo && s.photo.length > 50000){
+s.photo = defaultPhoto();
+}
+return s;
+});
+
+try{
+saveStudentsToStorage();
+alert("تم إصلاح الصور القديمة. جرّب الحفظ الآن.");
+renderStudents();
+}catch(e){
+localStorage.removeItem(CURRENT_STUDENT_KEY);
+students = students.map(s=>({...s,photo:defaultPhoto()}));
+saveStudentsToStorage();
+alert("تم تنظيف الصور الثقيلة. جرّب الحفظ الآن.");
 renderStudents();
 }
 }
@@ -306,6 +405,8 @@ renderStudents();
 function renderStudents(){
 const body = document.getElementById("studentsBody");
 const s = document.getElementById("searchInput").value.trim();
+
+students = students.map(normalizeStudent);
 
 const filtered = students.filter(st =>
 (st.name||"").includes(s) ||
