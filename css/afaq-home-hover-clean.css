@@ -1,0 +1,33 @@
+
+/* Clean hover: ONLY login role cards, stats cards, and buttons.
+   Floating cards around laptop are intentionally excluded to avoid distortion. */
+.role-card,.stat-card,.hero-btn,.login-pill{transition:.28s ease;position:relative;overflow:hidden}
+.role-card::before,.stat-card::before{
+  content:"";position:absolute;top:-90%;right:-130%;width:80%;height:270%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.16),rgba(216,180,254,.34),transparent);
+  transform:rotate(25deg);opacity:0;transition:.55s ease;pointer-events:none;z-index:2;
+}
+.role-card:hover,.stat-card:hover{
+  transform:translateY(-12px) scale(1.025);
+  border-color:rgba(216,180,254,.82)!important;
+  box-shadow:0 28px 65px rgba(0,0,0,.42),0 0 30px rgba(168,85,247,.35)!important;
+}
+.role-card:hover::before,.stat-card:hover::before{right:140%;opacity:1}
+.role-card:hover .role-icon,.stat-card:hover .stat-icon{transform:translateY(-7px) scale(1.08) rotate(-3deg)}
+.role-icon,.stat-icon{transition:.28s ease;position:relative;z-index:3}
+.role-card h3,.role-card p,.role-card a,.stat-card *{position:relative;z-index:3}
+.role-card a:hover,.hero-btn:hover,.login-pill:hover{transform:translateY(-4px) scale(1.03);filter:brightness(1.08)}
+.role-card a::after,.hero-btn::after,.login-pill::after{
+  content:"  ➜";display:inline-block;opacity:0;transform:translateX(8px);transition:.25s ease;
+}
+.role-card a:hover::after,.hero-btn:hover::after,.login-pill:hover::after{opacity:1;transform:translateX(0)}
+.counter-flash{animation:counterFlash .55s ease}
+@keyframes counterFlash{
+  0%{transform:scale(1);color:#fff}
+  40%{transform:scale(1.18);color:#d8b4fe;text-shadow:0 0 20px rgba(216,180,254,.7)}
+  100%{transform:scale(1);color:#fff}
+}
+@media(max-width:750px){
+  .role-card:hover,.stat-card:hover{transform:translateY(-6px) scale(1.012)}
+  .role-card::before,.stat-card::before{display:none}
+}
