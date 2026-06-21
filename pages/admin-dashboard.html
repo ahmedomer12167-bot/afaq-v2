@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة المدير</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-purple-mobile.css">
 <link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-3d-dashboard.css">
 </head>
 <body>
 <main class="afaq-mobile">
 <section class="afaq-top">
 <h1>👨‍💼 لوحة المدير</h1>
+<p>جميع البيانات متزامنة بين المدير والمدرس والطالب وولي الأمر.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="../index.html">الرئيسية</a>
+<a class="afaq-btn" href="admin-control.html">⚙️ تحكم الصفحة</a>
+<a class="afaq-btn" href="admin-student-registry.html">📋 سجل الطلبة</a>
+</div>
+</section>
 
-<div style="margin-top:14px"><a class="afaq-btn gray" href="../index.html">الرئيسية</a></div>
-</section>
 <section class="afaq-stats">
-<div class="afaq-stat"><div class="icon">👨‍🎓</div><h3>الطلاب</h3><strong data-count="students">0</strong></div>
-<div class="afaq-stat"><div class="icon">👨‍🏫</div><h3>المدرسون</h3><strong data-count="teachers">0</strong></div>
-<div class="afaq-stat"><div class="icon">📚</div><h3>المواد</h3><strong data-count="subjects">0</strong></div>
-<div class="afaq-stat"><div class="icon">💳</div><h3>الاشتراكات</h3><strong data-count="subscriptions">0</strong></div>
-<div class="afaq-stat"><div class="icon">📖</div><h3>الدروس</h3><strong data-count="lessons">0</strong></div>
-<div class="afaq-stat"><div class="icon">📝</div><h3>الاختبارات</h3><strong data-count="exams">0</strong></div>
-<div class="afaq-stat"><div class="icon">📋</div><h3>الواجبات</h3><strong data-count="assignments">0</strong></div>
-<div class="afaq-stat"><div class="icon">📊</div><h3>النتائج</h3><strong data-count="results">0</strong></div>
+<div class="afaq-stat"><h3>👨‍🎓 الطلاب</h3><strong data-count="students">0</strong></div>
+<div class="afaq-stat"><h3>👨‍🏫 المدرسون</h3><strong data-count="teachers">0</strong></div>
+<div class="afaq-stat"><h3>📚 المواد</h3><strong data-count="subjects">0</strong></div>
+<div class="afaq-stat"><h3>💳 الاشتراكات</h3><strong data-count="subscriptionRequests">0</strong></div>
+<div class="afaq-stat"><h3>📖 الدروس</h3><strong data-count="lessons">0</strong></div>
+<div class="afaq-stat"><h3>📝 الاختبارات</h3><strong data-count="exams">0</strong></div>
+<div class="afaq-stat"><h3>📋 الواجبات</h3><strong data-count="assignments">0</strong></div>
+<div class="afaq-stat"><h3>🔔 الإشعارات</h3><strong data-count="notifications">0</strong></div>
 </section>
+
 <section class="afaq-grid">
-<div class="afaq-tile" data-badge="" onclick="location.href='students-management.html'"><div class="icon">👨‍🎓</div><h3>إدارة الطلاب</h3><p>إضافة وتعديل بيانات الطلاب.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='teachers-management.html'"><div class="icon">👨‍🏫</div><h3>إدارة المدرسين</h3><p>إضافة المدرسين وربطهم.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='subjects-management.html'"><div class="icon">📚</div><h3>إدارة المواد</h3><p>ربط المواد بالمدرسين.</p></div>
-<div class="afaq-tile" data-badge="subscriptionRequests" onclick="location.href='subscription-requests-management.html'"><div class="icon">💳</div><h3>طلبات الاشتراك</h3><p>قبول طلبات الطلاب.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='admin-attendance.html'"><div class="icon">✅</div><h3>الحضور</h3><p>مركز الحضور والغياب.</p></div>
-<div class="afaq-tile" data-badge="results" onclick="location.href='admin-results-center.html'"><div class="icon">📊</div><h3>مركز النتائج</h3><p>كل نتائج المنصة.</p></div>
-<div class="afaq-tile" data-badge="messages" onclick="location.href='admin-messages.html'"><div class="icon">💬</div><h3>الرسائل</h3><p>مركز رسائل المدير.</p></div>
-<div class="afaq-tile" data-badge="" onclick="location.href='admin-unified-data-center.html'"><div class="icon">🧩</div><h3>مركز البيانات</h3><p>عرض البيانات الموحدة.</p></div>
+<div class="afaq-tile" onclick="location.href='students-management.html'"><h3>إدارة الطلاب</h3><p>إضافة وتعديل وحذف الطلاب.</p><button class="afaq-btn">فتح</button></div>
+<div class="afaq-tile" onclick="location.href='teachers-management.html'"><h3>إدارة المدرسين</h3><p>إضافة المدرسين وربطهم بالمواد.</p><button class="afaq-btn">فتح</button></div>
+<div class="afaq-tile" onclick="location.href='subjects-management.html'"><h3>إدارة المواد</h3><p>إضافة المواد وربطها بالمدرسين.</p><button class="afaq-btn">فتح</button></div>
+<div class="afaq-tile" onclick="location.href='subscription-requests-management.html'"><h3>طلبات الاشتراك</h3><p>قبول أو رفض اشتراك الطلاب.</p><button class="afaq-btn">فتح</button></div>
+<div class="afaq-tile" onclick="location.href='admin-subject-requests.html'"><h3>طلبات دخول المواد</h3><p>متابعة طلبات دخول الطلاب للمواد.</p><button class="afaq-btn">فتح</button></div>
+<div class="afaq-tile" onclick="location.href='admin-messages.html'"><h3>الرسائل</h3><p>رسائل المنصة.</p><button class="afaq-btn">فتح</button></div>
+<div class="afaq-tile" onclick="location.href='admin-control.html'"><h3>تحكم الصفحة بالكامل</h3><p>تفريغ البيانات وتعديل معلومات المنصة.</p><button class="afaq-btn">فتح</button></div>
+<div class="afaq-tile" onclick="location.href='admin-student-registry.html'"><h3>سجل الطلبة</h3><p>تفاصيل الطلبة حسب المادة.</p><button class="afaq-btn">فتح</button></div>
 </section>
 </main>
 <script src="../js/afaq-data.js"></script>
-<script src="../js/afaq-auto-stats.js"></script>
-<script src="../js/afaq-badges.js"></script>
 <script src="../js/afaq-unified-counters.js"></script>
-<script>if(window.AfaqData&&AfaqData.renderCurrentStudent)AfaqData.renderCurrentStudent();</script>
+<script src="../js/afaq-badges.js"></script>
 </body>
 </html>

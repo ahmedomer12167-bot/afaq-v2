@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحكم المدير الكامل</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-admin-control.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>⚙️ تحكم المدير الكامل</h1>
+<p>من هنا تستطيع التحكم ببيانات المنصة والبدء من جديد عند الحاجة.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
+</div>
+</section>
+
+<section class="admin-control-grid">
+  <div class="control-card">
+    <h3>ℹ️ معلومات الصفحة</h3>
+    <p>اسم المنصة وكود دخول المدير.</p>
+    <input id="platformName" placeholder="اسم المنصة">
+    <input id="adminCode" placeholder="كود دخول المدير">
+    <button class="afaq-btn" onclick="saveInfo()">حفظ المعلومات</button>
+  </div>
+
+  <div class="control-card">
+    <h3>📊 ملخص البيانات</h3>
+    <div id="countsBox"></div>
+  </div>
+</section>
+
+<section class="admin-control-grid">
+  <div class="control-card danger-zone">
+    <h3>🧹 تفريغ بيانات محددة</h3>
+    <p>استخدم هذه الأزرار عند الحاجة فقط.</p>
+    <button class="afaq-btn red" onclick="confirmAction('تفريغ الطلاب؟', AfaqAdminTools.clearStudents)">تفريغ الطلاب</button>
+    <button class="afaq-btn red" onclick="confirmAction('تفريغ المدرسين؟', AfaqAdminTools.clearTeachers)">تفريغ المدرسين</button>
+    <button class="afaq-btn red" onclick="confirmAction('تفريغ المواد؟', AfaqAdminTools.clearSubjects)">تفريغ المواد</button>
+    <button class="afaq-btn red" onclick="confirmAction('تفريغ الاشتراكات؟', AfaqAdminTools.clearSubscriptions)">تفريغ الاشتراكات</button>
+    <button class="afaq-btn red" onclick="confirmAction('تفريغ طلبات دخول المواد؟', AfaqAdminTools.clearSubjectRequests)">تفريغ طلبات المواد</button>
+  </div>
+
+  <div class="control-card danger-zone">
+    <h3>🔄 بداية جديدة</h3>
+    <p>مسح البيانات القديمة لتبدأ المنصة ببيانات جديدة.</p>
+    <button class="afaq-btn red" onclick="confirmAction('سيتم مسح الدروس والاختبارات والواجبات والحضور والنتائج والرسائل والإشعارات فقط. متابعة؟', AfaqAdminTools.clearOldOperationalData)">مسح البيانات القديمة</button>
+    <button class="afaq-btn red" onclick="confirmAction('تحذير: سيتم مسح كل بيانات المنصة بالكامل. متابعة؟', AfaqAdminTools.resetPlatformData)">مسح كل البيانات والبدء من جديد</button>
+  </div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-admin-control.js"></script>
+<script>
+function render(){
+  platformName.value = AfaqAdminTools.getPlatformName();
+  adminCode.value = AfaqAdminTools.getAdminCode();
+
+  const c = AfaqAdminTools.statsCounts();
+  countsBox.innerHTML = `
+    <p>الطلاب: <b>${c.students}</b></p>
+    <p>المدرسون: <b>${c.teachers}</b></p>
+    <p>المواد: <b>${c.subjects}</b></p>
+    <p>طلبات الاشتراك: <b>${c.subscriptions}</b></p>
+    <p>طلبات دخول المواد: <b>${c.subjectRequests}</b></p>
+    <p>الدروس: <b>${c.lessons}</b></p>
+    <p>الاختبارات: <b>${c.exams}</b></p>
+    <p>الواجبات: <b>${c.assignments}</b></p>
+    <p>الحضور: <b>${c.attendance}</b></p>
+    <p>النتائج: <b>${c.results}</b></p>
+    <p>الإشعارات: <b>${c.notifications}</b></p>
+    <p>الرسائل: <b>${c.messages}</b></p>
+  `;
+}
+
+function saveInfo(){
+  AfaqAdminTools.setPlatformName(platformName.value);
+  AfaqAdminTools.setAdminCode(adminCode.value);
+  alert("تم حفظ معلومات الصفحة وكود المدير");
+  render();
+}
+
+function confirmAction(message, fn){
+  if(confirm(message)){
+    fn();
+    alert("تم التنفيذ وتحديث العدادات");
+    render();
+  }
+}
+
+render();
+</script>
+</body>
+</html>

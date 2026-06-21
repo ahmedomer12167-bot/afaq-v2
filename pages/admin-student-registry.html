@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سجل الطلبة</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-admin-control.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>📋 سجل الطلبة</h1>
+<p>جدول الطلبة المسجلين بكل مادة مع تفاصيل الحضور والغياب والاختبارات والواجبات والنتيجة النهائية.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
+</div>
+</section>
+
+<section class="control-card">
+<h2>اختيار المادة</h2>
+<select id="subjectSelect" onchange="renderRegistry()"></select>
+<input id="searchBox" placeholder="بحث باسم الطالب أو ولي الأمر أو كود الطالب" oninput="renderRegistry()">
+</section>
+
+<section class="control-card">
+<div class="table-wrap">
+<table class="afaq-table">
+<thead>
+<tr>
+<th>اسم الطالب</th>
+<th>كود الطالب</th>
+<th>الصف</th>
+<th>ولي الأمر</th>
+<th>الحضور</th>
+<th>الغياب</th>
+<th>النتيجة النهائية</th>
+<th>التفاصيل</th>
+</tr>
+</thead>
+<tbody id="studentsTable"></tbody>
+</table>
+</div>
+</section>
+
+<section id="detailsBox"></section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-admin-control.js"></script>
+<script>
+function init(){
+  const subjects = AfaqAdminTools.read("afaq_subjects");
+  subjectSelect.innerHTML = subjects.length ? subjects.map(s=>{
+    const name = s.name || s.subject || "-";
+    return `<option value="${name}">${name} - ${s.grade || ""}</option>`;
+  }).join("") : "<option value=''>لا توجد مواد</option>";
+  renderRegistry();
+}
+
+function renderRegistry(){
+  const subject = subjectSelect.value;
+  const q = String(searchBox.value || "").trim();
+  let students = AfaqAdminTools.studentsBySubject(subject);
+
+  if(q){
+    students = students.filter(st =>
+      String(st.name || st.studentName || "").includes(q) ||
+      String(st.parentName || st.guardianName || "").includes(q) ||
+      String(st.code || st.studentId || "").includes(q)
+    );
+  }
+
+  studentsTable.innerHTML = students.length ? students.map((st,i)=>{
+    const att = AfaqAdminTools.attendanceStats(st, subject);
+    const final = AfaqAdminTools.finalResult(st, subject);
+    return `
+      <tr>
+        <td>${st.name || st.studentName || "-"}</td>
+        <td>${st.code || st.studentId || "-"}</td>
+        <td>${st.grade || "-"}</td>
+        <td>${st.parentName || st.guardianName || "-"}</td>
+        <td>${att.present}</td>
+        <td>${att.absent}</td>
+        <td>${final ? `${final.score || 0}/${final.total || 100}` : "-"}</td>
+        <td><button class="afaq-btn" onclick="showDetails('${st.code || st.studentId}')">عرض</button></td>
+      </tr>
+    `;
+  }).join("") : "<tr><td colspan='8'>لا يوجد طلاب مسجلون بهذه المادة</td></tr>";
+}
+
+function showDetails(code){
+  const subject = subjectSelect.value;
+  const st = AfaqAdminTools.read("afaq_students").find(s =>
+    String(s.code || s.studentId || s.studentCode || "") === String(code)
+  );
+  if(!st){return;}
+
+  const att = AfaqAdminTools.attendanceStats(st, subject);
+  const exams = AfaqAdminTools.examResults(st, subject);
+  const assignments = AfaqAdminTools.assignmentResults(st, subject);
+  const final = AfaqAdminTools.finalResult(st, subject);
+
+  detailsBox.innerHTML = `
+    <section class="detail-card show">
+      <h2>معلومات الطالب</h2>
+      <div class="info-grid">
+        <p>اسم الطالب: <b>${st.name || st.studentName || "-"}</b></p>
+        <p>كود الطالب: <b>${st.code || st.studentId || "-"}</b></p>
+        <p>الصف: <b>${st.grade || "-"}</b></p>
+        <p>اسم ولي الأمر: <b>${st.parentName || st.guardianName || "-"}</b></p>
+        <p>حالة الاشتراك: <b>${st.subscriptionStatus || "-"}</b></p>
+        <p>المادة: <b>${subject}</b></p>
+      </div>
+
+      <h3>الحضور والغياب</h3>
+      <p>عدد الحضور: <b>${att.present}</b></p>
+      <p>عدد الغياب: <b>${att.absent}</b></p>
+
+      <h3>نتائج الاختبارات</h3>
+      ${exams.length ? exams.map(r=>`
+        <div class="student-card">
+          <p>الاختبار: <b>${r.title || r.examTitle || "اختبار"}</b></p>
+          <p>الدرجة: <b>${r.score || 0}/${r.total || 100}</b></p>
+          <p>${r.createdAt || ""}</p>
+        </div>
+      `).join("") : "<p>لا توجد نتائج اختبارات</p>"}
+
+      <h3>نتائج الواجبات</h3>
+      ${assignments.length ? assignments.map(r=>`
+        <div class="student-card">
+          <p>الواجب: <b>${r.title || r.assignmentTitle || "واجب"}</b></p>
+          <p>الدرجة: <b>${r.score || 0}/${r.total || 100}</b></p>
+          <p>${r.createdAt || ""}</p>
+        </div>
+      `).join("") : "<p>لا توجد نتائج واجبات</p>"}
+
+      <div class="final-result">
+        <h3>النتيجة النهائية</h3>
+        ${final ? `<p><b>${final.score || 0}/${final.total || 100}</b></p>` : "<p>لا توجد نتيجة نهائية لهذه المادة</p>"}
+      </div>
+    </section>
+  `;
+}
+init();
+</script>
+</body>
+</html>
