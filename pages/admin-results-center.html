@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مركز النتائج الموحد - المدير</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>📊 مركز النتائج الموحد</h1>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
+</div>
+</section>
+
+<section class="afaq-stats">
+<div class="afaq-stat"><div class="icon">📝</div><h3>نتائج الاختبارات</h3><strong id="examResultsCount">0</strong></div>
+<div class="afaq-stat"><div class="icon">📋</div><h3>نتائج الواجبات</h3><strong id="assignmentResultsCount">0</strong></div>
+<div class="afaq-stat"><div class="icon">✅</div><h3>حضور</h3><strong id="presentCount">0</strong></div>
+<div class="afaq-stat"><div class="icon">❌</div><h3>غياب</h3><strong id="absentCount">0</strong></div>
+</section>
+
+<section class="panel">
+<h2>بحث وتصفية</h2>
+<input id="searchInput" placeholder="ابحث باسم الطالب أو المادة أو المدرس..." oninput="render()">
+<select id="typeFilter" onchange="render()">
+<option value="">كل النتائج</option>
+<option value="اختبار">اختبارات</option>
+<option value="واجب">واجبات</option>
+<option value="نهائي">نتيجة نهائية</option>
+</select>
+</section>
+
+<section class="panel" style="margin-top:15px">
+<h2>كل النتائج</h2>
+<div id="resultsBox" class="cards"></div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
+<script src="../js/afaq-badges.js"></script>
+
+<script>
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+
+function getAllResults(){
+  return read("afaq_results");
+}
+
+function render(){
+  const results = getAllResults();
+  const attendance = read("afaq_attendance");
+  const q = searchInput.value.trim();
+  const type = typeFilter.value;
+
+  const examCount = results.filter(r => r.type === "اختبار").length;
+  const assignmentCount = results.filter(r => r.type === "واجب").length;
+  const present = attendance.filter(a => String(a.status).includes("حاضر")).length;
+  const absent = attendance.filter(a => String(a.status).includes("غائب")).length;
+
+  examResultsCount.textContent = examCount;
+  assignmentResultsCount.textContent = assignmentCount;
+  presentCount.textContent = present;
+  absentCount.textContent = absent;
+
+  let filtered = results;
+
+  if(type) filtered = filtered.filter(r => r.type === type);
+
+  if(q){
+    filtered = filtered.filter(r =>
+      String(r.studentName || "").includes(q) ||
+      String(r.studentId || "").includes(q) ||
+      String(r.subject || "").includes(q) ||
+      String(r.teacherName || "").includes(q) ||
+      String(r.teacherCode || "").includes(q) ||
+      String(r.title || "").includes(q)
+    );
+  }
+
+  resultsBox.innerHTML = filtered.length ? filtered.map(r=>`
+    <div class="card">
+      <h3>${r.studentName || r.studentId || "طالب"}</h3>
+      <p>العنوان: ${r.title || "-"}</p>
+      <p>النوع: ${r.type || "-"}</p>
+      <p>المادة: ${r.subject || "-"}</p>
+      <p>المدرس: ${r.teacherName || r.teacherCode || "-"}</p>
+      <p>الدرجة: <b>${r.score || 0} / ${r.total || 100}</b></p>
+      <span class="badge">${r.createdAt || ""}</span>
+    </div>
+  `).join("") : "<div class='card'><h3>لا توجد نتائج حالياً</h3></div>";
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,11 +1,79 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>📊 نتائج الطالب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"><link rel="stylesheet" href="../css/afaq-badges.css"></head><body>
-<main class="room"><section class="topbar"><div class="title"><h1>📊 نتائج الطالب</h1><p>تم فتح الصفحة، وسيتم إزالة الشارة الحمراء الخاصة بهذا القسم.</p></div><a class="btn back" href="parent-dashboard.html">رجوع</a></section><section class="panel"><div id="box" class="cards"></div></section></main>
-<script src="../js/afaq-data.js"></script><script src="../js/afaq-badges.js"></script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتائج الطالب - ولي الأمر</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>📊 نتائج الطالب</h1>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="parent-dashboard.html">رجوع لولي الأمر</a>
+</div>
+</section>
+
+<section class="afaq-stats">
+<div class="afaq-stat"><div class="icon">📈</div><h3>المعدل</h3><strong id="avgScore">0%</strong></div>
+<div class="afaq-stat"><div class="icon">📝</div><h3>اختبارات</h3><strong id="examCount">0</strong></div>
+<div class="afaq-stat"><div class="icon">📋</div><h3>واجبات</h3><strong id="assignmentCount">0</strong></div>
+<div class="afaq-stat"><div class="icon">📊</div><h3>كل النتائج</h3><strong id="totalCount">0</strong></div>
+</section>
+
+<section class="panel">
+<h2>نتائج الطالب</h2>
+<div id="resultsBox" class="cards"></div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
+<script src="../js/afaq-badges.js"></script>
+
 <script>
-if(window.AfaqBadges) AfaqBadges.markCollectionSeen("results");
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+function student(){
+ if(window.AfaqData && AfaqData.getCurrentStudent) return AfaqData.getCurrentStudent();
+ try{return JSON.parse(localStorage.getItem("afaq_current_student"))||null}catch(e){return null}
+}
 function render(){
- const arr = window.AfaqData ? AfaqData.list("results") : [];
- box.innerHTML = arr.length ? arr.map(x=>`<div class="card"><h3>${x.title||x.subject||x.studentName||"عنصر"}</h3><p>${x.description||x.message||x.status||""}</p><span class="badge">${x.subject||"عام"}</span></div>`).join("") : "<div class='card'><h3>لا توجد بيانات حالياً</h3></div>";
+ const st = student();
+ if(!st){location.href="parent-login.html";return;}
+ const sid = st.studentId || st.code;
+ const results = read("afaq_results").filter(r => r.studentId === sid || r.code === sid);
+
+ const exams = results.filter(r=>r.type==="اختبار").length;
+ const assignments = results.filter(r=>r.type==="واجب").length;
+
+ const percents = results.map(r=>{
+   const s=Number(r.score||0), t=Number(r.total||100);
+   return t ? Math.round((s/t)*100) : 0;
+ }).filter(v=>!isNaN(v));
+
+ const avg = percents.length ? Math.round(percents.reduce((a,b)=>a+b,0)/percents.length) : 0;
+
+ avgScore.textContent = avg + "%";
+ examCount.textContent = exams;
+ assignmentCount.textContent = assignments;
+ totalCount.textContent = results.length;
+
+ resultsBox.innerHTML = results.length ? results.map(r=>`
+ <div class="card">
+ <h3>${r.title || "نتيجة"}</h3>
+ <p>النوع: ${r.type || "-"}</p>
+ <p>المادة: ${r.subject || "-"}</p>
+ <p>الدرجة: <b>${r.score || 0} / ${r.total || 100}</b></p>
+ <span class="badge">${r.createdAt || ""}</span>
+ </div>`).join("") : "<div class='card'><h3>لا توجد نتائج حالياً</h3></div>";
 }
 render();
-</script></body></html>
+if(window.AfaqBadges) AfaqBadges.markCollectionSeen("results");
+</script>
+</body>
+</html>
