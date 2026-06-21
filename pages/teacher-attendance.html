@@ -1,20 +1,187 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>✅ الحضور والغياب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body><main class="room"><section class="topbar"><div class="title"><h1>✅ الحضور والغياب</h1><p>هذه البيانات موحدة وتظهر للطالب وولي الأمر والمدير.</p></div><a class="btn back" href="teacher-dashboard.html">لوحة المدرس</a></section>
-<section class="panel"><h2>إضافة</h2><input id="teacherCode" placeholder="كود المدرس">
-<select id="subject"><option>الأحياء</option><option>الكيمياء</option><option>الفيزياء</option></select>
-<input id="studentId" placeholder="كود الطالب">
-<input id="studentName" placeholder="اسم الطالب">
-<select id="status"><option>حاضر</option><option>غائب</option></select>
-<input id="date" type="date"><button class="btn ok" onclick="saveItem()">حفظ</button></section>
-<section class="panel"><h2>القائمة</h2><div id="box" class="cards"></div></section></main><script src="../js/afaq-data.js"></script><script>
-function val(id){return document.getElementById(id)?.value||""}
-function saveItem(){
- const item={subject:val("subject"),teacherCode:val("teacherCode"),title:val("title"),description:val("description"),studentId:val("studentId"),studentName:val("studentName"),status:val("status"),score:val("score"),total:val("total"),date:val("date"),url:val("url"),type:val("type")};
- AfaqData.add("attendance",item);
- if(item.studentId) AfaqData.notifyStudent(item.studentId,"تحديث جديد","تمت إضافة بيانات في ✅ الحضور والغياب","✅ الحضور والغياب",item.subject);
- AfaqData.notifyAdmin("تحديث من المدرس","تمت إضافة عنصر في ✅ الحضور والغياب","✅ الحضور والغياب");
- render();
- alert("تم الحفظ");
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحضور والغياب - المدرس</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<style>
+.timer-bar{height:14px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:10px 0}
+.timer-fill{height:100%;width:0%;background:linear-gradient(90deg,#a855f7,#22c55e);transition:.4s}
+</style>
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>✅ الحضور والغياب</h1>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="teacher-dashboard.html">رجوع للوحة المدرس</a>
+</div>
+</section>
+
+<section class="panel">
+<h2>إرسال طلب تسجيل حضور</h2>
+<input id="lessonTitle" placeholder="عنوان الدرس / المحاضرة">
+<textarea id="lessonNote" placeholder="ملاحظات اختيارية"></textarea>
+<input id="durationMinutes" type="number" placeholder="مدة تسجيل الحضور بالدقائق">
+<button class="afaq-btn" onclick="createAttendanceSession()">إرسال طلب الحضور</button>
+</section>
+
+<section class="panel" style="margin-top:15px">
+<h2>طلبات الحضور المفتوحة</h2>
+<div id="sessionsBox" class="cards"></div>
+</section>
+
+<section class="panel" style="margin-top:15px">
+<h2>سجل الحضور والغياب</h2>
+<div id="recordsBox" class="cards"></div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-teacher-auth.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
+<script src="../js/afaq-badges.js"></script>
+
+<script>
+const teacher = window.AfaqTeacherAuth && AfaqTeacherAuth.requireTeacher ? AfaqTeacherAuth.requireTeacher() : null;
+
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+function write(key,val){localStorage.setItem(key,JSON.stringify(val));window.dispatchEvent(new Event("afaqDataUpdated"))}
+function currentTeacher(){
+ if(window.AfaqTeacherAuth && AfaqTeacherAuth.currentTeacher) return AfaqTeacherAuth.currentTeacher();
+ try{return JSON.parse(localStorage.getItem("afaq_current_teacher"))||{}}catch(e){return{}}
 }
-function del(id){AfaqData.remove("attendance",id);render()}
-function render(){const arr=AfaqData.list("attendance");box.innerHTML=arr.length?arr.map(x=>`<div class="card"><h3>${x.title||x.studentName||x.subject||"عنصر"}</h3><p>${x.description||x.status||x.score||""}</p><p><span class="badge">${x.subject||"عام"}</span></p>${x.url?`<button class="btn" onclick="window.open('${x.url}','_blank')">فتح الملف</button>`:""}<button class="btn danger" onclick="del('${x.id}')">حذف</button></div>`).join(""):"<div class='card'><h3>لا توجد بيانات</h3></div>"}render();
-</script></body></html>
+
+function createAttendanceSession(){
+ const t = currentTeacher();
+ const title = lessonTitle.value.trim();
+ const minutes = Number(durationMinutes.value || 0);
+
+ if(!title || !minutes){
+   alert("أدخل عنوان الدرس ومدة التسجيل بالدقائق");
+   return;
+ }
+
+ const start = Date.now();
+ const end = start + minutes * 60 * 1000;
+
+ const session = {
+   id:"attendance-session-" + Date.now(),
+   title,
+   note:lessonNote.value.trim(),
+   durationMinutes:minutes,
+   startTime:start,
+   endTime:end,
+   status:"مفتوح",
+   teacherCode:t.teacherCode || t.code || "",
+   teacherName:t.fullName || t.name || "",
+   subject:t.subject || "",
+   subjectCode:t.subjectCode || "",
+   grade:t.grade || "",
+   createdAt:new Date().toLocaleString("ar")
+ };
+
+ const sessions = read("afaq_attendance_sessions");
+ sessions.unshift(session);
+ write("afaq_attendance_sessions", sessions);
+
+ if(window.AfaqData && AfaqData.addNotification){
+   AfaqData.addNotification("student","", "طلب تسجيل حضور", "تم فتح تسجيل حضور لدرس: " + title, "حضور", session.subject);
+   AfaqData.addNotification("admin","admin", "طلب حضور جديد", "المدرس فتح حضور لدرس: " + title, "حضور", session.subject);
+ }
+
+ lessonTitle.value = "";
+ lessonNote.value = "";
+ durationMinutes.value = "";
+
+ renderSessions();
+ alert("تم إرسال طلب الحضور للطلاب");
+}
+
+function closeSession(id){
+ const sessions = read("afaq_attendance_sessions");
+ const s = sessions.find(x=>x.id===id);
+ if(s) s.status = "مغلق";
+ write("afaq_attendance_sessions", sessions);
+ renderSessions();
+}
+
+function deleteSession(id){
+ if(!confirm("حذف طلب الحضور؟")) return;
+ write("afaq_attendance_sessions", read("afaq_attendance_sessions").filter(s=>s.id!==id));
+ renderSessions();
+}
+
+function timeLeftText(end){
+ const left = end - Date.now();
+ if(left <= 0) return "انتهى الوقت";
+ const m = Math.floor(left/60000);
+ const s = Math.floor((left%60000)/1000);
+ return m + " د " + s + " ث";
+}
+
+function renderSessions(){
+ const t = currentTeacher();
+ let sessions = read("afaq_attendance_sessions").filter(s =>
+   !t.teacherCode || s.teacherCode === t.teacherCode || s.subjectCode === t.subjectCode
+ );
+
+ if(!sessions.length){
+   sessionsBox.innerHTML = "<div class='card'><h3>لا توجد طلبات حضور حالياً</h3></div>";
+   return;
+ }
+
+ sessionsBox.innerHTML = sessions.map(s=>{
+   const total = Math.max(1, s.endTime - s.startTime);
+   const passed = Math.min(total, Math.max(0, Date.now() - s.startTime));
+   const percent = Math.round((passed/total)*100);
+   const expired = Date.now() > s.endTime;
+   return `
+   <div class="card">
+     <h3>${s.title}</h3>
+     <p>${s.note || ""}</p>
+     <p>المادة: ${s.subject || "-"}</p>
+     <p>الحالة: <span class="badge">${expired ? "انتهى الوقت" : s.status}</span></p>
+     <div class="timer-bar"><div class="timer-fill" style="width:${percent}%"></div></div>
+     <p>${timeLeftText(s.endTime)}</p>
+     <button class="afaq-btn gray" onclick="closeSession('${s.id}')">إغلاق</button>
+     <button class="afaq-btn red" onclick="deleteSession('${s.id}')">حذف</button>
+   </div>`;
+ }).join("");
+}
+
+function renderRecords(){
+ const t = currentTeacher();
+ let records = read("afaq_attendance").filter(r =>
+   !t.teacherCode || r.teacherCode === t.teacherCode || r.subjectCode === t.subjectCode
+ );
+
+ if(!records.length){
+   recordsBox.innerHTML = "<div class='card'><h3>لا يوجد سجل حضور بعد</h3></div>";
+   return;
+ }
+
+ recordsBox.innerHTML = records.map(r=>`
+ <div class="card">
+ <h3>${r.studentName || r.studentId}</h3>
+ <p>الدرس: ${r.lessonTitle || "-"}</p>
+ <p>المادة: ${r.subject || "-"}</p>
+ <span class="badge">${r.status}</span>
+ <p><small>${r.createdAt || ""}</small></p>
+ </div>`).join("");
+}
+
+function tick(){
+ renderSessions();
+ renderRecords();
+}
+tick();
+setInterval(tick,1000);
+</script>
+</body>
+</html>

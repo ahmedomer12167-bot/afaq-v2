@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>حضور الطالب - ولي الأمر</title>
+<title>الحضور والغياب - المدير</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-purple-mobile.css">
 <link rel="stylesheet" href="../css/afaq-badges.css">
@@ -12,21 +12,21 @@
 <main class="afaq-mobile">
 
 <section class="afaq-top">
-<h1>✅ حضور وغياب الطالب</h1>
+<h1>✅ مركز الحضور والغياب</h1>
 <div style="margin-top:14px">
-<a class="afaq-btn gray" href="parent-dashboard.html">رجوع لولي الأمر</a>
+<a class="afaq-btn gray" href="admin-dashboard.html">رجوع للمدير</a>
 </div>
 </section>
 
 <section class="afaq-stats">
 <div class="afaq-stat"><div class="icon">✅</div><h3>حضور</h3><strong id="presentCount">0</strong></div>
 <div class="afaq-stat"><div class="icon">❌</div><h3>غياب</h3><strong id="absentCount">0</strong></div>
-<div class="afaq-stat"><div class="icon">📈</div><h3>النسبة</h3><strong id="rateView">0%</strong></div>
-<div class="afaq-stat"><div class="icon">📚</div><h3>السجلات</h3><strong id="totalView">0</strong></div>
+<div class="afaq-stat"><div class="icon">📚</div><h3>طلبات مفتوحة</h3><strong id="sessionsCount">0</strong></div>
+<div class="afaq-stat"><div class="icon">📊</div><h3>السجلات</h3><strong id="recordsCount">0</strong></div>
 </section>
 
 <section class="panel">
-<h2>السجل الكامل</h2>
+<h2>كل سجلات الحضور</h2>
 <div id="recordsBox" class="cards"></div>
 </section>
 
@@ -38,30 +38,23 @@
 
 <script>
 function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
-function student(){
- if(window.AfaqData && AfaqData.getCurrentStudent) return AfaqData.getCurrentStudent();
- try{return JSON.parse(localStorage.getItem("afaq_current_student"))||null}catch(e){return null}
-}
 function render(){
- const st = student();
- if(!st){recordsBox.innerHTML="<div class='card'><h3>سجل دخول ولي الأمر أولاً</h3></div>";return;}
- const sid = st.studentId || st.code;
- const records = read("afaq_attendance").filter(r=>r.studentId===sid || r.code===sid);
-
+ const records = read("afaq_attendance");
+ const sessions = read("afaq_attendance_sessions");
  const present = records.filter(r=>String(r.status).includes("حاضر")).length;
  const absent = records.filter(r=>String(r.status).includes("غائب")).length;
- const total = records.length;
- const rate = total ? Math.round((present/total)*100) : 0;
 
  presentCount.textContent = present;
  absentCount.textContent = absent;
- totalView.textContent = total;
- rateView.textContent = rate + "%";
+ sessionsCount.textContent = sessions.filter(s=>s.status!=="مغلق").length;
+ recordsCount.textContent = records.length;
 
  recordsBox.innerHTML = records.length ? records.map(r=>`
  <div class="card">
- <h3>${r.lessonTitle || "درس"}</h3>
+ <h3>${r.studentName || r.studentId}</h3>
+ <p>الدرس: ${r.lessonTitle || "-"}</p>
  <p>المادة: ${r.subject || "-"}</p>
+ <p>المدرس: ${r.teacherName || r.teacherCode || "-"}</p>
  <span class="badge">${r.status}</span>
  <p><small>${r.createdAt || ""}</small></p>
  </div>`).join("") : "<div class='card'><h3>لا توجد سجلات حضور</h3></div>";

@@ -1,7 +1,174 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>✅ الحضور والغياب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body><main class="room"><section class="topbar"><div class="title"><h1>✅ الحضور والغياب</h1><p>بيانات موحدة مرتبطة بإدخالات المدرس والمدير.</p></div><a class="btn back" href="student-dashboard.html">رجوع</a></section><section class="panel"><div id="box" class="cards"></div></section></main><script src="../js/afaq-data.js"></script><script>
-function render(){
- const st=AfaqData.getCurrentStudent();
- const arr=AfaqData.scoped("attendance",{studentId:st?.studentId||st?.code});
- box.innerHTML=arr.length?arr.map(x=>`<div class="card"><h3>${x.title||x.subject||"عنصر"}</h3><p>${x.description||x.status||""}</p>${x.score?`<p>الدرجة: ${x.score} / ${x.total||100}</p>`:""}<span class="badge">${x.subject||"عام"}</span>${x.url?`<button class="btn" onclick="window.open('${x.url}','_blank')">فتح الملف</button>`:""}</div>`).join(""):"<div class='card'><h3>لا توجد بيانات حالياً</h3></div>"
-}render();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحضور - الطالب</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<style>
+.timer-bar{height:16px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:12px 0}
+.timer-fill{height:100%;width:0%;background:linear-gradient(90deg,#a855f7,#22c55e);transition:.4s}
+.timer-fill.expired{background:linear-gradient(90deg,#ef4444,#991b1b)}
+</style>
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>✅ تسجيل الحضور</h1>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="student-dashboard.html">رجوع للطالب</a>
+</div>
+</section>
+
+<section class="panel">
+<h2>طلبات الحضور الحالية</h2>
+<div id="sessionsBox" class="cards"></div>
+</section>
+
+<section class="panel" style="margin-top:15px">
+<h2>سجلي</h2>
+<div id="recordsBox" class="cards"></div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
+<script src="../js/afaq-badges.js"></script>
+
+<script>
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+function write(key,val){localStorage.setItem(key,JSON.stringify(val));window.dispatchEvent(new Event("afaqDataUpdated"))}
+function student(){
+ if(window.AfaqData && AfaqData.getCurrentStudent) return AfaqData.getCurrentStudent();
+ try{return JSON.parse(localStorage.getItem("afaq_current_student"))||null}catch(e){return null}
+}
+
+function alreadyRecorded(sessionId, studentId){
+ return read("afaq_attendance").some(r => r.sessionId === sessionId && (r.studentId === studentId || r.code === studentId));
+}
+
+function markAttendance(sessionId){
+ const st = student();
+ if(!st){alert("سجل الدخول أولاً");location.href="student-login.html";return;}
+
+ const sessions = read("afaq_attendance_sessions");
+ const s = sessions.find(x=>x.id===sessionId);
+ if(!s) return;
+
+ const studentId = st.studentId || st.code;
+
+ if(alreadyRecorded(sessionId, studentId)){
+   alert("تم تسجيلك سابقاً لهذا الدرس");
+   return;
+ }
+
+ const now = Date.now();
+ const status = now <= s.endTime ? "حاضر" : "غائب";
+ const late = now > s.endTime;
+
+ const records = read("afaq_attendance");
+ records.unshift({
+   id:"attendance-" + Date.now(),
+   sessionId:s.id,
+   lessonTitle:s.title,
+   studentId,
+   code:st.code,
+   studentName:st.name,
+   grade:st.grade,
+   subject:s.subject,
+   subjectCode:s.subjectCode,
+   teacherCode:s.teacherCode,
+   teacherName:s.teacherName,
+   status,
+   isLate:late,
+   createdAt:new Date().toLocaleString("ar")
+ });
+ write("afaq_attendance", records);
+
+ if(window.AfaqData && AfaqData.addNotification){
+   AfaqData.addNotification("teacher",s.teacherCode,"تسجيل حضور",st.name + " تم تسجيله: " + status,"حضور",s.subject);
+   AfaqData.addNotification("admin","admin","تحديث حضور",st.name + " في " + s.title + ": " + status,"حضور",s.subject);
+   AfaqData.addNotification("parent",studentId,"تحديث حضور",st.name + " في " + s.title + ": " + status,"حضور",s.subject);
+  }
+
+ alert(status === "حاضر" ? "تم تسجيل حضورك بنجاح" : "انتهى الوقت وتم تسجيلك غائب");
+ renderSessions();
+ renderRecords();
+}
+
+function timeLeftText(end){
+ const left = end - Date.now();
+ if(left <= 0) return "انتهى الوقت";
+ const m = Math.floor(left/60000);
+ const s = Math.floor((left%60000)/1000);
+ return m + " د " + s + " ث";
+}
+
+function renderSessions(){
+ const st = student();
+ if(!st){sessionsBox.innerHTML="<div class='card'><h3>سجل الدخول أولاً</h3></div>";return;}
+
+ const subjects = st.subjects || [];
+ let sessions = read("afaq_attendance_sessions").filter(s =>
+   s.status !== "مغلق" &&
+   (!s.grade || s.grade === st.grade) &&
+   (!s.subject || subjects.includes(s.subject))
+ );
+
+ if(!sessions.length){
+   sessionsBox.innerHTML = "<div class='card'><h3>لا يوجد طلب حضور حالياً</h3></div>";
+   return;
+ }
+
+ sessionsBox.innerHTML = sessions.map(s=>{
+   const total = Math.max(1, s.endTime - s.startTime);
+   const passed = Math.min(total, Math.max(0, Date.now() - s.startTime));
+   const percent = Math.round((passed/total)*100);
+   const expired = Date.now() > s.endTime;
+   const done = alreadyRecorded(s.id, st.studentId || st.code);
+   return `
+   <div class="card">
+     <h3>${s.title}</h3>
+     <p>${s.note || ""}</p>
+     <p>المادة: ${s.subject || "-"}</p>
+     <div class="timer-bar"><div class="timer-fill ${expired ? "expired" : ""}" style="width:${percent}%"></div></div>
+     <p>${timeLeftText(s.endTime)}</p>
+     ${done ? "<span class='badge'>تم التسجيل</span>" : `<button class="afaq-btn" onclick="markAttendance('${s.id}')">تم</button>`}
+   </div>`;
+ }).join("");
+}
+
+function renderRecords(){
+ const st = student();
+ if(!st) return;
+ const sid = st.studentId || st.code;
+ const records = read("afaq_attendance").filter(r => r.studentId === sid || r.code === sid);
+
+ if(!records.length){
+   recordsBox.innerHTML = "<div class='card'><h3>لا يوجد سجل حضور بعد</h3></div>";
+   return;
+ }
+
+ recordsBox.innerHTML = records.map(r=>`
+ <div class="card">
+ <h3>${r.lessonTitle || "درس"}</h3>
+ <p>المادة: ${r.subject || "-"}</p>
+ <span class="badge">${r.status}</span>
+ <p><small>${r.createdAt || ""}</small></p>
+ </div>`).join("");
+}
+
+function tick(){
+ renderSessions();
+ renderRecords();
+}
+tick();
+setInterval(tick,1000);
+if(window.AfaqBadges) AfaqBadges.markCollectionSeen("attendance");
+</script>
+</body>
+</html>
