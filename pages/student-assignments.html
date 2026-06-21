@@ -1,11 +1,195 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>📋 واجبات الطالب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"><link rel="stylesheet" href="../css/afaq-badges.css"></head><body>
-<main class="room"><section class="topbar"><div class="title"><h1>📋 واجبات الطالب</h1><p>تم فتح الصفحة، وسيتم إزالة الشارة الحمراء الخاصة بهذا القسم.</p></div><a class="btn back" href="student-dashboard.html">رجوع</a></section><section class="panel"><div id="box" class="cards"></div></section></main>
-<script src="../js/afaq-data.js"></script><script src="../js/afaq-badges.js"></script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>واجبات الطالب</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<style>
+.question-card{padding:16px;border-radius:22px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);margin-bottom:14px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>📋 واجبات الطالب</h1>
+<div style="margin-top:14px"><a class="afaq-btn gray" href="student-dashboard.html">رجوع للطالب</a></div>
+</section>
+
+<section class="panel">
+<h2>الواجبات المنشورة</h2>
+<div id="assignmentsBox" class="cards"></div>
+</section>
+
+<section id="solvePanel" class="panel hidden" style="margin-top:15px">
+<h2 id="assignmentTitleView">حل الواجب</h2>
+<div id="questionsBox"></div>
+<button class="afaq-btn" onclick="submitAssignment()">تسليم الواجب</button>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-badges.js"></script>
 <script>
-if(window.AfaqBadges) AfaqBadges.markCollectionSeen("assignments");
-function render(){
- const arr = window.AfaqData ? AfaqData.list("assignments") : [];
- box.innerHTML = arr.length ? arr.map(x=>`<div class="card"><h3>${x.title||x.subject||x.studentName||"عنصر"}</h3><p>${x.description||x.message||x.status||""}</p><span class="badge">${x.subject||"عام"}</span></div>`).join("") : "<div class='card'><h3>لا توجد بيانات حالياً</h3></div>";
+let currentAssignment = null;
+let problemImageData = "";
+
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+function write(key,val){localStorage.setItem(key,JSON.stringify(val));window.dispatchEvent(new Event("afaqDataUpdated"))}
+function student(){
+  if(window.AfaqData && AfaqData.getCurrentStudent) return AfaqData.getCurrentStudent();
+  try{return JSON.parse(localStorage.getItem("afaq_current_student"))||{}}catch(e){return{}}
 }
-render();
-</script></body></html>
+
+function renderAssignments(){
+ const st = student();
+ const assignments = read("afaq_assignments").filter(a =>
+   a.status === "منشور" &&
+   (!a.grade || !st.grade || a.grade === st.grade) &&
+   (!a.subject || !st.subjects || st.subjects.includes(a.subject))
+ );
+
+ assignmentsBox.innerHTML = assignments.length ? assignments.map(a=>`
+ <div class="card">
+ <h3>${a.title}</h3>
+ <p>${a.description || ""}</p>
+ <p>عدد الأسئلة: ${a.questions.length}</p>
+ <p>الدرجة الكلية: ${a.total}</p>
+ <p>تاريخ التسليم: ${a.dueDate || "غير محدد"}</p>
+ <span class="badge">${a.subject || "عام"}</span>
+ <button class="afaq-btn" onclick="startAssignment('${a.id}')">حل الواجب</button>
+ </div>`).join("") : "<div class='card'><h3>لا توجد واجبات منشورة حالياً</h3></div>";
+}
+
+function startAssignment(id){
+ currentAssignment = read("afaq_assignments").find(a => a.id === id);
+ if(!currentAssignment) return;
+ solvePanel.classList.remove("hidden");
+ assignmentTitleView.textContent = currentAssignment.title;
+ renderQuestions();
+ window.scrollTo({top:solvePanel.offsetTop,behavior:"smooth"});
+}
+
+function renderQuestions(){
+ questionsBox.innerHTML = currentAssignment.questions.map((q,i)=>{
+  if(q.type === "mcq"){
+    return `<div class="question-card"><h3>س${i+1}: ${q.text}</h3><p>الدرجة: ${q.degree}</p>
+    ${q.options.map(opt=>`<label><input type="radio" name="${q.id}" value="${opt}"> ${opt}</label><br>`).join("")}</div>`;
+  }
+  if(q.type === "tf"){
+    return `<div class="question-card"><h3>س${i+1}: ${q.text}</h3><p>الدرجة: ${q.degree}</p>
+    <label><input type="radio" name="${q.id}" value="صح"> صح</label><br>
+    <label><input type="radio" name="${q.id}" value="خطأ"> خطأ</label></div>`;
+  }
+  if(q.type === "blank"){
+    return `<div class="question-card"><h3>س${i+1}: ${q.text}</h3><p>الدرجة: ${q.degree}</p>
+    <input id="${q.id}" placeholder="اكتب الإجابة"></div>`;
+  }
+  if(q.type === "problem"){
+    return `<div class="question-card"><h3>س${i+1}: ${q.text}</h3><p>الدرجة: ${q.degree}</p>
+    <p>ارفق صورة حل المسألة بعد حلها.</p>
+    <input type="file" accept="image/*" onchange="readProblemImage(event)"></div>`;
+  }
+  return `<div class="question-card"><h3>س${i+1}: ${q.text}</h3><p>الدرجة: ${q.degree}</p>
+  <textarea id="${q.id}" placeholder="اكتب الإجابة المقالية"></textarea></div>`;
+ }).join("");
+}
+
+function readProblemImage(event){
+ const file = event.target.files[0];
+ if(!file) return;
+ const reader = new FileReader();
+ reader.onload = e => problemImageData = e.target.result;
+ reader.readAsDataURL(file);
+}
+
+function getAnswer(q){
+ if(q.type === "mcq" || q.type === "tf"){
+   const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+   return checked ? checked.value : "";
+ }
+ const el = document.getElementById(q.id);
+ return el ? el.value.trim() : "";
+}
+
+function submitAssignment(){
+ const st = student();
+ let autoScore = 0;
+ let manualTotal = 0;
+ let needsManual = false;
+ const answers = [];
+
+ currentAssignment.questions.forEach(q=>{
+   const ans = getAnswer(q);
+   let score = 0;
+   if(q.manual){
+     needsManual = true;
+     manualTotal += Number(q.degree || 0);
+   }else{
+     if(String(ans).trim().toLowerCase() === String(q.correct).trim().toLowerCase()){
+       score = Number(q.degree || 0);
+       autoScore += score;
+     }
+   }
+   answers.push({questionId:q.id,type:q.type,answer:ans,correct:q.correct || "",score});
+ });
+
+ const submission = {
+   id:"assignment-submission-" + Date.now(),
+   assignmentId:currentAssignment.id,
+   assignmentTitle:currentAssignment.title,
+   studentId:st.studentId || st.code,
+   studentName:st.name,
+   subject:currentAssignment.subject,
+   teacherCode:currentAssignment.teacherCode,
+   subjectCode:currentAssignment.subjectCode,
+   answers,
+   autoScore,
+   manualTotal,
+   finalScore: needsManual ? autoScore : autoScore,
+   total: currentAssignment.total,
+   needsManual,
+   problemImage: problemImageData,
+   status: needsManual ? "بانتظار التصحيح اليدوي" : "تم التصحيح تلقائياً",
+   createdAt:new Date().toLocaleString("ar")
+ };
+
+ const submissions = read("afaq_assignment_submissions");
+ submissions.unshift(submission);
+ write("afaq_assignment_submissions", submissions);
+
+ if(!needsManual){
+   const results = read("afaq_results");
+   results.unshift({
+     id:"result-" + Date.now(),
+     studentId:submission.studentId,
+     studentName:submission.studentName,
+     title:submission.assignmentTitle,
+     score:submission.finalScore,
+     total:submission.total,
+     subject:submission.subject,
+     teacherCode:submission.teacherCode,
+     subjectCode:submission.subjectCode,
+     type:"واجب",
+     createdAt:new Date().toLocaleString("ar")
+   });
+   write("afaq_results", results);
+   alert("تم تسليم الواجب وتصحيحه تلقائياً. درجتك: " + autoScore + " / " + currentAssignment.total);
+ }else{
+   alert("تم تسليم الواجب. الأسئلة المقالية أو المسائل بانتظار تصحيح المدرس.");
+ }
+
+ solvePanel.classList.add("hidden");
+ currentAssignment = null;
+}
+
+renderAssignments();
+if(window.AfaqBadges) AfaqBadges.markCollectionSeen("assignments");
+</script>
+</body>
+</html>
