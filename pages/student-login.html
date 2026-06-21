@@ -1,7 +1,117 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>دخول الطالب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body>
-<main class="room"><section class="panel" style="max-width:520px;margin:auto"><h1>🎓 دخول الطالب</h1><input id="code" placeholder="كود الطالب"><button class="btn ok" onclick="login()">دخول</button><a class="btn back" href="student-subscription-request.html">طلب اشتراك جديد</a><p id="msg"></p></section></main>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دخول الطالب - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-subscription.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>🎓 دخول الطالب</h1>
+<p>لا يمكن الدخول إلى لوحة الطالب إلا بعد موافقة المدير على طلب الاشتراك وإضافة كود خاص للطالب.</p>
+<div style="margin-top:14px"><a class="afaq-btn gray" href="../index.html">الرئيسية</a></div>
+</section>
+
+<section class="sub-grid">
+  <div class="panel">
+    <h2>تسجيل الدخول</h2>
+    <input id="studentCode" placeholder="اكتب كود الطالب بعد موافقة المدير">
+    <button class="afaq-btn" onclick="login()">دخول الطالب</button>
+  </div>
+
+  <div class="panel">
+    <h2>طلب اشتراك جديد</h2>
+    <div class="master-card">
+      <h3>رقم الماستر للدفع</h3>
+      <p id="masterNumberView" style="font-size:24px;font-weight:900;margin:0"></p>
+    </div>
+
+    <input id="studentName" placeholder="اسم الطالب الثلاثي">
+    <input id="parentName" placeholder="اسم ولي الأمر الثلاثي">
+
+    <select id="grade">
+      <option value="">اختر الصف</option>
+      <option>أول متوسط</option>
+      <option>ثاني متوسط</option>
+      <option>ثالث متوسط</option>
+      <option>رابع إعدادي</option>
+      <option>خامس إعدادي</option>
+      <option>سادس إعدادي</option>
+    </select>
+
+    <input id="amount" type="number" placeholder="رقم المبلغ المرسل">
+    <button class="afaq-btn" onclick="sendRequest()">إرسال طلب الاشتراك</button>
+  </div>
+</section>
+
+<section class="panel" style="margin-top:15px">
+<h2>متابعة طلباتي</h2>
+<input id="searchName" placeholder="اكتب اسم الطالب للبحث عن حالة الطلب" oninput="renderRequests()">
+<div id="myRequestsBox"></div>
+</section>
+
+</main>
+
 <script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-subscription.js"></script>
 <script>
-function login(){const st=AfaqData.findStudent(code.value);if(!st){msg.textContent="الكود غير صحيح";return;}if(!AfaqData.hasActiveSubscription(st)){msg.textContent="اشتراكك غير مفعل";return;}AfaqData.setCurrentStudent(st);location.href="student-dashboard.html";}
+function init(){
+  masterNumberView.textContent = AfaqSubscription.getMasterNumber();
+  renderRequests();
+}
+
+function login(){
+  try{
+    AfaqSubscription.loginStudent(studentCode.value);
+    location.href = "student-dashboard.html";
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+function sendRequest(){
+  try{
+    AfaqSubscription.submitRequest({
+      studentName:studentName.value,
+      parentName:parentName.value,
+      grade:grade.value,
+      amount:amount.value
+    });
+    studentName.value = "";
+    parentName.value = "";
+    grade.value = "";
+    amount.value = "";
+    renderRequests();
+    alert("تم إرسال طلب الاشتراك إلى المدير. انتظر الموافقة وإضافة كود الطالب.");
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+function renderRequests(){
+  const q = String(searchName.value || "").trim();
+  let list = AfaqSubscription.requests();
+  if(q) list = list.filter(r => String(r.studentName || "").includes(q));
+
+  myRequestsBox.innerHTML = list.length ? list.slice(0,8).map(r=>`
+    <div class="req-card">
+      <h3>${r.studentName}</h3>
+      <p>ولي الأمر: ${r.parentName}</p>
+      <p>الصف: ${r.grade}</p>
+      <p>المبلغ: ${r.amount}</p>
+      <p>رقم الماستر: ${r.masterNumber}</p>
+      <span class="status-pill">${r.status}</span>
+      ${r.studentCode ? `<p>كود الطالب: <b>${r.studentCode}</b></p>` : ""}
+      ${r.adminNote ? `<p>ملاحظة المدير: ${r.adminNote}</p>` : ""}
+    </div>
+  `).join("") : "<div class='req-card'><h3>لا توجد طلبات</h3></div>";
+}
+init();
 </script>
-</body></html>
+</body>
+</html>
