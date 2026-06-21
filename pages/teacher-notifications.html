@@ -1,19 +1,11 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>🔔 إشعارات المادة</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body><main class="room"><section class="topbar"><div class="title"><h1>🔔 إشعارات المادة</h1><p>هذه البيانات موحدة وتظهر للطالب وولي الأمر والمدير.</p></div><a class="btn back" href="teacher-dashboard.html">لوحة المدرس</a></section>
-<section class="panel"><h2>إضافة</h2><input id="teacherCode" placeholder="كود المدرس">
-<select id="subject"><option>الأحياء</option><option>الكيمياء</option><option>الفيزياء</option><option>الرياضيات</option></select>
-<input id="title" placeholder="العنوان">
-<textarea id="description" placeholder="الوصف"></textarea>
-<input id="studentId" placeholder="كود الطالب اختياري"><button class="btn ok" onclick="saveItem()">حفظ</button></section>
-<section class="panel"><h2>القائمة</h2><div id="box" class="cards"></div></section></main><script src="../js/afaq-data.js"></script><script>
-function val(id){return document.getElementById(id)?.value||""}
-function saveItem(){
- const item={subject:val("subject"),teacherCode:val("teacherCode"),title:val("title"),description:val("description"),studentId:val("studentId"),studentName:val("studentName"),status:val("status"),score:val("score"),total:val("total"),date:val("date"),url:val("url"),type:val("type")};
- AfaqData.add("notifications",item);
- if(item.studentId) AfaqData.notifyStudent(item.studentId,"تحديث جديد","تمت إضافة بيانات في 🔔 إشعارات المادة","🔔 إشعارات المادة",item.subject);
- AfaqData.notifyAdmin("تحديث من المدرس","تمت إضافة عنصر في 🔔 إشعارات المادة","🔔 إشعارات المادة");
- render();
- alert("تم الحفظ");
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>🔔 إشعارات المدرس</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"><link rel="stylesheet" href="../css/afaq-badges.css"></head><body>
+<main class="room"><section class="topbar"><div class="title"><h1>🔔 إشعارات المدرس</h1><p>تم فتح الصفحة، وسيتم إزالة الشارة الحمراء الخاصة بهذا القسم.</p></div><a class="btn back" href="teacher-dashboard.html">رجوع</a></section><section class="panel"><div id="box" class="cards"></div></section></main>
+<script src="../js/afaq-data.js"></script><script src="../js/afaq-badges.js"></script>
+<script>
+if(window.AfaqBadges) AfaqBadges.markCollectionSeen("notifications");
+function render(){
+ const arr = window.AfaqData ? AfaqData.list("notifications") : [];
+ box.innerHTML = arr.length ? arr.map(x=>`<div class="card"><h3>${x.title||x.subject||x.studentName||"عنصر"}</h3><p>${x.description||x.message||x.status||""}</p><span class="badge">${x.subject||"عام"}</span></div>`).join("") : "<div class='card'><h3>لا توجد بيانات حالياً</h3></div>";
 }
-function del(id){AfaqData.remove("notifications",id);render()}
-function render(){const arr=AfaqData.list("notifications");box.innerHTML=arr.length?arr.map(x=>`<div class="card"><h3>${x.title||x.studentName||x.subject||"عنصر"}</h3><p>${x.description||x.status||x.score||""}</p><p><span class="badge">${x.subject||"عام"}</span></p>${x.url?`<button class="btn" onclick="window.open('${x.url}','_blank')">فتح الملف</button>`:""}<button class="btn danger" onclick="del('${x.id}')">حذف</button></div>`).join(""):"<div class='card'><h3>لا توجد بيانات</h3></div>"}render();
+render();
 </script></body></html>
