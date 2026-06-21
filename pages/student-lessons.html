@@ -1,11 +1,109 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>📖 دروس الطالب</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"><link rel="stylesheet" href="../css/afaq-badges.css"></head><body>
-<main class="room"><section class="topbar"><div class="title"><h1>📖 دروس الطالب</h1><p>تم فتح الصفحة، وسيتم إزالة الشارة الحمراء الخاصة بهذا القسم.</p></div><a class="btn back" href="student-dashboard.html">رجوع</a></section><section class="panel"><div id="box" class="cards"></div></section></main>
-<script src="../js/afaq-data.js"></script><script src="../js/afaq-badges.js"></script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دروس الطالب</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-subject-join.css">
+</head>
+<body>
+<main class="afaq-mobile">
+
+<section class="afaq-top">
+<h1>📖 الدروس والملفات</h1>
+<p>تظهر دروس المواد المسجل بها الطالب فقط. يتم عرض كود المادة، ولا يتم عرض كود المدرس.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="student-dashboard.html">رجوع للطالب</a>
+</div>
+</section>
+
+<section class="panel">
+<h2>دروسي</h2>
+<input id="searchBox" placeholder="بحث عن درس أو مادة..." oninput="renderLessons()">
+<div id="lessonsBox"></div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-unified-counters.js"></script>
+<script src="../js/afaq-badges.js"></script>
+<script src="../js/afaq-full-sync.js"></script>
 <script>
-if(window.AfaqBadges) AfaqBadges.markCollectionSeen("lessons");
-function render(){
- const arr = window.AfaqData ? AfaqData.list("lessons") : [];
- box.innerHTML = arr.length ? arr.map(x=>`<div class="card"><h3>${x.title||x.subject||x.studentName||"عنصر"}</h3><p>${x.description||x.message||x.status||""}</p><span class="badge">${x.subject||"عام"}</span></div>`).join("") : "<div class='card'><h3>لا توجد بيانات حالياً</h3></div>";
+let student = AfaqFullSync.resyncCurrentStudent();
+if(!student){location.href="student-login.html";}
+
+function read(key){
+  try{return JSON.parse(localStorage.getItem(key)) || [];}catch(e){return [];}
 }
-render();
-</script></body></html>
+
+function getSubjectByNameOrCode(lesson){
+  const list = AfaqFullSync.subjects();
+  const lessonSubject = AfaqFullSync.normalizeSubject(lesson.subject || lesson.subjectName || "");
+  const lessonCode = String(lesson.subjectCode || "").trim();
+
+  return list.find(s =>
+    AfaqFullSync.normalizeSubject(s.name || s.subject || "") === lessonSubject ||
+    String(s.subjectCode || "").trim() === lessonCode
+  ) || {};
+}
+
+function studentHasSubject(lesson){
+  const subjects = Array.isArray(student.subjects) ? student.subjects.map(AfaqFullSync.normalizeSubject) : [];
+  const codes = Array.isArray(student.subjectCodes) ? student.subjectCodes.map(x=>String(x).trim()) : [];
+
+  const sub = getSubjectByNameOrCode(lesson);
+  const name = AfaqFullSync.normalizeSubject(lesson.subject || lesson.subjectName || sub.name || sub.subject || "");
+  const code = String(lesson.subjectCode || sub.subjectCode || "").trim();
+
+  return subjects.includes(name) || (code && codes.includes(code));
+}
+
+function renderLessons(){
+  student = AfaqFullSync.resyncCurrentStudent() || student;
+  const q = String(searchBox.value || "").trim();
+
+  let lessons = read("afaq_lessons").filter(l =>
+    (!l.grade || AfaqFullSync.normalizeGrade(l.grade) === AfaqFullSync.normalizeGrade(student.grade)) &&
+    (!l.status || l.status === "منشور") &&
+    studentHasSubject(l)
+  );
+
+  if(q){
+    lessons = lessons.filter(l =>
+      String(l.title || "").includes(q) ||
+      String(l.subject || l.subjectName || "").includes(q)
+    );
+  }
+
+  lessonsBox.innerHTML = lessons.length ? lessons.map(l=>{
+    const sub = getSubjectByNameOrCode(l);
+    const subjectName = l.subject || l.subjectName || sub.name || sub.subject || "-";
+    const subjectCode = l.subjectCode || sub.subjectCode || "-";
+    const link = l.link || l.url || l.fileUrl || "";
+
+    return `
+      <div class="lesson-card">
+        <h3>${l.title || "درس"}</h3>
+        <p>المادة: ${subjectName}</p>
+        <p>كود المادة: <b>${subjectCode}</b></p>
+        <p>التاريخ: ${l.createdAt || "-"}</p>
+        <div class="secure-note">كود المدرس مخفي عن الطالب.</div>
+        ${link ? `<button class="afaq-btn" onclick="window.open('${link}','_blank')">فتح الملف / الدرس</button>` : "<span class='status-pill'>لا يوجد رابط</span>"}
+      </div>
+    `;
+  }).join("") : `
+    <div class="lesson-card">
+      <h3>لا توجد دروس حالياً</h3>
+      <p>تأكد أن المدرس أضاف دروساً للمادة التي تم قبولك بها.</p>
+    </div>
+  `;
+}
+
+renderLessons();
+</script>
+</body>
+</html>

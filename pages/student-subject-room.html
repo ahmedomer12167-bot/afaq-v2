@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>غرفة المادة</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<link rel="stylesheet" href="../css/afaq-subject-join.css">
+</head>
+<body>
+<main class="afaq-mobile">
+<section class="afaq-top">
+<h1 id="roomTitle">📚 غرفة المادة</h1>
+<p id="roomInfo">يتم عرض كود المادة فقط دون كود المدرس.</p>
+<div style="margin-top:14px">
+<a class="afaq-btn gray" href="student-subjects.html">رجوع للمواد</a>
+</div>
+</section>
+
+<section class="join-grid">
+<div class="subject-card" onclick="location.href='student-lessons.html'"><h3>📖 الدروس</h3><p>ملفات ودروس المادة</p></div>
+<div class="subject-card" onclick="location.href='student-exams.html'"><h3>📝 الاختبارات</h3><p>اختبارات المادة</p></div>
+<div class="subject-card" onclick="location.href='student-assignments.html'"><h3>📋 الواجبات</h3><p>واجبات المادة</p></div>
+<div class="subject-card" onclick="location.href='student-results.html'"><h3>📊 النتائج</h3><p>نتائج المادة</p></div>
+</section>
+</main>
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-full-sync.js"></script>
+<script>
+const subjectName = localStorage.getItem("afaq_current_subject") || "المادة";
+const subject = AfaqFullSync.subjects().find(s => AfaqFullSync.normalizeSubject(s.name || s.subject) === AfaqFullSync.normalizeSubject(subjectName)) || {};
+roomTitle.textContent = "📚 " + subjectName;
+roomInfo.innerHTML = "كود المادة: <b>" + (subject.subjectCode || "-") + "</b>";
+</script>
+</body>
+</html>

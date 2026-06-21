@@ -17,7 +17,7 @@
 
 <section class="afaq-top">
 <h1>📚 المواد</h1>
-<p>تظهر هنا جميع المواد المطابقة لصف الطالب. إذا لم تظهر، اضغط زر مزامنة البيانات.</p>
+<p>تظهر هنا جميع المواد المطابقة لصف الطالب. الطالب يرى كود المادة فقط، ولا يظهر له كود المدرس.</p>
 <div style="margin-top:14px">
   <a class="afaq-btn gray" href="student-dashboard.html">رجوع للطالب</a>
   <button class="afaq-btn" onclick="syncAndRender()">مزامنة البيانات</button>
@@ -69,21 +69,26 @@ function renderSubjects(){
   studentInfo.innerHTML = `
     الطالب: <b>${student.name || student.studentName || "-"}</b> |
     الصف: <b>${student.grade || "-"}</b> |
-    عدد المواد في قاعدة المدير لهذا الصف: <b>${list.length}</b>
+    عدد المواد المتاحة: <b>${list.length}</b>
   `;
 
   subjectsBox.innerHTML = list.length ? list.map(s=>{
     const joined = AfaqFullSync.isStudentJoined(s, student);
     const pending = AfaqFullSync.existingRequest(s, student);
     const subjectName = s.name || s.subject || "-";
+    const subjectCode = s.subjectCode || "-";
+
     return `
       <div class="subject-card">
         <h3>${subjectName}</h3>
         <p>الصف: ${s.grade || "-"}</p>
         <p>المدرس: ${s.teacherName || "-"}</p>
-        <p>كود المدرس: ${s.teacherCode || "-"}</p>
+        <p>كود المادة: <b>${subjectCode}</b></p>
+        <div class="secure-note">كود المدرس مخفي عن الطالب للحفاظ على خصوصية بيانات المدرس.</div>
+
         ${joined ? `<span class="status-pill">مسجل في المادة</span>` : ""}
         ${pending ? `<span class="status-pill">طلبك قيد المراجعة</span>` : ""}
+
         ${!joined && !pending ? `
           <input id="code-${s.id}" placeholder="أدخل كود المادة">
           <button class="afaq-btn" onclick="requestJoin('${s.id}')">طلب دخول المادة</button>
@@ -126,6 +131,7 @@ function renderRequests(){
       <h3>${r.subject}</h3>
       <p>المدرس: ${r.teacherName}</p>
       <p>الصف: ${r.grade}</p>
+      <p>كود المادة: <b>${r.subjectCode || "-"}</b></p>
       <p>تاريخ الطلب: ${r.createdAt}</p>
       <span class="status-pill">${r.status}</span>
       ${r.note ? `<p>ملاحظة: ${r.note}</p>` : ""}
