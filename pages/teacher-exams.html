@@ -3,32 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📝 اختبارات المدرس</title>
+<title>اختبارات المدرس المتقدمة</title>
 <link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-room.css">
+<link rel="stylesheet" href="../css/afaq-purple-mobile.css">
+<link rel="stylesheet" href="../css/afaq-badges.css">
+<style>
+.question-card{
+  padding:16px;
+  border-radius:22px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.16);
+  margin-bottom:14px;
+}
+.question-card h3{margin:0 0 10px}
+.hidden{display:none}
+.option-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:650px){.option-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<main class="room">
+<main class="afaq-mobile">
 
-<section class="topbar">
-  <div class="title">
-    <h1>📝 اختبارات المدرس</h1>
-    <p id="teacherInfo">هذه الصفحة تعرض بيانات المدرس الحالي فقط.</p>
+<section class="afaq-top">
+  <h1>📝 اختبارات المدرس</h1>
+  <div style="margin-top:14px">
+    <a class="afaq-btn gray" href="teacher-dashboard.html">رجوع للوحة المدرس</a>
   </div>
-  <a class="btn back" href="teacher-dashboard.html">لوحة المدرس</a>
 </section>
 
 <section class="panel">
-  <h2>إضافة</h2>
-  <input id="titleInput" placeholder="العنوان">
-  <textarea id="description" placeholder="الوصف"></textarea>
-  <input id="total" placeholder="الدرجة الكلية"><select id="status"><option>منشور</option><option>مخفي</option></select>
-  <button class="btn ok" onclick="saveItem()">حفظ</button>
+  <h2>بيانات الاختبار</h2>
+  <input id="examTitle" placeholder="عنوان الاختبار">
+  <textarea id="examDescription" placeholder="وصف الاختبار أو تعليمات عامة"></textarea>
+  <select id="examStatus">
+    <option>منشور</option>
+    <option>مخفي</option>
+  </select>
 </section>
 
-<section class="panel">
-  <h2>بياناتي الخاصة</h2>
-  <div id="box" class="cards"></div>
+<section class="panel" style="margin-top:15px">
+  <h2>إضافة سؤال</h2>
+
+  <select id="questionType" onchange="toggleQuestionFields()">
+    <option value="mcq">اختيارات</option>
+    <option value="tf">صح وخطأ</option>
+    <option value="blank">فراغات</option>
+    <option value="essay">سؤال مقالي / تعاريف / شرح</option>
+    <option value="problem">مسائل - يرفق الطالب صورة الحل</option>
+  </select>
+
+  <input id="questionText" placeholder="نص السؤال">
+  <input id="questionDegree" type="number" placeholder="درجة السؤال">
+
+  <div id="mcqFields">
+    <p>اكتب كل اختيار في خانة مستقلة، بدون فواصل.</p>
+    <div class="option-grid">
+      <input id="option1" placeholder="الاختيار الأول">
+      <input id="option2" placeholder="الاختيار الثاني">
+      <input id="option3" placeholder="الاختيار الثالث">
+    </div>
+    <select id="mcqCorrect">
+      <option value="1">الإجابة الصحيحة: الاختيار الأول</option>
+      <option value="2">الإجابة الصحيحة: الاختيار الثاني</option>
+      <option value="3">الإجابة الصحيحة: الاختيار الثالث</option>
+    </select>
+  </div>
+
+  <div id="tfFields" class="hidden">
+    <select id="tfCorrect">
+      <option value="صح">الإجابة الصحيحة: صح</option>
+      <option value="خطأ">الإجابة الصحيحة: خطأ</option>
+    </select>
+  </div>
+
+  <div id="blankFields" class="hidden">
+    <input id="blankAnswer" placeholder="الإجابة الصحيحة للفراغ">
+  </div>
+
+  <div id="manualFields" class="hidden">
+    <p>هذا السؤال لا يصحح تلقائياً. يتم تصحيحه يدوياً من المدرس بعد إرسال الطالب.</p>
+  </div>
+
+  <button class="afaq-btn" onclick="addQuestion()">إضافة السؤال للقائمة</button>
+</section>
+
+<section class="panel" style="margin-top:15px">
+  <h2>أسئلة الاختبار</h2>
+  <div id="questionsBox"></div>
+  <button class="afaq-btn" onclick="saveExam()">💾 حفظ الاختبار كاملاً</button>
+</section>
+
+<section class="panel" style="margin-top:15px">
+  <h2>الاختبارات المحفوظة</h2>
+  <div id="examsBox" class="cards"></div>
+</section>
+
+<section class="panel" style="margin-top:15px">
+  <h2>تصحيح الأسئلة المقالية والمسائل</h2>
+  <div id="manualBox" class="cards"></div>
 </section>
 
 </main>
@@ -36,61 +108,229 @@
 <script src="../js/afaq-data.js"></script>
 <script src="../js/afaq-teacher-auth.js"></script>
 <script src="../js/afaq-auto-stats.js"></script>
+<script src="../js/afaq-badges.js"></script>
+
 <script>
-const teacher = AfaqTeacherAuth.requireTeacher();
-if(teacher){
-  document.getElementById("teacherInfo").textContent =
-  teacher.fullName + " | " + teacher.grade + " | " + teacher.subject;
+let questions = [];
+const teacher = window.AfaqTeacherAuth && AfaqTeacherAuth.requireTeacher ? AfaqTeacherAuth.requireTeacher() : null;
+
+function read(key){
+  try{return JSON.parse(localStorage.getItem(key)) || []}catch(e){return []}
+}
+function write(key,value){
+  localStorage.setItem(key, JSON.stringify(value));
+  window.dispatchEvent(new Event("afaqDataUpdated"));
+}
+function currentTeacher(){
+  if(window.AfaqTeacherAuth && AfaqTeacherAuth.currentTeacher) return AfaqTeacherAuth.currentTeacher();
+  try{return JSON.parse(localStorage.getItem("afaq_current_teacher")) || {}}catch(e){return {}}
 }
 
-function saveItem(){
-  const item = {
-    title: titleInput.value.trim(),
-    description: description.value.trim(),
-    url: document.getElementById("url") ? document.getElementById("url").value.trim() : "",
-    type: document.getElementById("type") ? document.getElementById("type").value : "",
-    score: document.getElementById("score") ? document.getElementById("score").value : "",
-    total: document.getElementById("total") ? document.getElementById("total").value : "",
-    status: document.getElementById("status") ? document.getElementById("status").value : "منشور"
-  };
-
-  if(!item.title){ alert("أدخل العنوان"); return; }
-
-  AfaqTeacherAuth.addTeacherScoped("exams", item);
-  titleInput.value = "";
-  description.value = "";
-  if(document.getElementById("url")) document.getElementById("url").value = "";
-  render();
-  alert("تم الحفظ ضمن بياناتك فقط");
+function toggleQuestionFields(){
+  const type = questionType.value;
+  mcqFields.classList.toggle("hidden", type !== "mcq");
+  tfFields.classList.toggle("hidden", type !== "tf");
+  blankFields.classList.toggle("hidden", type !== "blank");
+  manualFields.classList.toggle("hidden", !(type === "essay" || type === "problem"));
 }
 
-function deleteItem(id){
-  if(!confirm("حذف؟")) return;
-  const arr = AfaqTeacherAuth.read("afaq_exams").filter(x => x.id !== id);
-  AfaqTeacherAuth.write("afaq_exams", arr);
-  render();
-}
+function addQuestion(){
+  const type = questionType.value;
+  const text = questionText.value.trim();
+  const degree = Number(questionDegree.value || 0);
 
-function render(){
-  const arr = AfaqTeacherAuth.teacherScopedList("exams");
-  if(!arr.length){
-    box.innerHTML = '<div class="card"><h3>لا توجد بيانات حالياً</h3></div>';
+  if(!text || !degree){
+    alert("يرجى إدخال نص السؤال والدرجة");
     return;
   }
 
-  box.innerHTML = arr.map(x => `
-    <div class="card">
-      <h3>${x.title || "عنصر"}</h3>
-      <p>${x.description || ""}</p>
-      <p>المادة: ${x.subject}</p>
-      <p>الصف: ${x.grade}</p>
-      ${x.url ? `<button class="btn" onclick="window.open('${x.url}','_blank')">فتح الملف</button>` : ""}
-      <button class="btn danger" onclick="deleteItem('${x.id}')">حذف</button>
+  let q = {
+    id: "q-" + Date.now(),
+    type,
+    text,
+    degree,
+    manual: type === "essay" || type === "problem"
+  };
+
+  if(type === "mcq"){
+    if(!option1.value.trim() || !option2.value.trim() || !option3.value.trim()){
+      alert("يرجى ملء الاختيارات الثلاثة");
+      return;
+    }
+    q.options = [option1.value.trim(), option2.value.trim(), option3.value.trim()];
+    q.correct = q.options[Number(mcqCorrect.value) - 1];
+  }
+
+  if(type === "tf") q.correct = tfCorrect.value;
+  if(type === "blank") q.correct = blankAnswer.value.trim();
+
+  questions.push(q);
+
+  questionText.value = "";
+  questionDegree.value = "";
+  option1.value = "";
+  option2.value = "";
+  option3.value = "";
+  blankAnswer.value = "";
+
+  renderQuestions();
+}
+
+function typeName(type){
+  return {
+    mcq:"اختيارات",
+    tf:"صح وخطأ",
+    blank:"فراغات",
+    essay:"مقالي / تعاريف / شرح",
+    problem:"مسائل بصورة"
+  }[type] || type;
+}
+
+function removeQuestion(id){
+  questions = questions.filter(q => q.id !== id);
+  renderQuestions();
+}
+
+function renderQuestions(){
+  if(!questions.length){
+    questionsBox.innerHTML = "<p>لا توجد أسئلة بعد.</p>";
+    return;
+  }
+
+  questionsBox.innerHTML = questions.map((q,index)=>`
+    <div class="question-card">
+      <h3>س${index+1}: ${typeName(q.type)}</h3>
+      <p>${q.text}</p>
+      <p>الدرجة: <b>${q.degree}</b></p>
+      ${q.options ? `<p>الاختيارات: ${q.options.join(" | ")}</p>` : ""}
+      ${q.correct ? `<p>الإجابة الصحيحة: <b>${q.correct}</b></p>` : "<p>تصحيح يدوي</p>"}
+      <button class="afaq-btn red" onclick="removeQuestion('${q.id}')">حذف السؤال</button>
     </div>
   `).join("");
 }
 
-render();
+function saveExam(){
+  const title = examTitle.value.trim();
+  if(!title || !questions.length){
+    alert("أدخل عنوان الاختبار وأضف سؤالاً واحداً على الأقل");
+    return;
+  }
+
+  const t = currentTeacher();
+  const total = questions.reduce((sum,q)=>sum + Number(q.degree || 0),0);
+
+  const exam = {
+    id: "exam-" + Date.now(),
+    title,
+    description: examDescription.value.trim(),
+    status: examStatus.value,
+    questions,
+    total,
+    teacherCode: t.teacherCode || t.code || "",
+    teacherName: t.fullName || t.name || "",
+    subject: t.subject || "",
+    subjectCode: t.subjectCode || "",
+    grade: t.grade || "",
+    createdAt: new Date().toLocaleString("ar")
+  };
+
+  const exams = read("afaq_exams");
+  exams.unshift(exam);
+  write("afaq_exams", exams);
+
+  if(window.AfaqData && AfaqData.addNotification){
+    AfaqData.addNotification("student","", "اختبار جديد", "تم نشر اختبار: " + title, "اختبار", exam.subject);
+  }
+
+  examTitle.value = "";
+  examDescription.value = "";
+  questions = [];
+  renderQuestions();
+  renderExams();
+  alert("تم حفظ الاختبار بنجاح");
+}
+
+function deleteExam(id){
+  if(!confirm("حذف الاختبار؟")) return;
+  write("afaq_exams", read("afaq_exams").filter(e => e.id !== id));
+  renderExams();
+}
+
+function renderExams(){
+  const t = currentTeacher();
+  const exams = read("afaq_exams").filter(e =>
+    !t.teacherCode || e.teacherCode === t.teacherCode || e.subjectCode === t.subjectCode
+  );
+
+  examsBox.innerHTML = exams.length ? exams.map(e=>`
+    <div class="card">
+      <h3>${e.title}</h3>
+      <p>${e.description || ""}</p>
+      <p>عدد الأسئلة: ${e.questions ? e.questions.length : 0}</p>
+      <p>الدرجة الكلية: ${e.total}</p>
+      <span class="badge">${e.status}</span>
+      <button class="afaq-btn red" onclick="deleteExam('${e.id}')">حذف</button>
+    </div>
+  `).join("") : "<div class='card'><h3>لا توجد اختبارات</h3></div>";
+}
+
+function renderManualSubmissions(){
+  const t = currentTeacher();
+  const submissions = read("afaq_exam_submissions").filter(s =>
+    s.needsManual &&
+    (!t.teacherCode || s.teacherCode === t.teacherCode || s.subjectCode === t.subjectCode)
+  );
+
+  manualBox.innerHTML = submissions.length ? submissions.map(s=>`
+    <div class="card">
+      <h3>${s.examTitle}</h3>
+      <p>الطالب: ${s.studentName || s.studentId}</p>
+      <p>الدرجة التلقائية: ${s.autoScore} / ${s.total}</p>
+      <input id="manual-${s.id}" type="number" placeholder="الدرجة اليدوية">
+      <button class="afaq-btn" onclick="saveManualGrade('${s.id}')">حفظ الدرجة النهائية</button>
+      ${s.problemImage ? `<button class="afaq-btn gray" onclick="window.open('${s.problemImage}','_blank')">فتح صورة الحل</button>` : ""}
+    </div>
+  `).join("") : "<div class='card'><h3>لا توجد إجابات تحتاج تصحيح يدوي</h3></div>";
+}
+
+function saveManualGrade(id){
+  const input = document.getElementById("manual-" + id);
+  const manual = Number(input.value || 0);
+  const submissions = read("afaq_exam_submissions");
+  const sub = submissions.find(s => s.id === id);
+  if(!sub) return;
+
+  sub.manualScore = manual;
+  sub.finalScore = Number(sub.autoScore || 0) + manual;
+  sub.needsManual = false;
+  sub.status = "تم التصحيح";
+
+  write("afaq_exam_submissions", submissions);
+
+  const results = read("afaq_results");
+  results.unshift({
+    id: "result-" + Date.now(),
+    studentId: sub.studentId,
+    studentName: sub.studentName,
+    title: sub.examTitle,
+    score: sub.finalScore,
+    total: sub.total,
+    subject: sub.subject,
+    teacherCode: sub.teacherCode,
+    subjectCode: sub.subjectCode,
+    type: "اختبار",
+    createdAt: new Date().toLocaleString("ar")
+  });
+  write("afaq_results", results);
+
+  alert("تم حفظ الدرجة النهائية وإضافتها إلى نتائج الطالب");
+  renderManualSubmissions();
+}
+
+toggleQuestionFields();
+renderQuestions();
+renderExams();
+renderManualSubmissions();
 </script>
 </body>
 </html>
