@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>معلومات الطالب لولي الأمر - آفاق التعليمية</title>
+<title>معلومات الطالب - ولي الأمر</title>
 <link rel="stylesheet" href="../css/main.css">
 <style>
 .page{min-height:100vh;padding:24px}
@@ -25,16 +25,9 @@
 </head>
 <body>
 <main class="page">
-
 <header class="header">
-<div>
-<h1>👤 معلومات الطالب لولي الأمر</h1>
-<p>هذه الصفحة تعرض بيانات الطالب المرتبط بولي الأمر.</p>
-</div>
-<div class="actions">
-<button class="btn" onclick="location.href='parent-dashboard.html'">🏠 لوحة ولي الأمر</button>
-<button class="btn" onclick="history.back()">← رجوع</button>
-</div>
+<div><h1>👨‍🎓 معلومات الطالب</h1><p>هذه البيانات مرتبطة مباشرة بالطالب الذي سجّل ولي الأمر بكوده.</p></div>
+<div class="actions"><button class="btn" onclick="location.href='parent-dashboard.html'">🏠 لوحة ولي الأمر</button><button class="btn" onclick="history.back()">← رجوع</button></div>
 </header>
 
 <section class="profile-grid">
@@ -43,36 +36,33 @@
 <h2 id="studentNameView">اسم الطالب</h2>
 <p id="studentGradeView">المرحلة الدراسية</p>
 <div id="subjectsList" class="subjects"></div>
-<p class="hint">صورة الطالب وبياناته تُدار من لوحة المدير فقط.</p>
+<p class="hint">هذه الصورة والبيانات مأخوذة من إدارة الطلاب.</p>
 </div>
 
 <div class="box">
 <h2>بيانات الطالب</h2>
-
 <div class="info-grid">
-<div class="info"><strong>الاسم الثلاثي</strong><span id="studentNameInfo">-</span><p class="hint">الاسم الكامل كما أضافه المدير.</p></div>
-<div class="info"><strong>المرحلة الدراسية</strong><span id="studentGradeInfo">-</span><p class="hint">مرحلة الطالب الحالية.</p></div>
-<div class="info"><strong>رقم هاتف الطالب</strong><span id="studentPhoneInfo">-</span><p class="hint">رقم التواصل الخاص بالطالب.</p></div>
-<div class="info"><strong>كود الطالب</strong><span id="studentCodeInfo">-</span><p class="hint">الكود المستخدم لتسجيل الدخول.</p></div>
-<div class="info"><strong>اسم ولي الأمر</strong><span id="parentNameInfo">-</span><p class="hint">ولي الأمر المرتبط بحساب الطالب.</p></div>
-<div class="info"><strong>رقم ولي الأمر</strong><span id="parentPhoneInfo">-</span><p class="hint">رقم التواصل مع ولي الأمر.</p></div>
-<div class="info"><strong>حالة الاشتراك</strong><span id="subscriptionStatusInfo">-</span><p class="hint">تُحدّث من إدارة الطلاب/الاشتراكات.</p></div>
-<div class="info"><strong>انتهاء الاشتراك</strong><span id="subscriptionEndInfo">-</span><p class="hint">تاريخ انتهاء اشتراك الطالب.</p></div>
+<div class="info"><strong>الاسم الثلاثي</strong><span id="studentNameInfo">-</span></div>
+<div class="info"><strong>المرحلة الدراسية</strong><span id="studentGradeInfo">-</span></div>
+<div class="info"><strong>رقم هاتف الطالب</strong><span id="studentPhoneInfo">-</span></div>
+<div class="info"><strong>كود الطالب</strong><span id="studentCodeInfo">-</span></div>
+<div class="info"><strong>اسم ولي الأمر</strong><span id="parentNameInfo">-</span></div>
+<div class="info"><strong>رقم ولي الأمر</strong><span id="parentPhoneInfo">-</span></div>
+<div class="info"><strong>حالة الاشتراك</strong><span id="subscriptionStatusInfo">-</span></div>
+<div class="info"><strong>انتهاء الاشتراك</strong><span id="subscriptionEndInfo">-</span></div>
 </div>
-
-<div class="info" style="margin-top:15px">
-<strong>ملاحظات الطالب</strong>
-<span id="studentNotesInfo">لا توجد ملاحظات</span>
-<p class="hint">ملاحظات الإدارة عن الطالب.</p>
-</div>
+<div class="info" style="margin-top:15px"><strong>ملاحظات الطالب</strong><span id="studentNotesInfo">-</span></div>
 </div>
 </section>
-
 </main>
 
 <script src="../js/afaq-data.js"></script>
 <script>
-AfaqData.renderStudentMiniProfile();
+const student=AfaqData.renderCurrentStudent();
+if(!student){
+alert("يرجى تسجيل دخول ولي الأمر أولاً");
+location.href="parent-login.html";
+}
 </script>
 </body>
 </html>

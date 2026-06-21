@@ -5,55 +5,113 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>تسجيل دخول ولي الأمر - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
+<style>
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-box{width:100%;max-width:520px;padding:32px;border-radius:28px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);box-shadow:0 0 35px rgba(124,58,237,.25)}
+.back-link{display:inline-block;margin-bottom:18px;color:#ddd;text-decoration:none;font-weight:bold}
+.login-icon{width:88px;height:88px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:44px;background:linear-gradient(135deg,#7c3aed,#a855f7)}
+h1{text-align:center;margin-bottom:8px}
+p{text-align:center;color:#d6d6d6;line-height:1.7}
+label{display:block;margin-top:16px;margin-bottom:8px;font-weight:bold}
+input{width:100%;padding:15px;border:none;border-radius:14px;outline:none;font-size:16px}
+button{width:100%;border:none;padding:15px;border-radius:14px;margin-top:20px;cursor:pointer;color:white;font-weight:bold;font-size:16px;background:linear-gradient(135deg,#16a34a,#22c55e)}
+.msg{margin-top:14px;padding:12px;border-radius:14px;display:none;line-height:1.8;text-align:center}
+.error{background:rgba(220,38,38,.18);border:1px solid rgba(220,38,38,.35)}
+.success{background:rgba(22,163,74,.18);border:1px solid rgba(22,163,74,.35)}
+</style>
 </head>
 <body>
-
 <section class="login-page">
 <div class="login-box">
-
 <a href="../index.html" class="back-link">← الرجوع للرئيسية</a>
-
 <div class="login-icon">👨‍👩‍👦</div>
-
 <h1>تسجيل دخول ولي الأمر</h1>
+<p>أدخل كود الطالب للوصول إلى بياناته</p>
 
-<p>أدخل اسم الطالب وكود الطالب/ولي الأمر للوصول إلى بيانات الطالب</p>
-
-<form>
-<label>اسم الطالب الثلاثي</label>
-<input id="studentNameInput" type="text" placeholder="مثال: أحمد محمد علي">
-
-<label>كود الطالب / رمز ولي الأمر</label>
-<input id="parentCodeInput" type="password" placeholder="مثال: STD-2026-001">
+<label>كود الطالب</label>
+<input id="parentCodeInput" type="text" placeholder="أدخل كود الطالب">
 
 <button type="button" onclick="loginParent()">دخول ولي الأمر</button>
-</form>
 
+<div id="errorBox" class="msg error"></div>
+<div id="successBox" class="msg success"></div>
 </div>
 </section>
 
 <script src="../js/afaq-data.js"></script>
 <script>
+function show(id,msg){
+document.getElementById("errorBox").style.display="none";
+document.getElementById("successBox").style.display="none";
+const box=document.getElementById(id);
+box.style.display="block";
+box.innerHTML=msg;
+}
+
+function fallbackStudents(){
+try{return JSON.parse(localStorage.getItem("afaq_students")) || [];}catch(e){return [];}
+}
+
+function clean(v){return String(v || "").trim();}
+
+function normalizeStudent(st){
+const id=clean(st.studentId || st.id || st.code || ("STD-"+Date.now()));
+return {
+studentId:id,
+id:id,
+code:clean(st.code || id),
+name:clean(st.name || st.studentName || "طالب"),
+grade:clean(st.grade || st.studentGrade || "غير محدد"),
+phone:clean(st.phone || st.studentPhone || "-"),
+parentName:clean(st.parentName || "-"),
+parentPhone:clean(st.parentPhone || "-"),
+notes:clean(st.notes || st.studentNotes || "لا توجد ملاحظات"),
+photo:st.photo || "",
+subscriptionStatus:clean(st.subscriptionStatus || st.subscription || "غير مفعل"),
+subscriptionEnd:clean(st.subscriptionEnd || st.endDate || "غير محدد"),
+subjects:st.subjects || ["الأحياء","الكيمياء","الفيزياء"],
+createdAt:st.createdAt || ""
+};
+}
+
 function loginParent(){
-  const name = document.getElementById("studentNameInput").value.trim();
-  const code = document.getElementById("parentCodeInput").value.trim();
+const code=document.getElementById("parentCodeInput").value.trim();
 
-  if(!name || !code){
-    alert("يرجى إدخال اسم الطالب والكود");
-    return;
-  }
+if(!code){
+show("errorBox","يرجى إدخال كود الطالب.");
+return;
+}
 
-  const student = AfaqData.getStudentByNameAndParentCode(name, code);
+let students=[];
+if(window.AfaqData && AfaqData.allStudents){
+students=AfaqData.allStudents();
+}else{
+students=fallbackStudents().map(normalizeStudent);
+}
 
-  if(!student){
-    alert("لم يتم العثور على طالب مطابق. تأكد من الاسم والكود.");
-    return;
-  }
+const student=students.find(s =>
+clean(s.code)===code ||
+clean(s.studentId)===code ||
+clean(s.id)===code
+);
 
-  AfaqData.setCurrentStudent(student);
-  window.location.href = "parent-dashboard.html";
+if(!student){
+show("errorBox","الكود غير صحيح أو الطالب غير موجود.");
+return;
+}
+
+if(window.AfaqData && AfaqData.setCurrentStudent){
+AfaqData.setCurrentStudent(student);
+}else{
+localStorage.setItem("afaq_current_student_id", student.studentId || student.code);
+localStorage.setItem("afaq_current_student", JSON.stringify(student));
+}
+
+show("successBox","تم تسجيل الدخول بنجاح");
+setTimeout(function(){
+window.location.href="parent-dashboard.html";
+},500);
 }
 </script>
-
 </body>
 </html>
