@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<title>إدارة طلبات الاشتراك</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-room.css">
+
+</head>
+<body>
+<main class="room">
+<section class="topbar">
+<div class="title"><h1>💳 طلبات الاشتراك</h1><p>موافقة المدير على طلبات الاشتراك وإنشاء كود الطالب.</p></div>
+<a class="btn back" href="admin-dashboard.html">لوحة المدير</a>
+</section>
+
+<section class="panel">
+<h2>الطلبات الواردة</h2>
+<div id="requestsBox" class="cards"></div>
+</section>
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script>
+function read(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return []}}
+function write(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function makeCode(){return "STD-" + Date.now().toString().slice(-6)}
+function approveRequest(id){
+ let reqs=read("afaq_subscription_requests");
+ const r=reqs.find(x=>x.id===id);
+ if(!r)return;
+ const code=makeCode();
+ const student={
+  studentId:code,
+  code,
+  name:r.name,
+  grade:r.grade,
+  phone:r.phone,
+  parentName:r.parentName,
+  parentPhone:r.parentPhone,
+  notes:r.notes,
+  subscriptionStatus:"مفعل",
+  subscriptionEnd:"غير محدد",
+  subjects:[],
+  createdAt:new Date().toLocaleString("ar")
+ };
+ if(window.AfaqData && AfaqData.upsertStudent) AfaqData.upsertStudent(student);
+ else {
+   const students=read("afaq_students");
+   students.unshift(student);
+   write("afaq_students",students);
+ }
+ r.status="تمت الموافقة";
+ r.studentCode=code;
+ write("afaq_subscription_requests",reqs);
+ render();
+ alert("تمت الموافقة وإنشاء كود الطالب: " + code);
+}
+function rejectRequest(id){
+ let reqs=read("afaq_subscription_requests");
+ const r=reqs.find(x=>x.id===id);
+ if(r) r.status="مرفوض";
+ write("afaq_subscription_requests",reqs);
+ render();
+}
+function render(){
+ const reqs=read("afaq_subscription_requests");
+ if(!reqs.length){requestsBox.innerHTML='<div class="card"><h3>لا توجد طلبات حالياً</h3></div>';return;}
+ requestsBox.innerHTML=reqs.map(r=>`
+ <div class="card">
+ <h3>${r.name}</h3>
+ <p>المرحلة: ${r.grade}</p>
+ <p>الهاتف: ${r.phone || "-"}</p>
+ <p>ولي الأمر: ${r.parentName || "-"}</p>
+ <span class="badge">${r.status}</span>
+ ${r.studentCode ? `<p>كود الطالب: <b>${r.studentCode}</b></p>` : ""}
+ <button class="btn" onclick="approveRequest('${r.id}')">موافقة</button>
+ <button class="btn back" onclick="rejectRequest('${r.id}')">رفض</button>
+ </div>`).join("");
+}
+render();
+</script>
+</body>
+</html>

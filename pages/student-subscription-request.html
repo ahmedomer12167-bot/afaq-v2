@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<title>طلب اشتراك الطالب</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-room.css">
+
+</head>
+<body>
+<main class="room">
+<section class="topbar">
+<div class="title"><h1>💳 طلب اشتراك جديد</h1><p>املأ البيانات ليصل الطلب إلى المدير للموافقة.</p></div>
+<a class="btn back" href="student-login.html">رجوع</a>
+</section>
+
+<section class="panel">
+<h2>بيانات الطالب</h2>
+<input id="studentName" placeholder="الاسم الثلاثي">
+<select id="studentGrade">
+<option>الأول متوسط</option>
+<option>الثاني متوسط</option>
+<option>الثالث متوسط</option>
+<option>الرابع العلمي</option>
+<option>الخامس العلمي</option>
+<option>السادس العلمي</option>
+</select>
+<input id="studentPhone" placeholder="رقم هاتف الطالب">
+<input id="parentName" placeholder="اسم ولي الأمر">
+<input id="parentPhone" placeholder="رقم هاتف ولي الأمر">
+<textarea id="notes" placeholder="ملاحظات إضافية"></textarea>
+<button class="btn" onclick="sendRequest()">إرسال طلب الاشتراك</button>
+</section>
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script>
+function read(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return []}}
+function write(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function sendRequest(){
+ const name=studentName.value.trim();
+ if(!name){alert("أدخل اسم الطالب");return;}
+ const requests=read("afaq_subscription_requests");
+ requests.unshift({
+  id:"sub-"+Date.now(),
+  name,
+  grade:studentGrade.value,
+  phone:studentPhone.value.trim(),
+  parentName:parentName.value.trim(),
+  parentPhone:parentPhone.value.trim(),
+  notes:notes.value.trim(),
+  status:"قيد المراجعة",
+  createdAt:new Date().toLocaleString("ar")
+ });
+ write("afaq_subscription_requests",requests);
+ alert("تم إرسال طلب الاشتراك إلى المدير");
+ location.href="student-login.html";
+}
+</script>
+</body>
+</html>
