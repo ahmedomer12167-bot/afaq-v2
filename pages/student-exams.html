@@ -4,50 +4,17 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>📝 الاختبارات - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-panel.css">
+<link rel="stylesheet" href="../css/afaq-room.css">
 </head>
 <body>
-<div class="layout">
-<aside class="sidebar">
-<div class="brand"><div class="brand-icon">🎓</div><div><h2>آفاق التعليمية</h2><p>لوحة الطالب</p></div></div>
-<nav class="nav"><a class="" href="student-dashboard.html">🏠 الرئيسية</a>
-<a class="" href="student-profile.html">👤 الملف الشخصي</a>
-<a class="" href="student-lessons.html">📖 الدروس</a>
-<a class="active" href="student-exams.html">📝 الاختبارات</a>
-<a class="" href="student-assignments.html">📋 الواجبات</a>
-<a class="" href="student-attendance.html">✅ الحضور</a>
-<a class="" href="student-results.html">📊 النتائج</a>
-<a class="" href="student-notifications.html">🔔 الإشعارات</a>
-<a class="" href="student-messages.html">💬 الرسائل</a><a class="logout" href="../index.html">🚪 تسجيل خروج</a></nav>
-</aside>
-<main class="main">
-<section class="hero"><div><h1>📝 الاختبارات</h1><p>الاختبارات المنشورة للطالب.</p></div><div class="actions"><button class="btn" onclick="history.back()">رجوع</button></div></section>
-<section class="panel">
-<h2>القائمة</h2>
-<div id="listBox" class="cards"></div>
-</section>
+
+<main class="room">
+<section class="topbar"><div class="title"><h1>📝 الاختبارات</h1><p>غرفة مستقلة للاختبارات.</p></div><a class="btn back" href="student-dashboard.html">رجوع للوحة</a></section>
+<section class="panel"><h2>المحتويات</h2><div id="box" class="cards"></div></section>
 </main>
-</div>
 <script src="../js/afaq-data.js"></script>
 <script>
-function render(){
- let arr = [];
- if(window.AfaqData){
-   arr = AfaqData.list("exams") || [];
- }
- const box=document.getElementById("listBox");
- if(!arr.length){
-   box.innerHTML='<div class="card"><h3>لا توجد بيانات حالياً</h3><p>ستظهر البيانات هنا بعد إضافتها من لوحة المدرس أو المدير.</p></div>';
-   return;
- }
- box.innerHTML = arr.map(x=>`
- <div class="card">
-   <h3>${x.title || x.studentName || x.subject || "عنصر"}</h3>
-   <p>${x.description || x.status || x.score || x.message || "بيانات مرتبطة"}</p>
-   <p><span class="badge">${x.subject || "عام"}</span></p>
- </div>`).join("");
-}
-render();
+function render(){const arr=window.AfaqData?AfaqData.list("exams"):[];box.innerHTML=arr.length?arr.map(x=>`<div class="card"><h3>${x.title||x.studentName||"عنصر"}</h3><p>${x.description||x.status||x.score||x.message||"بيانات مرتبطة"}</p><span class="badge">${x.subject||"عام"}</span></div>`).join(""):'<div class="card"><h3>لا توجد بيانات حالياً</h3><p>ستظهر هنا بعد إضافة البيانات من لوحة المدرس أو المدير.</p></div>';}render();
 </script>
 </body>
 </html>

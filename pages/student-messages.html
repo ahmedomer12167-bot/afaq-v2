@@ -2,55 +2,22 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>رسائل الطالب - آفاق التعليمية</title>
+<title>💬 الرسائل - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-panel.css">
+<link rel="stylesheet" href="../css/afaq-room.css">
 </head>
 <body>
-<div class="layout">
-<aside class="sidebar">
-<div class="brand"><div class="brand-icon">🎓</div><div><h2>آفاق التعليمية</h2><p>لوحة الطالب</p></div></div>
-<nav class="nav"><a class="" href="student-dashboard.html">🏠 الرئيسية</a>
-<a class="" href="student-profile.html">👤 الملف الشخصي</a>
-<a class="" href="student-lessons.html">📖 الدروس</a>
-<a class="" href="student-exams.html">📝 الاختبارات</a>
-<a class="" href="student-assignments.html">📋 الواجبات</a>
-<a class="" href="student-attendance.html">✅ الحضور</a>
-<a class="" href="student-results.html">📊 النتائج</a>
-<a class="" href="student-notifications.html">🔔 الإشعارات</a>
-<a class="active" href="student-messages.html">💬 الرسائل</a><a class="logout" href="../index.html">🚪 تسجيل خروج</a></nav>
-</aside>
-<main class="main">
-<section class="hero"><div><h1>💬 الرسائل</h1><p>واجهة مرتبة للرسائل والمحادثات.</p></div><button class="btn" onclick="history.back()">رجوع</button></section>
-<section class="content-grid">
-<div class="panel">
-<h2>رسالة جديدة</h2>
-<input id="to" placeholder="إلى">
-<input id="subject" placeholder="عنوان الرسالة">
-<textarea id="msgText" placeholder="نص الرسالة"></textarea>
-<button class="btn save-btn" onclick="sendMsg()">إرسال</button>
-</div>
-<div class="panel">
-<h2>صندوق الرسائل</h2>
-<div id="messagesBox"></div>
-</div>
-</section>
-</main>
-</div>
+
+<main class="room">
+<section class="topbar"><div class="title"><h1>💬 الرسائل</h1><p>غرفة مستقلة للرسائل.</p></div><a class="btn back" href="student-dashboard.html">رجوع للوحة</a></section>
+<section class="content">
+<div class="panel"><h2>رسالة جديدة</h2><input id="to" placeholder="إلى"><input id="subject" placeholder="العنوان"><textarea id="msgText" placeholder="نص الرسالة"></textarea><button class="btn" onclick="sendMsg()">إرسال</button></div>
+<div class="panel"><h2>الرسائل</h2><div id="box" class="cards"></div></div>
+</section></main>
 <script src="../js/afaq-data.js"></script>
 <script>
-function sendMsg(){
- const arr = window.AfaqData ? AfaqData.list("messages") : [];
- arr.unshift({id:"msg-"+Date.now(),to:to.value,subject:subject.value,message:msgText.value,createdAt:new Date().toLocaleString("ar")});
- if(window.AfaqData) AfaqData.save("messages",arr);
- to.value=subject.value=msgText.value="";
- renderMsgs();
-}
-function renderMsgs(){
- const arr = window.AfaqData ? AfaqData.list("messages") : [];
- messagesBox.innerHTML = arr.length ? arr.map(m=>`<div class="card"><h3>${m.subject||"رسالة"}</h3><p>${m.message||""}</p><small>${m.createdAt||""}</small></div>`).join("") : '<div class="card"><h3>لا توجد رسائل</h3></div>';
-}
-renderMsgs();
+function sendMsg(){const arr=AfaqData.list("messages");arr.unshift({id:"msg-"+Date.now(),to:to.value,subject:subject.value,message:msgText.value,createdAt:new Date().toLocaleString("ar")});AfaqData.save("messages",arr);to.value=subject.value=msgText.value="";render();}
+function render(){const arr=window.AfaqData?AfaqData.list("messages"):[];box.innerHTML=arr.length?arr.map(m=>`<div class="card"><h3>${m.subject||"رسالة"}</h3><p>${m.message||""}</p><small>${m.createdAt||""}</small></div>`).join(""):'<div class="card"><h3>لا توجد رسائل</h3></div>'}render();
 </script>
 </body>
 </html>

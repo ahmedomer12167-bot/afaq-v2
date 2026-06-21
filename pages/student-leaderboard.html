@@ -1,136 +1,20 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة المتفوقين - آفاق التعليمية</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 المتفوقون - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
-<style>
-.page{min-height:100vh;padding:24px}
-.header,.box{padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:22px}
-.header{display:flex;justify-content:space-between;align-items:center;gap:15px}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
-.card{padding:20px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);text-align:center}
-.card span{font-size:34px;display:block;margin-bottom:10px}
-.card strong{font-size:28px;display:block;margin-top:8px}
-input{width:100%;padding:14px;border:none;border-radius:14px;outline:none;margin:8px 0 14px;font-size:15px}
-.table{width:100%;border-collapse:collapse;margin-top:15px}
-.table th,.table td{padding:13px;text-align:center;border-bottom:1px solid rgba(255,255,255,.12)}
-.table th{color:#c084fc}
-.rank{font-size:24px}
-.badge{display:inline-block;padding:6px 10px;border-radius:10px;background:#7c3aed}
-.gold{background:#ca8a04}
-.silver{background:#64748b}
-.bronze{background:#92400e}
-.me{background:rgba(124,58,237,.25)}
-@media(max-width:900px){.stats{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}.table{font-size:13px}}
-</style>
+<link rel="stylesheet" href="../css/afaq-room.css">
 </head>
 <body>
-<main class="page">
 
-<header class="header">
-<div>
-<h1>🏆 لوحة المتفوقين</h1>
-<p>ترتيب الطلاب داخل مادة الأحياء حسب الأداء والدرجات والحضور.</p>
-</div>
-<div class="actions">
-<button class="btn" onclick="location.href='student-subject-page.html'">📚 صفحة المادة</button>
-<button class="btn" onclick="location.href='student-dashboard.html'">🏠 لوحة الطالب</button>
-<button class="btn" onclick="history.back()">← رجوع</button>
-</div>
-</header>
-
-<section class="stats">
-<div class="card"><span>🥇</span><h3>ترتيبي</h3><strong id="myRank">4</strong></div>
-<div class="card"><span>⭐</span><h3>مستواي</h3><strong id="myLevel">متفوق</strong></div>
-<div class="card"><span>📝</span><h3>اختباراتي</h3><strong id="myExams">8</strong></div>
-<div class="card"><span>✅</span><h3>نسبة النجاح</h3><strong id="myPercent">82%</strong></div>
-</section>
-
-<section class="box">
-<h2>بحث في المتفوقين</h2>
-<input id="searchInput" placeholder="🔍 ابحث عن طالب..." oninput="renderLeaderboard()">
-</section>
-
-<section class="box">
-<h2>ترتيب الطلاب في المادة</h2>
-<table class="table">
-<thead>
-<tr>
-<th>الترتيب</th>
-<th>اسم الطالب</th>
-<th>الاختبارات</th>
-<th>الإجابات الصحيحة</th>
-<th>نسبة النجاح</th>
-<th>المستوى</th>
-</tr>
-</thead>
-<tbody id="leaderboardBody"></tbody>
-</table>
-</section>
-
+<main class="room">
+<section class="topbar"><div class="title"><h1>🏆 المتفوقون</h1><p>غرفة مستقلة للترتيب والمتفوقين.</p></div><a class="btn back" href="student-dashboard.html">رجوع للوحة</a></section>
+<section class="panel"><h2>المحتويات</h2><div id="box" class="cards"></div></section>
 </main>
-
+<script src="../js/afaq-data.js"></script>
 <script>
-let leaderboard = JSON.parse(localStorage.getItem("afaq_student_leaderboard")) || [
-{name:"علي محمد حسن",exams:10,correct:92,percent:96,level:"أسطورة"},
-{name:"سارة أحمد كريم",exams:9,correct:84,percent:91,level:"خبير"},
-{name:"حسن قاسم علي",exams:9,correct:78,percent:86,level:"متفوق"},
-{name:"أحمد محمد علي",exams:8,correct:70,percent:82,level:"متفوق",me:true},
-{name:"زينب خالد عمر",exams:7,correct:58,percent:74,level:"مجتهد"},
-{name:"محمد سامر نجم",exams:6,correct:40,percent:61,level:"مبتدئ"}
-];
-
-function saveLeaderboard(){
-localStorage.setItem("afaq_student_leaderboard",JSON.stringify(leaderboard));
-}
-
-function rankIcon(index){
-if(index===0)return "🥇";
-if(index===1)return "🥈";
-if(index===2)return "🥉";
-return index+1;
-}
-
-function badgeClass(index){
-if(index===0)return "gold";
-if(index===1)return "silver";
-if(index===2)return "bronze";
-return "";
-}
-
-function renderLeaderboard(){
-const body = document.getElementById("leaderboardBody");
-const search = document.getElementById("searchInput").value.trim();
-
-let sorted = [...leaderboard].sort((a,b)=>b.percent-a.percent);
-let filtered = sorted.filter(s=>s.name.includes(search) || s.level.includes(search));
-
-if(filtered.length===0){
-body.innerHTML = '<tr><td colspan="6">لا توجد بيانات حالياً</td></tr>';
-return;
-}
-
-body.innerHTML = filtered.map((s,i)=>{
-let realIndex = sorted.indexOf(s);
-return `
-<tr class="${s.me ? 'me' : ''}">
-<td class="rank">${rankIcon(realIndex)}</td>
-<td>${s.name}${s.me ? " - أنت" : ""}</td>
-<td>${s.exams}</td>
-<td>${s.correct}</td>
-<td>${s.percent}%</td>
-<td><span class="badge ${badgeClass(realIndex)}">${s.level}</span></td>
-</tr>
-`;
-}).join("");
-}
-
-saveLeaderboard();
-renderLeaderboard();
+function render(){const arr=window.AfaqData?AfaqData.list("results"):[];box.innerHTML=arr.length?arr.map(x=>`<div class="card"><h3>${x.title||x.studentName||"عنصر"}</h3><p>${x.description||x.status||x.score||x.message||"بيانات مرتبطة"}</p><span class="badge">${x.subject||"عام"}</span></div>`).join(""):'<div class="card"><h3>لا توجد بيانات حالياً</h3><p>ستظهر هنا بعد إضافة البيانات من لوحة المدرس أو المدير.</p></div>';}render();
 </script>
 </body>
 </html>

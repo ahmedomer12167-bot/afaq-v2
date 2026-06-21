@@ -2,54 +2,31 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>معلومات الطالب - آفاق التعليمية</title>
+<title>👨‍🎓 معلومات الطالب - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/afaq-panel.css">
+<link rel="stylesheet" href="../css/afaq-room.css">
 </head>
 <body>
-<div class="layout">
-<aside class="sidebar">
-<div class="brand"><div class="brand-icon">👨‍👩‍👦</div><div><h2>آفاق التعليمية</h2><p>لوحة ولي الأمر</p></div></div>
-<nav class="nav"><a class="" href="parent-dashboard.html">🏠 الرئيسية</a>
-<a class="active" href="parent-student-info.html">👨‍🎓 معلومات الطالب</a>
-<a class="" href="parent-results.html">📊 النتائج</a>
-<a class="" href="parent-attendance.html">✅ الحضور</a>
-<a class="" href="parent-exams.html">📝 الاختبارات</a>
-<a class="" href="parent-assignments.html">📋 الواجبات</a>
-<a class="" href="parent-notifications.html">🔔 الإشعارات</a>
-<a class="" href="parent-messages.html">💬 الرسائل</a>
-<a class="" href="parent-profile.html">👤 ملف ولي الأمر</a><a class="logout" href="../index.html">🚪 تسجيل خروج</a></nav>
-</aside>
-<main class="main">
-<section class="hero"><div><h1>👨‍🎓 معلومات الطالب</h1><p>بيانات الطالب مرتبطة مباشرة بما يضيفه المدير في إدارة الطلاب.</p></div><div class="actions"><button class="btn" onclick="history.back()">رجوع</button></div></section>
-<section class="content-grid">
-<div class="panel profile-card">
-<img id="studentPhotoView" class="avatar" alt="صورة الطالب">
-<h2 id="studentNameView">اسم الطالب</h2>
-<p id="studentGradeView">المرحلة</p>
-<div id="subjectsList"></div>
-</div>
+
+<main class="room">
+<section class="topbar"><div class="title"><h1>👨‍🎓 معلومات الطالب</h1><p>غرفة مستقلة لبيانات الطالب المرتبط.</p></div><div class="actions"><a class="btn back" href="parent-dashboard.html">رجوع للوحة</a></div></section>
+<section class="content">
 <div class="panel">
-<h2>البيانات الأساسية</h2>
-<div class="info-grid">
-<div class="info"><strong>الاسم الثلاثي</strong><span id="studentNameInfo">-</span></div>
-<div class="info"><strong>المرحلة الدراسية</strong><span id="studentGradeInfo">-</span></div>
-<div class="info"><strong>رقم الطالب</strong><span id="studentPhoneInfo">-</span></div>
-<div class="info"><strong>كود الطالب</strong><span id="studentCodeInfo">-</span></div>
-<div class="info"><strong>اسم ولي الأمر</strong><span id="parentNameInfo">-</span></div>
-<div class="info"><strong>رقم ولي الأمر</strong><span id="parentPhoneInfo">-</span></div>
-<div class="info"><strong>حالة الاشتراك</strong><span id="subscriptionStatusInfo">-</span></div>
+<div class="hero-card"><img id="studentPhotoView" class="avatar"><div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><div id="subjectsList"></div></div></div>
+</div>
+<div class="panel"><h2>البيانات</h2><div class="info-grid">
+<div class="info"><strong>الاسم</strong><span id="studentNameInfo">-</span></div>
+<div class="info"><strong>المرحلة</strong><span id="studentGradeInfo">-</span></div>
+<div class="info"><strong>هاتف الطالب</strong><span id="studentPhoneInfo">-</span></div>
+<div class="info"><strong>الكود</strong><span id="studentCodeInfo">-</span></div>
+<div class="info"><strong>ولي الأمر</strong><span id="parentNameInfo">-</span></div>
+<div class="info"><strong>هاتف ولي الأمر</strong><span id="parentPhoneInfo">-</span></div>
+<div class="info"><strong>الاشتراك</strong><span id="subscriptionStatusInfo">-</span></div>
 <div class="info"><strong>انتهاء الاشتراك</strong><span id="subscriptionEndInfo">-</span></div>
-</div>
-</div>
-<div class="panel full"><h2>ملاحظات</h2><p id="studentNotesInfo">-</p></div>
-</section>
-</main>
-</div>
+</div></div>
+<div class="panel"><h2>ملاحظات</h2><p id="studentNotesInfo">-</p></div>
+</section></main>
 <script src="../js/afaq-data.js"></script>
-<script>
-const st = window.AfaqData ? AfaqData.renderCurrentStudent() : null;
-if(!st){ alert("يرجى تسجيل دخول ولي الأمر أولاً"); location.href="parent-login.html"; }
-</script>
+<script>if(window.AfaqData){const st=AfaqData.renderCurrentStudent(); if(!st) location.href="parent-login.html";}</script>
 </body>
 </html>
