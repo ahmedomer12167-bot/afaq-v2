@@ -5,56 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة المدرس - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
-<style>
-.dashboard{min-height:100vh;padding:24px}
-.header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:22px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);margin-bottom:24px}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:none;padding:12px 16px;border-radius:14px;cursor:pointer;color:white;font-weight:bold;background:linear-gradient(135deg,#7c3aed,#a855f7)}
-.logout{background:linear-gradient(135deg,#dc2626,#ef4444)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}
-.card,.tile{padding:24px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);transition:.3s}
-.card:hover,.tile:hover{transform:translateY(-7px);box-shadow:0 0 28px rgba(168,85,247,.35);border-color:#a855f7}
-.card .icon,.tile span{font-size:36px;display:block;margin-bottom:12px}
-.card strong{font-size:30px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.tile{cursor:pointer;min-height:150px}
-.tile h3{font-size:22px;margin-bottom:8px}
-.tile p{color:#d6d6d6;line-height:1.7}
-@media(max-width:900px){.stats,.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
-</style>
+<link rel="stylesheet" href="../css/afaq-room.css">
 </head>
 <body>
-<main class="dashboard">
+<main class="room">
 
-<header class="header">
-<div>
-<h1>👨‍🏫 لوحة المدرس</h1>
-<p>مرحباً بك في لوحة إدارة المدرس في منصة آفاق التعليمية</p>
-</div>
-<div class="actions">
-<button class="btn" onclick="location.href='../index.html'">🏠 الرئيسية</button>
-<button class="btn" onclick="history.back()">← رجوع</button>
-<button class="btn logout" onclick="location.href='../index.html'">تسجيل الخروج</button>
-</div>
-</header>
-
-<section class="stats">
-<div class="card"><span class="icon">📚</span><h3>المواد</h3><strong>1</strong></div>
-<div class="card"><span class="icon">👨‍🎓</span><h3>الطلاب</h3><strong>0</strong></div>
-<div class="card"><span class="icon">📝</span><h3>الاختبارات</h3><strong>0</strong></div>
-<div class="card"><span class="icon">📋</span><h3>الواجبات</h3><strong>0</strong></div>
+<section class="topbar">
+  <div class="title">
+    <h1>👨‍🏫 لوحة المدرس</h1>
+    <p>عدادات الدروس والاختبارات والواجبات والحضور والنتائج تتحدث تلقائياً.</p>
+  </div>
+  <a class="btn back" href="../index.html">الرئيسية</a>
 </section>
 
-<section class="grid">
-<div class="tile" onclick="location.href='teacher-subjects.html'"><span>📚</span><h3>موادي</h3><p>إدارة المواد والانتقال إلى صفحة كل مادة.</p></div>
-<div class="tile" onclick="location.href='teacher-question-bank.html'"><span>🧠</span><h3>بنك الأسئلة</h3><p>حفظ الأسئلة واستخدامها لاحقاً في الاختبارات.</p></div>
-<div class="tile" onclick="location.href='teacher-profile.html'"><span>👤</span><h3>الملف الشخصي</h3><p>تعديل صورة المدرس والنبذة والبيانات الأساسية.</p></div>
-<div class="tile" onclick="location.href='teacher-calendar.html'"><span>📅</span><h3>تقويم المادة</h3><p>إضافة مواعيد الاختبارات والواجبات والمحاضرات.</p></div>
-<div class="tile" onclick="location.href='teacher-statistics.html'"><span>📊</span><h3>إحصائيات المدرس</h3><p>عرض ملخص الطلاب والدروس والنتائج والحضور.</p></div>
-<div class="tile" onclick="location.href='teacher-messages.html'"><span>💬</span><h3>الرسائل العامة</h3><p>إرسال واستقبال الرسائل العامة للمدرس.</p></div>
-<div class="tile" onclick="location.href='teacher-notifications.html'"><span>🔔</span><h3>الإشعارات العامة</h3><p>إرسال إشعارات عامة للطلاب أو لمادة محددة.</p></div>
+<section class="grid4">
+  <div class="panel"><h3>📖 الدروس</h3><h1 data-count="lessons">0</h1></div>
+  <div class="panel"><h3>📝 الاختبارات</h3><h1 data-count="exams">0</h1></div>
+  <div class="panel"><h3>📋 الواجبات</h3><h1 data-count="assignments">0</h1></div>
+  <div class="panel"><h3>📚 طلبات المواد</h3><h1 data-count="subjectRequests">0</h1></div>
+</section>
+
+<section class="grid4">
+  <div class="panel"><h3>✅ الحضور</h3><h1 data-count="present">0</h1></div>
+  <div class="panel"><h3>❌ الغياب</h3><h1 data-count="absent">0</h1></div>
+  <div class="panel"><h3>📊 النتائج</h3><h1 data-count="results">0</h1></div>
+  <div class="panel"><h3>🔔 إشعارات</h3><h1 data-count="notifications">0</h1></div>
+</section>
+
+<section class="cards">
+  <div class="card"><h3>الدروس والملفات</h3><a class="btn" href="teacher-lessons.html">فتح</a></div>
+  <div class="card"><h3>الاختبارات</h3><a class="btn" href="teacher-exams.html">فتح</a></div>
+  <div class="card"><h3>الواجبات</h3><a class="btn" href="teacher-assignments.html">فتح</a></div>
+  <div class="card"><h3>الحضور</h3><a class="btn" href="teacher-attendance.html">فتح</a></div>
+  <div class="card"><h3>النتائج</h3><a class="btn" href="teacher-results.html">فتح</a></div>
+  <div class="card"><h3>طلبات دخول المواد</h3><a class="btn" href="teacher-subject-requests.html">فتح</a></div>
 </section>
 
 </main>
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
 </body>
 </html>

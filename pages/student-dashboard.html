@@ -1,44 +1,63 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة الطالب - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-room.css">
 </head>
 <body>
-
 <main class="room">
-<section class="topbar">
-<div class="title"><h1>🎓 لوحة الطالب</h1><p>كل زر يفتح صفحة مستقلة بدون الحاجة للنزول للأسفل.</p></div>
-<div class="actions"><a class="btn back" href="../index.html">الرئيسية</a></div>
-</section>
-<section class="hero-card">
-<img id="studentPhotoView" class="avatar">
-<div><h2 id="studentNameView">اسم الطالب</h2><p id="studentGradeView">المرحلة</p><p>الكود: <span id="studentCodeInfo">-</span></p></div>
-</section>
-<section class="stats">
-<div class="stat"><span>📊</span><h3>المعدل</h3><strong>92%</strong></div>
-<div class="stat"><span>✅</span><h3>الحضور</h3><strong>96%</strong></div>
-<div class="stat"><span>📋</span><h3>الواجبات</h3><strong>5</strong></div>
-<div class="stat"><span>📝</span><h3>الاختبارات</h3><strong>8</strong></div>
-</section>
-<section class="dashboard-grid">
-<div class="tile" onclick="location.href='student-profile.html'"><div class="icon">👤</div><h3>الملف الشخصي</h3><p>بيانات الطالب كاملة.</p></div>
-<div class="tile" onclick="location.href='student-lessons.html'"><div class="icon">📖</div><h3>الدروس</h3><p>غرفة الدروس والملفات.</p></div>
-<div class="tile" onclick="location.href='student-exams.html'"><div class="icon">📝</div><h3>الاختبارات</h3><p>غرفة الاختبارات.</p></div>
-<div class="tile" onclick="location.href='student-assignments.html'"><div class="icon">📋</div><h3>الواجبات</h3><p>غرفة الواجبات.</p></div>
-<div class="tile" onclick="location.href='student-attendance.html'"><div class="icon">✅</div><h3>الحضور</h3><p>غرفة سجل الحضور.</p></div>
-<div class="tile" onclick="location.href='student-results.html'"><div class="icon">📊</div><h3>النتائج</h3><p>غرفة الدرجات والنتائج.</p></div>
-<div class="tile" onclick="location.href='student-notifications.html'"><div class="icon">🔔</div><h3>الإشعارات</h3><p>غرفة التنبيهات.</p></div>
-<div class="tile" onclick="location.href='student-messages.html'"><div class="icon">💬</div><h3>الرسائل</h3><p>غرفة الرسائل.</p></div>
-<div class="tile" onclick="location.href='student-leaderboard.html'"><div class="icon">🏆</div><h3>المتفوقون</h3><p>غرفة لوحة الشرف.</p></div>
-</section>
-</main>
 
+<section class="topbar">
+  <div class="title">
+    <h1>🎓 لوحة الطالب</h1>
+    <p>العدادات مرتبطة ببيانات الطالب وتتحدث تلقائياً.</p>
+  </div>
+  <a class="btn back" href="../index.html">الرئيسية</a>
+</section>
+
+<section class="hero-card">
+  <img id="studentPhotoView" class="avatar">
+  <div>
+    <h2 id="studentNameView">اسم الطالب</h2>
+    <p id="studentGradeView">المرحلة</p>
+    <p>الكود: <span id="studentCodeInfo">-</span></p>
+  </div>
+</section>
+
+<section class="grid4">
+  <div class="panel"><h3>📖 الدروس</h3><h1 data-count="studentLessons">0</h1></div>
+  <div class="panel"><h3>📝 الاختبارات</h3><h1 data-count="studentExams">0</h1></div>
+  <div class="panel"><h3>📋 الواجبات</h3><h1 data-count="studentAssignments">0</h1></div>
+  <div class="panel"><h3>📊 النتائج</h3><h1 data-count="studentResults">0</h1></div>
+</section>
+
+<section class="grid4">
+  <div class="panel"><h3>✅ الحضور</h3><h1 data-count="attendanceRate">0%</h1></div>
+  <div class="panel"><h3>📈 المعدل</h3><h1 data-count="averageScore">0%</h1></div>
+  <div class="panel"><h3>💬 الرسائل</h3><h1 data-count="studentMessages">0</h1></div>
+  <div class="panel"><h3>🔔 إشعارات</h3><h1 data-count="unreadStudent">0</h1></div>
+</section>
+
+<section class="dashboard-grid cards">
+  <div class="card"><h3>الملف الشخصي</h3><a class="btn" href="student-profile.html">فتح</a></div>
+  <div class="card"><h3>المواد</h3><a class="btn" href="student-subjects.html">فتح</a></div>
+  <div class="card"><h3>الدروس</h3><a class="btn" href="student-lessons.html">فتح</a></div>
+  <div class="card"><h3>الاختبارات</h3><a class="btn" href="student-exams.html">فتح</a></div>
+  <div class="card"><h3>الواجبات</h3><a class="btn" href="student-assignments.html">فتح</a></div>
+  <div class="card"><h3>الحضور</h3><a class="btn" href="student-attendance.html">فتح</a></div>
+  <div class="card"><h3>النتائج</h3><a class="btn" href="student-results.html">فتح</a></div>
+  <div class="card"><h3>الرسائل</h3><a class="btn" href="student-messages.html">فتح</a></div>
+  <div class="card"><h3>الإشعارات</h3><a class="btn" href="student-notifications.html">فتح</a></div>
+</section>
+
+</main>
 <script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
 <script>
-if(window.AfaqData){ const st=AfaqData.getCurrentStudent(); if(st) AfaqData.renderCurrentStudent(); }
+if(window.AfaqData){ AfaqData.renderCurrentStudent && AfaqData.renderCurrentStudent(); }
 </script>
 </body>
 </html>

@@ -1,103 +1,62 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة ولي الأمر - آفاق التعليمية</title>
 <link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/afaq-room.css">
 </head>
 <body>
-
 <main class="room">
+
 <section class="topbar">
-<div class="title">
-<h1>👨‍👩‍👦 لوحة ولي الأمر</h1>
-<p>متابعة الطالب من غرف مستقلة واضحة.</p>
-</div>
-<div class="actions">
-<a class="btn back" href="../index.html">الرئيسية</a>
-</div>
+  <div class="title">
+    <h1>👨‍👩‍👦 لوحة ولي الأمر</h1>
+    <p>متابعة الطالب ببيانات موحدة وعدادات تحدث تلقائياً.</p>
+  </div>
+  <a class="btn back" href="../index.html">الرئيسية</a>
 </section>
 
 <section class="hero-card">
-<img id="studentPhotoView" class="avatar">
-<div>
-<h2 id="studentNameView">اسم الطالب</h2>
-<p id="studentGradeView">المرحلة</p>
-<p>الاشتراك: <span id="subscriptionStatusInfo">-</span></p>
-</div>
+  <img id="studentPhotoView" class="avatar">
+  <div>
+    <h2 id="studentNameView">اسم الطالب</h2>
+    <p id="studentGradeView">المرحلة</p>
+    <p>الاشتراك: <span id="subscriptionStatusInfo">-</span></p>
+  </div>
 </section>
 
-<section class="stats">
-<div class="stat"><span>📊</span><h3>المعدل</h3><strong>92%</strong></div>
-<div class="stat"><span>✅</span><h3>الحضور</h3><strong>96%</strong></div>
-<div class="stat"><span>📋</span><h3>الواجبات</h3><strong>5</strong></div>
-<div class="stat"><span>📝</span><h3>الاختبارات</h3><strong>8</strong></div>
+<section class="grid4">
+  <div class="panel"><h3>📖 الدروس</h3><h1 data-count="studentLessons">0</h1></div>
+  <div class="panel"><h3>📝 الاختبارات</h3><h1 data-count="studentExams">0</h1></div>
+  <div class="panel"><h3>📋 الواجبات</h3><h1 data-count="studentAssignments">0</h1></div>
+  <div class="panel"><h3>📊 النتائج</h3><h1 data-count="studentResults">0</h1></div>
 </section>
 
-<section class="dashboard-grid">
-<div class="tile" onclick="location.href='parent-student-info.html'">
-<div class="icon">👨‍🎓</div>
-<h3>معلومات الطالب</h3>
-<p>بيانات الطالب المرتبط والصورة والمرحلة والاشتراك.</p>
-</div>
-
-<div class="tile" onclick="location.href='parent-results.html'">
-<div class="icon">📊</div>
-<h3>النتائج</h3>
-<p>غرفة الدرجات والنتائج النهائية.</p>
-</div>
-
-<div class="tile" onclick="location.href='parent-attendance.html'">
-<div class="icon">✅</div>
-<h3>الحضور</h3>
-<p>غرفة سجل الحضور والغياب.</p>
-</div>
-
-<div class="tile" onclick="location.href='parent-exams.html'">
-<div class="icon">📝</div>
-<h3>الاختبارات</h3>
-<p>غرفة الاختبارات المنشورة ودرجاتها.</p>
-</div>
-
-<div class="tile" onclick="location.href='parent-assignments.html'">
-<div class="icon">📋</div>
-<h3>الواجبات</h3>
-<p>غرفة الواجبات وحالة التسليم.</p>
-</div>
-
-<div class="tile" onclick="location.href='parent-notifications.html'">
-<div class="icon">🔔</div>
-<h3>الإشعارات</h3>
-<p>غرفة التنبيهات والإعلانات الجديدة.</p>
-</div>
-
-<div class="tile" onclick="location.href='parent-messages.html'">
-<div class="icon">💬</div>
-<h3>الرسائل</h3>
-<p>غرفة الرسائل والتواصل مع المدرس أو الإدارة.</p>
-</div>
-
-<div class="tile" onclick="location.href='parent-profile.html'">
-<div class="icon">👤</div>
-<h3>ملف ولي الأمر</h3>
-<p>بيانات ولي الأمر ومعلومات التواصل.</p>
-</div>
-
-<div class="tile" onclick="location.href='parent-reports.html'">
-<div class="icon">📈</div>
-<h3>التقارير</h3>
-<p>غرفة التقارير ومتابعة أداء الطالب.</p>
-</div>
+<section class="grid4">
+  <div class="panel"><h3>✅ الحضور</h3><h1 data-count="attendanceRate">0%</h1></div>
+  <div class="panel"><h3>📈 المعدل</h3><h1 data-count="averageScore">0%</h1></div>
+  <div class="panel"><h3>💬 الرسائل</h3><h1 data-count="studentMessages">0</h1></div>
+  <div class="panel"><h3>🔔 إشعارات</h3><h1 data-count="unreadStudent">0</h1></div>
 </section>
+
+<section class="cards">
+  <div class="card"><h3>معلومات الطالب</h3><a class="btn" href="parent-student-info.html">فتح</a></div>
+  <div class="card"><h3>النتائج</h3><a class="btn" href="parent-results.html">فتح</a></div>
+  <div class="card"><h3>الحضور</h3><a class="btn" href="parent-attendance.html">فتح</a></div>
+  <div class="card"><h3>الاختبارات</h3><a class="btn" href="parent-exams.html">فتح</a></div>
+  <div class="card"><h3>الواجبات</h3><a class="btn" href="parent-assignments.html">فتح</a></div>
+  <div class="card"><h3>الرسائل</h3><a class="btn" href="parent-messages.html">فتح</a></div>
+  <div class="card"><h3>الإشعارات</h3><a class="btn" href="parent-notifications.html">فتح</a></div>
+  <div class="card"><h3>التقارير</h3><a class="btn" href="parent-reports.html">فتح</a></div>
+</section>
+
 </main>
-
 <script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
 <script>
-if(window.AfaqData){
-  const st = AfaqData.getCurrentStudent();
-  if(st) AfaqData.renderCurrentStudent();
-}
+if(window.AfaqData){ AfaqData.renderCurrentStudent && AfaqData.renderCurrentStudent(); }
 </script>
 </body>
 </html>
