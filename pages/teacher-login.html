@@ -1,54 +1,41 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تسجيل دخول المدرس - آفاق التعليمية</title>
-  <link rel="stylesheet" href="../css/main.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دخول المدرس - آفاق التعليمية</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-room.css">
 </head>
 <body>
-<section class="login-page">
-  <div class="login-box">
-    <a href="../index.html" class="back-link">← الرجوع للرئيسية</a>
-    <div class="login-icon">👨‍🏫</div>
-    <h1>تسجيل دخول المدرس</h1>
-    <p>أدخل بياناتك التي حددها المدير</p>
-    <form>
-      <label>الاسم الثلاثي</label>
-      <input id="teacherName" type="text" placeholder="مثال: أحمد محمد علي" />
-      <label>الصف</label>
-      <select id="teacherGrade">
-        <option>الأول متوسط</option>
-        <option>الثاني متوسط</option>
-        <option>الثالث متوسط</option>
-        <option>الرابع الإعدادي</option>
-        <option>الخامس الإعدادي</option>
-        <option>السادس الإعدادي</option>
-      </select>
-      <label>المادة</label>
-      <select id="teacherSubject">
-        <option>الأحياء</option>
-        <option>الفيزياء</option>
-        <option>الكيمياء</option>
-        <option>الرياضيات</option>
-        <option>الاجتماعيات</option>
-        <option>العربي</option>
-        <option>الإنكليزي</option>
-        <option>الإسلامية</option>
-      </select>
-      <label>كود المدرس</label>
-      <input id="teacherCode" type="password" placeholder="أدخل كود المدرس" />
-      <button type="button" onclick="loginTeacher()">دخول المدرس</button>
-    </form>
-  </div>
+<main class="room">
+
+<section class="panel" style="max-width:540px;margin:auto">
+  <h1>👨‍🏫 دخول المدرس</h1>
+  <p>لا يمكن الدخول إلا إذا قام المدير بإضافة المدرس وربطه بالصف والمادة.</p>
+
+  <input id="teacherCode" placeholder="كود المدرس">
+  <input id="subjectCode" placeholder="كود المادة">
+
+  <button class="btn ok" onclick="login()">دخول المدرس</button>
+  <a class="btn back" href="../index.html">رجوع للرئيسية</a>
+
+  <p id="msg"></p>
 </section>
+
+</main>
+
+<script src="../js/afaq-teacher-auth.js"></script>
 <script>
-function loginTeacher(){
-  const name=document.getElementById('teacherName').value.trim();
-  const code=document.getElementById('teacherCode').value.trim();
-  if(!name || !code){alert('يرجى إدخال الاسم والكود');return;}
-  localStorage.setItem('afaq_current_teacher', JSON.stringify({name,code}));
-  window.location.href='teacher-dashboard.html';
+function login(){
+  const teacher = AfaqTeacherAuth.loginTeacher(teacherCode.value, subjectCode.value);
+
+  if(!teacher){
+    msg.textContent = "الكود غير صحيح أو لم يتم تفعيل المدرس من المدير.";
+    return;
+  }
+
+  location.href = "teacher-dashboard.html";
 }
 </script>
 </body>

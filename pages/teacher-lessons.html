@@ -1,20 +1,96 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>📖 الدروس والملفات</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"></head><body><main class="room"><section class="topbar"><div class="title"><h1>📖 الدروس والملفات</h1><p>هذه البيانات موحدة وتظهر للطالب وولي الأمر والمدير.</p></div><a class="btn back" href="teacher-dashboard.html">لوحة المدرس</a></section>
-<section class="panel"><h2>إضافة</h2><input id="teacherCode" placeholder="كود المدرس">
-<select id="subject"><option>الأحياء</option><option>الكيمياء</option><option>الفيزياء</option><option>الرياضيات</option></select>
-<input id="title" placeholder="العنوان">
-<textarea id="description" placeholder="الوصف"></textarea>
-<select id="type"><option>PDF</option><option>Word</option><option>PowerPoint</option><option>صورة</option><option>فيديو</option><option>ZIP</option></select>
-<input id="url" placeholder="رابط Google Drive"><button class="btn ok" onclick="saveItem()">حفظ</button></section>
-<section class="panel"><h2>القائمة</h2><div id="box" class="cards"></div></section></main><script src="../js/afaq-data.js"></script><script>
-function val(id){return document.getElementById(id)?.value||""}
-function saveItem(){
- const item={subject:val("subject"),teacherCode:val("teacherCode"),title:val("title"),description:val("description"),studentId:val("studentId"),studentName:val("studentName"),status:val("status"),score:val("score"),total:val("total"),date:val("date"),url:val("url"),type:val("type")};
- AfaqData.add("lessons",item);
- if(item.studentId) AfaqData.notifyStudent(item.studentId,"تحديث جديد","تمت إضافة بيانات في 📖 الدروس والملفات","📖 الدروس والملفات",item.subject);
- AfaqData.notifyAdmin("تحديث من المدرس","تمت إضافة عنصر في 📖 الدروس والملفات","📖 الدروس والملفات");
- render();
- alert("تم الحفظ");
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📖 دروس وملفات المدرس</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-room.css">
+</head>
+<body>
+<main class="room">
+
+<section class="topbar">
+  <div class="title">
+    <h1>📖 دروس وملفات المدرس</h1>
+    <p id="teacherInfo">هذه الصفحة تعرض بيانات المدرس الحالي فقط.</p>
+  </div>
+  <a class="btn back" href="teacher-dashboard.html">لوحة المدرس</a>
+</section>
+
+<section class="panel">
+  <h2>إضافة</h2>
+  <input id="titleInput" placeholder="العنوان">
+  <textarea id="description" placeholder="الوصف"></textarea>
+  <select id="type"><option>PDF</option><option>Word</option><option>PowerPoint</option><option>صورة</option><option>فيديو</option><option>ZIP</option></select><input id="url" placeholder="رابط Google Drive">
+  <button class="btn ok" onclick="saveItem()">حفظ</button>
+</section>
+
+<section class="panel">
+  <h2>بياناتي الخاصة</h2>
+  <div id="box" class="cards"></div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-teacher-auth.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
+<script>
+const teacher = AfaqTeacherAuth.requireTeacher();
+if(teacher){
+  document.getElementById("teacherInfo").textContent =
+  teacher.fullName + " | " + teacher.grade + " | " + teacher.subject;
 }
-function del(id){AfaqData.remove("lessons",id);render()}
-function render(){const arr=AfaqData.list("lessons");box.innerHTML=arr.length?arr.map(x=>`<div class="card"><h3>${x.title||x.studentName||x.subject||"عنصر"}</h3><p>${x.description||x.status||x.score||""}</p><p><span class="badge">${x.subject||"عام"}</span></p>${x.url?`<button class="btn" onclick="window.open('${x.url}','_blank')">فتح الملف</button>`:""}<button class="btn danger" onclick="del('${x.id}')">حذف</button></div>`).join(""):"<div class='card'><h3>لا توجد بيانات</h3></div>"}render();
-</script></body></html>
+
+function saveItem(){
+  const item = {
+    title: titleInput.value.trim(),
+    description: description.value.trim(),
+    url: document.getElementById("url") ? document.getElementById("url").value.trim() : "",
+    type: document.getElementById("type") ? document.getElementById("type").value : "",
+    score: document.getElementById("score") ? document.getElementById("score").value : "",
+    total: document.getElementById("total") ? document.getElementById("total").value : "",
+    status: document.getElementById("status") ? document.getElementById("status").value : "منشور"
+  };
+
+  if(!item.title){ alert("أدخل العنوان"); return; }
+
+  AfaqTeacherAuth.addTeacherScoped("lessons", item);
+  titleInput.value = "";
+  description.value = "";
+  if(document.getElementById("url")) document.getElementById("url").value = "";
+  render();
+  alert("تم الحفظ ضمن بياناتك فقط");
+}
+
+function deleteItem(id){
+  if(!confirm("حذف؟")) return;
+  const arr = AfaqTeacherAuth.read("afaq_lessons").filter(x => x.id !== id);
+  AfaqTeacherAuth.write("afaq_lessons", arr);
+  render();
+}
+
+function render(){
+  const arr = AfaqTeacherAuth.teacherScopedList("lessons");
+  if(!arr.length){
+    box.innerHTML = '<div class="card"><h3>لا توجد بيانات حالياً</h3></div>';
+    return;
+  }
+
+  box.innerHTML = arr.map(x => `
+    <div class="card">
+      <h3>${x.title || "عنصر"}</h3>
+      <p>${x.description || ""}</p>
+      <p>المادة: ${x.subject}</p>
+      <p>الصف: ${x.grade}</p>
+      ${x.url ? `<button class="btn" onclick="window.open('${x.url}','_blank')">فتح الملف</button>` : ""}
+      <button class="btn danger" onclick="deleteItem('${x.id}')">حذف</button>
+    </div>
+  `).join("");
+}
+
+render();
+</script>
+</body>
+</html>

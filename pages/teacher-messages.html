@@ -1,11 +1,96 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>💬 رسائل المدرس</title><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/afaq-room.css"><link rel="stylesheet" href="../css/afaq-badges.css"></head><body>
-<main class="room"><section class="topbar"><div class="title"><h1>💬 رسائل المدرس</h1><p>تم فتح الصفحة، وسيتم إزالة الشارة الحمراء الخاصة بهذا القسم.</p></div><a class="btn back" href="teacher-dashboard.html">رجوع</a></section><section class="panel"><div id="box" class="cards"></div></section></main>
-<script src="../js/afaq-data.js"></script><script src="../js/afaq-badges.js"></script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💬 رسائل المادة</title>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/afaq-room.css">
+</head>
+<body>
+<main class="room">
+
+<section class="topbar">
+  <div class="title">
+    <h1>💬 رسائل المادة</h1>
+    <p id="teacherInfo">هذه الصفحة تعرض بيانات المدرس الحالي فقط.</p>
+  </div>
+  <a class="btn back" href="teacher-dashboard.html">لوحة المدرس</a>
+</section>
+
+<section class="panel">
+  <h2>إضافة</h2>
+  <input id="titleInput" placeholder="العنوان">
+  <textarea id="description" placeholder="الوصف"></textarea>
+  <input id="studentId" placeholder="كود الطالب اختياري">
+  <button class="btn ok" onclick="saveItem()">حفظ</button>
+</section>
+
+<section class="panel">
+  <h2>بياناتي الخاصة</h2>
+  <div id="box" class="cards"></div>
+</section>
+
+</main>
+
+<script src="../js/afaq-data.js"></script>
+<script src="../js/afaq-teacher-auth.js"></script>
+<script src="../js/afaq-auto-stats.js"></script>
 <script>
-if(window.AfaqBadges) AfaqBadges.markCollectionSeen("messages");
-function render(){
- const arr = window.AfaqData ? AfaqData.list("messages") : [];
- box.innerHTML = arr.length ? arr.map(x=>`<div class="card"><h3>${x.title||x.subject||x.studentName||"عنصر"}</h3><p>${x.description||x.message||x.status||""}</p><span class="badge">${x.subject||"عام"}</span></div>`).join("") : "<div class='card'><h3>لا توجد بيانات حالياً</h3></div>";
+const teacher = AfaqTeacherAuth.requireTeacher();
+if(teacher){
+  document.getElementById("teacherInfo").textContent =
+  teacher.fullName + " | " + teacher.grade + " | " + teacher.subject;
 }
+
+function saveItem(){
+  const item = {
+    title: titleInput.value.trim(),
+    description: description.value.trim(),
+    url: document.getElementById("url") ? document.getElementById("url").value.trim() : "",
+    type: document.getElementById("type") ? document.getElementById("type").value : "",
+    score: document.getElementById("score") ? document.getElementById("score").value : "",
+    total: document.getElementById("total") ? document.getElementById("total").value : "",
+    status: document.getElementById("status") ? document.getElementById("status").value : "منشور"
+  };
+
+  if(!item.title){ alert("أدخل العنوان"); return; }
+
+  AfaqTeacherAuth.addTeacherScoped("messages", item);
+  titleInput.value = "";
+  description.value = "";
+  if(document.getElementById("url")) document.getElementById("url").value = "";
+  render();
+  alert("تم الحفظ ضمن بياناتك فقط");
+}
+
+function deleteItem(id){
+  if(!confirm("حذف؟")) return;
+  const arr = AfaqTeacherAuth.read("afaq_messages").filter(x => x.id !== id);
+  AfaqTeacherAuth.write("afaq_messages", arr);
+  render();
+}
+
+function render(){
+  const arr = AfaqTeacherAuth.teacherScopedList("messages");
+  if(!arr.length){
+    box.innerHTML = '<div class="card"><h3>لا توجد بيانات حالياً</h3></div>';
+    return;
+  }
+
+  box.innerHTML = arr.map(x => `
+    <div class="card">
+      <h3>${x.title || "عنصر"}</h3>
+      <p>${x.description || ""}</p>
+      <p>المادة: ${x.subject}</p>
+      <p>الصف: ${x.grade}</p>
+      ${x.url ? `<button class="btn" onclick="window.open('${x.url}','_blank')">فتح الملف</button>` : ""}
+      <button class="btn danger" onclick="deleteItem('${x.id}')">حذف</button>
+    </div>
+  `).join("");
+}
+
 render();
-</script></body></html>
+</script>
+</body>
+</html>
