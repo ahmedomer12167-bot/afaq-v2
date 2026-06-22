@@ -4,15 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>آفاق التعليمية</title>
-<link rel="stylesheet" href="css/afaq-purple-mobile.css">
-<link rel="stylesheet" href="css/afaq-home-clean.css">
+<link rel="stylesheet" href="css/afaq-interface-fix.css">
 </head>
 <body>
 <main class="afaq-home">
 <nav class="home-nav">
   <div class="brand"><div class="brand-icon">📖</div><div class="brand-title">آفاق التعليمية</div></div>
-  <div class="nav-links"><a class="active" href="#">الرئيسية</a><a href="#features">المميزات</a><a href="#roles">تسجيل الدخول</a></div>
-  <div class="nav-actions"><a class="login-pill" href="#roles">تسجيل الدخول 👤</a></div>
+  <div class="nav-links"><a class="active" href="#">الرئيسية</a><a href="#roles">تسجيل الدخول</a><a href="#features">المميزات</a></div>
+  <a class="login-pill" href="#roles">تسجيل الدخول 👤</a>
 </nav>
 
 <section class="hero">
@@ -24,8 +23,7 @@
       <div class="float-card fc4"><b>🧾</b>اختبارات تفاعلية</div>
       <div class="float-card fc5"><b>💬</b>تواصل مباشر</div>
       <div class="books"><div class="book b1"></div><div class="book b2"></div><div class="book b3"></div><div class="book b4"></div></div>
-      <div class="cap">🎓</div>
-      <div class="keyboard"></div>
+      <div class="cap">🎓</div><div class="keyboard"></div>
       <div class="laptop"><div class="laptop-screen"><div class="play">▶</div><div class="screen-lines"><span></span><span></span><span></span></div></div></div>
       <div class="pencils"></div><div class="plant">🌱</div>
     </div>
@@ -39,14 +37,13 @@
 </section>
 
 <section class="stats-wrap"><div class="stats">
-  <div class="stat-card"><div><h3>الطلاب</h3><strong data-count="students">0</strong><p>طالب وطالبة</p></div><div class="stat-icon">👥</div></div>
-  <div class="stat-card"><div><h3>المعلمون</h3><strong data-count="teachers">0</strong><p>معلم ومعلمة</p></div><div class="stat-icon">👨‍🏫</div></div>
-  <div class="stat-card"><div><h3>المواد</h3><strong data-count="subjects">0</strong><p>مادة تعليمية</p></div><div class="stat-icon">📖</div></div>
-  <div class="stat-card"><div><h3>الاختبارات</h3><strong data-count="exams">0</strong><p>اختبار متاح</p></div><div class="stat-icon">🧾</div></div>
+  <div class="stat-card"><div><h3>الطلاب</h3><strong id="homeStudentsCount">0</strong><p>طالب وطالبة</p></div><div class="stat-icon">👥</div></div>
+  <div class="stat-card"><div><h3>المدرسون</h3><strong id="homeTeachersCount">0</strong><p>مدرس ومدرسة</p></div><div class="stat-icon">👨‍🏫</div></div>
+  <div class="stat-card"><div><h3>المواد</h3><strong id="homeSubjectsCount">0</strong><p>مادة تعليمية</p></div><div class="stat-icon">📖</div></div>
+  <div class="stat-card"><div><h3>الاختبارات</h3><strong id="homeExamsCount">0</strong><p>اختبار متاح</p></div><div class="stat-icon">🧾</div></div>
 </div></section>
 
 <section class="choose" id="roles"><h2>اختر نوع الحساب للبدء</h2><p>اختر نوع حسابك للوصول إلى الخدمات المناسبة لك</p></section>
-
 <section class="roles">
   <div class="role-card student"><div class="role-icon">🎓</div><h3>الطالب</h3><p>الدروس والاختبارات والواجبات والنتائج</p><a href="pages/student-login.html">دخول الطالب ←</a></div>
   <div class="role-card teacher"><div class="role-icon">👨‍🏫</div><h3>المدرس</h3><p>إدارة الدروس والاختبارات والطلاب</p><a href="pages/teacher-login.html">دخول المدرس ←</a></div>
@@ -61,12 +58,6 @@
   <div class="foot-item"><b>🎧</b><div>دعم فني<span>فريق دعم دائم لمساعدتك</span></div></div>
 </section>
 </main>
-
-<script src="js/afaq-data.js"></script>
-<script src="js/afaq-unified-counters.js"></script>
-<script src="js/afaq-central-data.js"></script>
-<script src="js/afaq-central-bridge.js"></script>
-<script src="js/afaq-final-counters.js"></script>
-<script src="js/afaq-home-hover-clean.js"></script>
+<script src="js/afaq-interface-fix.js"></script>
 </body>
 </html>
